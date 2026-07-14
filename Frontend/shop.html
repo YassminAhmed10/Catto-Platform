@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Language Island — Shop</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@6.6.0/css/flag-icons.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/shop.css">
+</head>
+<body>
+
+<!-- SKY -->
+<div class="sky">
+  <div class="sun"><div class="sun-face"><div class="sun-eye left"></div><div class="sun-eye right"></div><div class="sun-smile"></div></div></div>
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="cloud cloud-3"></div>
+</div>
+
+<!-- =========================================================
+   HEADER - Common for all pages
+   ========================================================= -->
+<header class="topbar">
+  <div class="topbar-top">
+    <div class="brand">
+      <span class="brand-logo"><img src="imgs/Cattoimages/cattologo.png" alt="Language Island" onerror="this.parentElement.style.display='none'"></span>
+    </div>
+    <div class="topbar-right">
+      <!-- Coins Display -->
+      <div class="progress-pill coins-display" style="display:none;">
+        <span class="progress-icon">🪙</span>
+        <span id="headerCoins">0</span>
+      </div>
+      <!-- Stars Display -->
+      <div class="progress-pill stars-display" style="display:none;">
+        <span class="progress-icon">⭐</span>
+        <span id="headerStars">0</span>
+      </div>
+      <!-- Auth Buttons -->
+      <div class="auth-buttons" id="authButtons">
+        <a href="signin.html" class="auth-btn login interactive">Sign In</a>
+        <a href="signup.html" class="auth-btn signup interactive">Sign Up</a>
+      </div>
+      <div class="user-menu-wrapper" id="userMenuWrapper" style="display:none;">
+        <button class="menu-toggle interactive" id="menuToggle" aria-label="Open account menu">
+          <img src="imgs/Cattoimages/default-catto.png" alt="User" class="user-avatar-icon" id="userAvatarIcon">
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Navbar -->
+  <nav class="navbar" aria-label="Main">
+    <a class="nav-btn" href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Home</a>
+    <a class="nav-btn" href="games.html"><span class="nav-icon"><i class="fas fa-gamepad"></i></span>Games</a>
+    <a class="nav-btn" href="books.html"><span class="nav-icon"><i class="fas fa-book"></i></span>Books</a>
+    <a class="nav-btn" href="listening.html"><span class="nav-icon"><i class="fas fa-headphones"></i></span>Listening</a>
+    <a class="nav-btn" href="pronunciation.html"><span class="nav-icon"><i class="fas fa-microphone"></i></span>Speak</a>
+    <a class="nav-btn" href="videos.html"><span class="nav-icon"><i class="fas fa-video"></i></span>Videos</a>
+    <a class="nav-btn" href="art.html"><span class="nav-icon"><i class="fas fa-palette"></i></span>Art</a>
+    <a class="nav-btn active" href="shop.html"><span class="nav-icon"><i class="fas fa-store"></i></span>Shop</a>
+  </nav>
+</header>
+
+<!-- =========================================================
+   SIDEBAR
+   ========================================================= -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar" id="sidebar">
+  <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+    <i class="fas fa-times"></i>
+  </button>
+  
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar-wrapper">
+      <img id="sidebarUserImage" src="imgs/Cattoimages/default-catto.png" alt="User Avatar">
+    </div>
+    <div class="sidebar-username" id="sidebarUsername">Explorer</div>
+    <div class="sidebar-user-email" id="sidebarEmail">explorer@languageisland.com</div>
+  </div>
+  
+  <ul class="sidebar-menu">
+    <li><a href="profile.html" id="menuProfile"><i class="fas fa-user"></i> My Profile</a></li>
+    <li><a href="index.html" id="menuDashboard"><i class="fas fa-chart-simple"></i> Dashboard</a></li>
+    <li><a href="achievements.html" id="menuAchievements"><i class="fas fa-trophy"></i> Achievements</a></li>
+    <li><a href="languages.html" id="menuLanguages"><i class="fas fa-globe"></i> Languages</a></li>
+    <li><a href="settings.html" id="menuSettings"><i class="fas fa-cog"></i> Settings</a></li>
+    <li class="logout-item"><a href="#" class="logout" id="menuLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+  </ul>
+</div>
+
+<!-- =========================================================
+   MAIN CONTENT
+   ========================================================= -->
+<main>
+  <!-- Shop Container with Overlay -->
+  <div class="shop-container" id="shopContainer">
+    
+    <!-- Hero -->
+    <section class="page-hero">
+      <h1>Catto's Shop</h1>
+      <p>Earn coins by playing games, reading books, watching videos, and more!</p>
+      <p style="font-size:14px;font-weight:800;margin-top:6px;color:var(--coral);" id="loginStatusMsg">
+        <i class="fas fa-lock" style="margin-right:6px;"></i> Sign in to start earning coins!
+      </p>
+    </section>
+
+    <!-- Category Tabs -->
+    <section class="category-tabs">
+      <button class="tab-btn active" data-category="all">All Items</button>
+      <button class="tab-btn" data-category="skins">Skins</button>
+      <button class="tab-btn" data-category="prints">Printables</button>
+      <button class="tab-btn" data-category="books">Books</button>
+      <button class="tab-btn" data-category="themes">Themes</button>
+      <button class="tab-btn" data-category="myitems">🌟 My Items</button>
+    </section>
+
+    <!-- Shop Items Grid -->
+    <section class="shop-section">
+      <div class="shop-grid" id="shopGrid">
+        <!-- Items will be loaded by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Sign In Overlay - Shows when user is not logged in -->
+    <div class="shop-overlay" id="shopOverlay">
+      <div class="shop-overlay-content">
+        <div class="overlay-catto-image">
+          <img src="imgs/Cattoimages/Catto_Login.png" alt="Catto" onerror="this.style.display='none'">
+        </div>
+        <h2>Sign In to Access the Shop</h2>
+        <p>Create an account or sign in to buy cool items and customize your experience!</p>
+        <div class="overlay-buttons">
+          <a href="signin.html" class="cta-btn interactive">Sign In</a>
+          <a href="signup.html" class="cta-btn secondary interactive">Create Account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- =========================================================
+   LOGIN REQUIRED MODAL
+   ========================================================= -->
+<div class="modal-backdrop" id="loginRequiredModal">
+  <div class="modal-card login-required-modal">
+    <button class="modal-close interactive" id="loginModalClose" aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="modal-catto-image">
+      <img src="imgs/Cattoimages/Catto_Login.png" alt="Catto" onerror="this.style.display='none'">
+    </div>
+    <h2 class="modal-title">Sign In Required</h2>
+    <p class="modal-subtitle">Please sign in or create an account to shop!</p>
+    <p class="modal-message">Earn coins and buy cool items!</p>
+    <div class="modal-actions">
+      <a href="signin.html" class="cta-btn interactive" id="loginModalSignin">
+        Sign In <i class="fas fa-arrow-right"></i>
+      </a>
+      <a href="signup.html" class="cta-btn secondary interactive" id="loginModalSignup">
+        Create Account <i class="fas fa-user-plus"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+   PURCHASE CONFIRMATION MODAL
+   ========================================================= -->
+<div class="modal-backdrop" id="purchaseModal">
+  <div class="modal-card purchase-modal">
+    <button class="modal-close interactive" id="purchaseModalClose" aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="purchase-icon" id="purchaseIcon"></div>
+    <h2 class="purchase-title" id="purchaseTitle">Confirm Purchase</h2>
+    <p class="purchase-text" id="purchaseText">Are you sure you want to buy this item?</p>
+    <div class="purchase-details" id="purchaseDetails"></div>
+    <div class="purchase-actions">
+      <button class="cta-btn secondary" id="purchaseCancel">Cancel</button>
+      <button class="cta-btn" id="purchaseConfirm">Buy Now!</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+   TOAST
+   ========================================================= -->
+<div class="toast" id="toast">
+  <span class="toast-icon"><i class="fas fa-check-circle"></i></span>
+  <span id="toastMessage">Welcome!</span>
+</div>
+
+<!-- =========================================================
+   SCRIPTS
+   ========================================================= -->
+<script src="assets/js/header.js"></script>
+<script src="assets/js/sounds.js"></script>
+<script src="assets/js/navsound.js"></script>
+<script src="assets/js/global-theme.js"></script>
+<script src="assets/js/shop.js"></script>
+</body>
+</html>

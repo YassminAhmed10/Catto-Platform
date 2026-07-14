@@ -1,0 +1,34 @@
+<!-- =========================================================
+   SIDEBAR - Common for all pages (SINGLE SOURCE OF TRUTH)
+   ========================================================= -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar" id="sidebar">
+  <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+    <i class="fas fa-times"></i>
+  </button>
+  
+  <!-- Profile Section - With User Image -->
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar-wrapper">
+      <img id="sidebarUserImage" src="imgs/profile/default-catto.png" alt="User Avatar">
+    </div>
+    <div class="sidebar-username" id="sidebarUsername">Explorer</div>
+    <div class="sidebar-user-email" id="sidebarEmail">explorer@languageisland.com</div>
+  </div>
+  
+  <!-- Menu Items - NEW ORDER -->
+  <ul class="sidebar-menu">
+    <!-- 1. My Profile -->
+    <li><a href="profile.html" id="menuProfile"><i class="fas fa-user"></i> My Profile</a></li>
+    <!-- 2. Dashboard (Home) -->
+    <li><a href="index.html" id="menuDashboard"><i class="fas fa-chart-simple"></i> Dashboard</a></li>
+    <!-- 3. Achievements -->
+    <li><a href="achievements.html" id="menuAchievements"><i class="fas fa-trophy"></i> Achievements</a></li>
+    <!-- 4. Languages -->
+    <li><a href="languages.html" id="menuLanguages"><i class="fas fa-globe"></i> Languages</a></li>
+    <!-- 5. Settings -->
+    <li><a href="settings.html" id="menuSettings"><i class="fas fa-cog"></i> Settings</a></li>
+    <!-- 6. Logout (at bottom) -->
+    <li class="logout-item"><a href="#" class="logout" id="menuLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+  </ul>
+</div>

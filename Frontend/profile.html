@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Language Island — My Profile</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@6.6.0/css/flag-icons.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/profile.css">
+</head>
+<body>
+
+<!-- SKY -->
+<div class="sky">
+  <div class="sun"><div class="sun-face"><div class="sun-eye left"></div><div class="sun-eye right"></div><div class="sun-smile"></div></div></div>
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="cloud cloud-3"></div>
+</div>
+
+<!-- =========================================================
+   HEADER - Common for all pages
+   ========================================================= -->
+<header class="topbar">
+  <div class="topbar-top">
+    <div class="brand">
+      <span class="brand-logo"><img src="imgs/Cattoimages/cattologo.png" alt="Language Island" onerror="this.parentElement.style.display='none'"></span>
+    </div>
+    <div class="topbar-right">
+      <!-- Coins Display -->
+      <div class="progress-pill coins-display" style="display:none;">
+        <span class="progress-icon">🪙</span>
+        <span id="headerCoins">0</span>
+      </div>
+      <!-- Stars Display -->
+      <div class="progress-pill stars-display" style="display:none;">
+        <span class="progress-icon">⭐</span>
+        <span id="headerStars">0</span>
+      </div>
+      <!-- Auth Buttons -->
+      <div class="auth-buttons" id="authButtons">
+        <a href="signin.html" class="auth-btn login interactive">Sign In</a>
+        <a href="signup.html" class="auth-btn signup interactive">Sign Up</a>
+      </div>
+      <div class="user-menu-wrapper" id="userMenuWrapper" style="display:none;">
+        <button class="menu-toggle interactive" id="menuToggle" aria-label="Open account menu">
+          <img src="imgs/Cattoimages/default-catto.png" alt="User" class="user-avatar-icon" id="userAvatarIcon">
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Navbar - NO active class on profile page -->
+  <nav class="navbar" aria-label="Main">
+    <a class="nav-btn" href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Home</a>
+    <a class="nav-btn" href="games.html"><span class="nav-icon"><i class="fas fa-gamepad"></i></span>Games</a>
+    <a class="nav-btn" href="books.html"><span class="nav-icon"><i class="fas fa-book"></i></span>Books</a>
+    <a class="nav-btn" href="listening.html"><span class="nav-icon"><i class="fas fa-headphones"></i></span>Listening</a>
+    <a class="nav-btn" href="pronunciation.html"><span class="nav-icon"><i class="fas fa-microphone"></i></span>Speak</a>
+    <a class="nav-btn" href="videos.html"><span class="nav-icon"><i class="fas fa-video"></i></span>Videos</a>
+    <a class="nav-btn" href="art.html"><span class="nav-icon"><i class="fas fa-palette"></i></span>Art</a>
+    <a class="nav-btn" href="shop.html"><span class="nav-icon"><i class="fas fa-store"></i></span>Shop</a>
+  </nav>
+</header>
+
+<!-- =========================================================
+   SIDEBAR
+   ========================================================= -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar" id="sidebar">
+  <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+    <i class="fas fa-times"></i>
+  </button>
+  
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar-wrapper">
+      <img id="sidebarUserImage" src="imgs/Cattoimages/default-catto.png" alt="User Avatar">
+    </div>
+    <div class="sidebar-username" id="sidebarUsername">Explorer</div>
+    <div class="sidebar-user-email" id="sidebarEmail">explorer@languageisland.com</div>
+  </div>
+  
+  <ul class="sidebar-menu">
+    <li><a href="profile.html" id="menuProfile"><i class="fas fa-user"></i> My Profile</a></li>
+    <li><a href="index.html" id="menuDashboard"><i class="fas fa-chart-simple"></i> Dashboard</a></li>
+    <li><a href="achievements.html" id="menuAchievements"><i class="fas fa-trophy"></i> Achievements</a></li>
+    <li><a href="languages.html" id="menuLanguages"><i class="fas fa-globe"></i> Languages</a></li>
+    <li><a href="settings.html" id="menuSettings"><i class="fas fa-cog"></i> Settings</a></li>
+    <li class="logout-item"><a href="#" class="logout" id="menuLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+  </ul>
+</div>
+
+<!-- =========================================================
+   MAIN CONTENT
+   ========================================================= -->
+<main>
+  <div class="profile-container">
+    
+    <!-- Profile Header with Avatar -->
+    <div class="profile-header">
+      <div class="profile-avatar-wrapper" id="profileAvatarClick">
+        <img id="cattoAvatar" src="imgs/Cattoimages/default-catto.png" alt="Catto Avatar">
+        <div class="profile-avatar-badge" id="userLevelBadge">#001</div>
+        <div class="profile-avatar-hint"> Change Skin</div>
+      </div>
+      <div class="profile-info">
+        <h1 id="userName">Explorer</h1>
+        <p class="profile-email" id="userEmail">explorer@languageisland.com</p>
+        <p class="profile-member">Member since <span id="memberSince">Today</span></p>
+      </div>
+      <button class="edit-profile-btn interactive" id="editProfileBtn">
+        <i class="fas fa-pen"></i> Edit Profile
+      </button>
+    </div>
+
+    <!-- My Adventure Stats - 4 Boxes -->
+    <section class="adventure-stats">
+      <h2 class="section-title">My Adventure Stats</h2>
+      <div class="stats-grid">
+        <!-- Coins -->
+        <div class="stat-box">
+          <div class="stat-icon">
+            <img src="imgs/profile/Coins.png" alt="Coins">
+          </div>
+          <div class="stat-content">
+            <span class="stat-value" id="statCoins">0</span>
+            <span class="stat-label">Coins</span>
+          </div>
+        </div>
+        <!-- Level -->
+        <div class="stat-box">
+          <div class="stat-icon">
+            <img src="imgs/profile/Language_Level.png" alt="Level">
+          </div>
+          <div class="stat-content">
+            <span class="stat-value" id="statLevel">1</span>
+            <span class="stat-label">Level</span>
+          </div>
+        </div>
+        <!-- Stars -->
+        <div class="stat-box">
+          <div class="stat-icon">
+            <img src="imgs/profile/Stars.png" alt="Stars">
+          </div>
+          <div class="stat-content">
+            <span class="stat-value" id="statStars">0</span>
+            <span class="stat-label">Stars</span>
+          </div>
+        </div>
+        <!-- Day Streak -->
+        <div class="stat-box">
+          <div class="stat-icon">
+            <img src="imgs/profile/Streak.png" alt="Streak">
+          </div>
+          <div class="stat-content">
+            <span class="stat-value" id="statStreak">0</span>
+            <span class="stat-label">Day Streak</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Profile Display / Edit Mode -->
+    <div class="profile-card">
+      <!-- Display Mode -->
+      <div id="profileDisplayMode">
+        <div class="profile-detail-grid">
+          <div class="profile-detail">
+            <span class="detail-label">Full Name</span>
+            <span class="detail-value" id="displayFullName">Loading...</span>
+          </div>
+          <div class="profile-detail">
+            <span class="detail-label">Email</span>
+            <span class="detail-value" id="displayEmail">Loading...</span>
+          </div>
+          <div class="profile-detail">
+            <span class="detail-label">Gender</span>
+            <span class="detail-value" id="displayGender">Loading...</span>
+          </div>
+          <div class="profile-detail">
+            <span class="detail-label">Date of Birth</span>
+            <span class="detail-value" id="displayDob">Loading...</span>
+          </div>
+          <div class="profile-detail">
+            <span class="detail-label">Age</span>
+            <span class="detail-value" id="displayAge">Loading...</span>
+          </div>
+          <div class="profile-detail">
+            <span class="detail-label">User ID</span>
+            <span class="detail-value" id="displayUserId">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div id="profileEditMode" style="display:none;">
+        <div class="edit-form">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" id="editFirstName" placeholder="First Name">
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" id="editLastName" placeholder="Last Name">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="editEmail" placeholder="Email">
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <select id="editGender">
+              <option value="girl">Girl</option>
+              <option value="boy">Boy</option>
+              <option value="prefer-not">Prefer not to say</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Date of Birth</label>
+            <input type="date" id="editDob">
+          </div>
+          <div class="edit-actions">
+            <button class="cta-btn secondary" id="cancelProfileBtn">Cancel</button>
+            <button class="cta-btn" id="saveProfileBtn">Save Changes</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="profileMessage" class="profile-message"></div>
+    </div>
+
+    <!-- My Closet - Equipment -->
+    <section class="closet-section">
+      <h2 class="section-title"> My Closet</h2>
+      <div class="closet-grid" id="closetGrid">
+        <!-- Items will be loaded by JavaScript -->
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- =========================================================
+   SKIN CHANGE MODAL - Opens when clicking profile picture
+   ========================================================= -->
+<div class="modal-backdrop" id="skinModal">
+  <div class="modal-card skin-modal">
+    <button class="modal-close interactive" id="skinModalClose" aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="skin-modal-content">
+      <h2 class="skin-modal-title"> Change Your Skin</h2>
+      <p class="skin-modal-subtitle">Click any skin you own to equip it</p>
+      
+      <div class="skin-grid" id="skinGrid">
+        <!-- Skins will be loaded by JavaScript -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+   TOAST BACKDROP
+   ========================================================= -->
+<div class="toast-backdrop" id="toastBackdrop"></div>
+
+<!-- =========================================================
+   UPDATE CONFIRMATION TOAST/MODAL - Clean White Theme
+   ========================================================= -->
+<div class="toast" id="updateToast">
+  <div class="toast-icon">
+    <img src="imgs/profile/Update.png" alt="Update" id="updateToastIconImg">
+  </div>
+  <span class="toast-message" id="updateToastMessage">Profile updated!</span>
+  <span class="toast-submessage" id="updateToastSubmessage"></span>
+  <button class="toast-close-btn" id="updateToastCloseBtn">Got it!</button>
+</div>
+
+<!-- =========================================================
+   SCRIPTS
+   ========================================================= -->
+<script src="assets/js/header.js"></script>
+<script src="assets/js/sounds.js"></script>
+<script src="assets/js/profile.js"></script>
+</body>
+</html>

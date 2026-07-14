@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Language Island — Learn Languages Easily</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@6.6.0/css/flag-icons.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/home.css">
+</head>
+<body>
+
+<!-- ambient sky layer -->
+<div class="sky">
+  <div class="sun" id="sun">
+    <div class="sun-face">
+      <div class="sun-eye left"></div>
+      <div class="sun-eye right"></div>
+      <div class="sun-smile"></div>
+    </div>
+  </div>
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="cloud cloud-3"></div>
+  <div class="star star-1">★</div>
+  <div class="star star-2">★</div>
+  <div class="star star-3">★</div>
+  <div class="star star-4">★</div>
+</div>
+
+<!-- =========================================================
+   HEADER - Common for all pages
+   ========================================================= -->
+<header class="topbar">
+  <div class="topbar-top">
+    <div class="topbar-left">
+      <div class="brand interactive" id="brandLogo">
+        <span class="brand-logo"><img src="imgs/Cattoimages/cattologo.png" id="siteLogo" alt="Language Island Logo"></span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <!-- Coins Display -->
+      <div class="progress-pill coins-display" style="display:none;">
+        <span class="progress-icon">🪙</span>
+        <span id="headerCoins">0</span>
+      </div>
+      <!-- Stars Display -->
+      <div class="progress-pill stars-display" style="display:none;">
+        <span class="progress-icon">⭐</span>
+        <span id="headerStars">0</span>
+      </div>
+      <!-- Auth Buttons -->
+      <div class="auth-buttons" id="authButtons">
+        <a href="signin.html" class="auth-btn login interactive">Sign In</a>
+        <a href="signup.html" class="auth-btn signup interactive">Sign Up</a>
+      </div>
+      <!-- User Menu -->
+      <div class="user-menu-wrapper" id="userMenuWrapper" style="display:none;">
+        <button class="menu-toggle interactive" id="menuToggle" aria-label="Open account menu">
+          <img src="imgs/Cattoimages/default-catto.png" alt="User" class="user-avatar-icon" id="userAvatarIcon">
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Main Navbar -->
+  <nav class="navbar" aria-label="Main">
+    <a class="nav-btn active" href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Home</a>
+    <a class="nav-btn" href="games.html"><span class="nav-icon"><i class="fas fa-gamepad"></i></span>Games</a>
+    <a class="nav-btn" href="books.html"><span class="nav-icon"><i class="fas fa-book"></i></span>Books</a>
+    <a class="nav-btn" href="listening.html"><span class="nav-icon"><i class="fas fa-headphones"></i></span>Listening</a>
+    <a class="nav-btn" href="pronunciation.html"><span class="nav-icon"><i class="fas fa-microphone"></i></span>Speak</a>
+    <a class="nav-btn" href="videos.html"><span class="nav-icon"><i class="fas fa-video"></i></span>Videos</a>
+    <a class="nav-btn" href="art.html"><span class="nav-icon"><i class="fas fa-palette"></i></span>Art</a>
+    <a class="nav-btn" href="shop.html"><span class="nav-icon"><i class="fas fa-store"></i></span>Shop</a>
+  </nav>
+  
+  <!-- Language Flags Navbar - Small -->
+  <nav class="lang-navbar" aria-label="Languages">
+    <button class="lang-nav-btn active" data-lang="en" title="English">
+      <span class="fi fi-gb"></span>
+      <span class="lang-nav-label">English</span>
+    </button>
+    <button class="lang-nav-btn" data-lang="fr" title="French">
+      <span class="fi fi-fr"></span>
+      <span class="lang-nav-label">Français</span>
+    </button>
+    <button class="lang-nav-btn" data-lang="es" title="Spanish">
+      <span class="fi fi-es"></span>
+      <span class="lang-nav-label">Español</span>
+    </button>
+    <button class="lang-nav-btn" data-lang="it" title="Italian">
+      <span class="fi fi-it"></span>
+      <span class="lang-nav-label">Italiano</span>
+    </button>
+    <button class="lang-nav-btn" data-lang="de" title="German">
+      <span class="fi fi-de"></span>
+      <span class="lang-nav-label">Deutsch</span>
+    </button>
+    <button class="lang-nav-btn" data-lang="ar" title="Arabic">
+      <span class="fi fi-eg"></span>
+      <span class="lang-nav-label">العربية</span>
+    </button>
+  </nav>
+</header>
+
+<!-- =========================================================
+   SIDEBAR
+   ========================================================= -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar" id="sidebar">
+  <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+    <i class="fas fa-times"></i>
+  </button>
+  
+  <!-- Profile Section -->
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar-wrapper">
+      <img id="sidebarUserImage" src="imgs/Cattoimages/default-catto.png" alt="User Avatar">
+    </div>
+    <div class="sidebar-username" id="sidebarUsername">Explorer</div>
+    <div class="sidebar-user-email" id="sidebarEmail">explorer@languageisland.com</div>
+  </div>
+  
+  <!-- Menu Items -->
+  <ul class="sidebar-menu">
+    <li><a href="profile.html" id="menuProfile"><i class="fas fa-user"></i> My Profile</a></li>
+    <li><a href="index.html" id="menuDashboard"><i class="fas fa-chart-simple"></i> Dashboard</a></li>
+    <li><a href="achievements.html" id="menuAchievements"><i class="fas fa-trophy"></i> Achievements</a></li>
+    <li><a href="languages.html" id="menuLanguages"><i class="fas fa-globe"></i> Languages</a></li>
+    <li><a href="settings.html" id="menuSettings"><i class="fas fa-cog"></i> Settings</a></li>
+    <li class="logout-item"><a href="#" class="logout" id="menuLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+  </ul>
+</div>
+
+<!-- =========================================================
+   MAIN CONTENT
+   ========================================================= -->
+<main>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1 class="bounce-in">Hop, learn, and collect stamps around the world! <i class="fas fa-globe-americas"></i></h1>
+      <p>Pick a world on the map, finish its lessons, and watch your explorer badge shelf fill up.</p>
+      <button class="cta-btn interactive" id="startBtn">
+        Let's Learn!
+        <span class="cta-icon"><i class="fas fa-arrow-right"></i></span>
+      </button>
+    </div>
+    
+    <!-- Catto Section -->
+    <div class="catto-section">
+      <div class="catto-center">
+        <div class="catto-wrapper">
+          <video class="catto-video" id="catVideo" autoplay loop muted playsinline>
+            <source src="imgs/Catto_Videos/Catto_English.webm" type="video/webm">
+            Your browser does not support the video tag.
+          </video>
+          <!-- Speech Bubble -->
+          <div class="speech-bubble" id="speechBubble">
+            <span class="speech-text" id="speechText">Hello, my friend! I am Catto!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+     WHY LEARN WITH CATTO? - 4 CARDS
+     ============================================ -->
+  <section class="section-container">
+    <h2 class="section-title">Why Learn With Catto?</h2>
+    <p class="section-subtitle">Discover the fun way to learn new languages!</p>
+    
+    <div class="grid-4">
+      <div class="card-uniform interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/LearnWithCatto/card1.png" alt="Learn Through Play" class="card-image">
+      </div>
+      <div class="card-uniform interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/LearnWithCatto/card2.png" alt="Fun Mini Games" class="card-image">
+      </div>
+      <div class="card-uniform interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/LearnWithCatto/card4.png" alt="Earn Rewards &amp; Badges" class="card-image">
+      </div>
+      <div class="card-uniform interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/LearnWithCatto/card22.png" alt="Explore New Countries" class="card-image">
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+     WHAT YOU'LL LEARN - 4 COLUMN
+     ============================================ -->
+  <section class="section-container topics-section">
+    <h2 class="section-title">What You'll Learn</h2>
+    <p class="section-subtitle">Start with the basics and grow your skills!</p>
+    
+    <div class="grid-4">
+      <div class="topic-card-uniform interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/LearnWithCatto/Alphabet.png" alt="Alphabet" class="topic-image">
+      </div>
+      <div class="topic-card-uniform interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/LearnWithCatto/Numbers.png" alt="Numbers" class="topic-image">
+      </div>
+      <div class="topic-card-uniform interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/LearnWithCatto/Colors.png" alt="Colors" class="topic-image">
+      </div>
+      <div class="topic-card-uniform interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/LearnWithCatto/Animals.png" alt="Animals" class="topic-image">
+      </div>
+      <div class="topic-card-uniform interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/LearnWithCatto/Food.png" alt="Food" class="topic-image">
+      </div>
+      <div class="topic-card-uniform interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/LearnWithCatto/Travel.png" alt="Travel" class="topic-image">
+      </div>
+      <div class="topic-card-uniform interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/LearnWithCatto/Family.png" alt="Family" class="topic-image">
+      </div>
+      <div class="topic-card-uniform interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/LearnWithCatto/Conversations.png" alt="Conversations" class="topic-image">
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+     MEET CATTO SECTION
+     ============================================ -->
+  <section class="meet-catto-section">
+    <div class="meet-content">
+      <h2>Meet Catto!</h2>
+      <p>I'm your language buddy! I'll travel with you around the world, help you learn new words, play games, and celebrate every achievement together.</p>
+      <button class="cta-btn interactive" id="meetCattoBtn" style="font-size:16px; padding:12px 28px;">
+        Start Your Adventure! <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+    <div class="meet-video">
+      <video autoplay loop muted playsinline>
+        <source src="imgs/Catto_Videos/Catto_English.webm" type="video/webm">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </section>
+
+  <!-- ============================================
+     SAFE FOR KIDS - 4 CARDS
+     ============================================ -->
+  <section class="section-container parent-section">
+    <h2 class="section-title">Safe for Kids</h2>
+    <p class="section-subtitle">A safe, ad-free learning environment for your child.</p>
+    
+    <div class="grid-4">
+      <div class="parent-card interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/GEAMS-KIDS.png" alt="Fun Learning Games" class="parent-image">
+      </div>
+      <div class="parent-card interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/NO-ADS.png" alt="No Ads" class="parent-image">
+      </div>
+      <div class="parent-card interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/SAFE-LEARNING.png" alt="Safe Learning" class="parent-image">
+      </div>
+      <div class="parent-card interactive" onclick="if(typeof Sound!=='undefined') Sound.pop();">
+        <img src="imgs/Cattoimages/INTERFACE.png" alt="Kid-Friendly Interface" class="parent-image">
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============================================
+   LOGIN REQUIRED MODAL - ONLY ONE MODAL
+   ============================================ -->
+<div class="modal-backdrop" id="loginRequiredModal">
+  <div class="modal-card login-required-modal">
+    <button class="modal-close interactive" id="loginModalClose" aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="modal-catto-image">
+      <img src="imgs/Cattoimages/Catto_Login.png" alt="Catto" onerror="this.style.display='none'">
+    </div>
+    <h2 class="modal-title">Sign In Required</h2>
+    <p class="modal-subtitle">Please sign in or create an account to start learning!</p>
+    <div class="modal-actions">
+      <a href="signin.html" class="cta-btn interactive" id="loginModalSignin">
+        Sign In <i class="fas fa-arrow-right"></i>
+      </a>
+      <a href="signup.html" class="cta-btn secondary interactive" id="loginModalSignup">
+        Create Account <i class="fas fa-user-plus"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span class="toast-icon"><i class="fas fa-check-circle"></i></span>
+  <span id="toastMessage">Welcome!</span>
+</div>
+
+<!-- =========================================================
+   SCRIPTS - Load in correct order
+   ========================================================= -->
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/sounds.js"></script>
+<script src="assets/js/header.js"></script>
+<script src="assets/js/home.js"></script>
+</body>
+</html>

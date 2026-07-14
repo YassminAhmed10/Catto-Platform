@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — Language Island</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@6.6.0/css/flag-icons.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+  .interactive { transition: all 0.2s ease; cursor: pointer; }
+  .interactive:hover { transform: scale(1.05) !important; filter: brightness(1.1); }
+  .interactive:active { transform: scale(0.95) !important; }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar {
+    flex: 0 0 auto;
+    padding: 8px clamp(20px, 5vw, 60px) 0;
+  }
+
+  .topbar-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  main {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-logo { 
+    height: 70px; 
+    width: auto; 
+    margin-right: 10px; 
+    vertical-align: middle;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); 
+    transition: transform 0.3s ease; 
+  }
+  .brand-logo:hover { transform: scale(1.05) rotate(-2deg); }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .brand-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--plum);
+    font-family: var(--font-display);
+  }
+  .brand-accent {
+    color: var(--coral);
+  }
+
+  @keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.1); }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+  .auth-wrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    padding: 0 4%;
+    box-sizing: border-box;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .auth-mascot {
+    flex: 0 0 350px;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .auth-cat-video {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    max-height: 350px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: block;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 30px;
+  }
+
+  .auth-cat-video:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(255,210,63,0.2);
+  }
+
+  .auth-cat-video:active {
+    transform: scale(0.99);
+  }
+
+  .auth-card {
+    flex: 0 0 400px;
+    max-width: 400px;
+    background: var(--white);
+    border-radius: 24px;
+    box-shadow: 0 12px 0 rgba(46,38,87,0.08), 0 0 40px rgba(255,216,142,0.2);
+    border: 3px solid #F1EEFB;
+    animation: bounceIn 0.5s ease;
+    padding: 24px 28px 20px;
+    max-height: 92vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 10;
+  }
+
+  .auth-card-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+  }
+
+  .card-logo-img {
+    height: 50px;
+    width: auto;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+  }
+
+  .card-logo-img:hover {
+    transform: scale(1.12) rotate(-4deg);
+  }
+
+  .card-logo-img:active {
+    transform: scale(0.94) rotate(2deg);
+  }
+
+  .auth-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--plum);
+    text-align: center;
+    margin: 0 0 4px;
+    flex-shrink: 0;
+  }
+
+  .auth-title .fa {
+    color: var(--coral);
+    margin-right: 6px;
+  }
+
+  .field-group {
+    margin-bottom: 14px;
+    flex-shrink: 0;
+  }
+
+  .field-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--plum);
+    margin-bottom: 5px;
+  }
+
+  .field-label .fa {
+    color: var(--coral);
+    font-size: 13px;
+  }
+
+  .field-input-wrap {
+    position: relative;
+  }
+
+  .field-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 2.5px solid #E3DFF5;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--plum);
+    background: #FBFAFF;
+    transition: all 0.2s ease;
+    outline: none;
+  }
+
+  .field-input::placeholder {
+    color: #B9B3D9;
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  .field-input:focus {
+    border-color: var(--star);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(255,210,63,0.15);
+  }
+
+  .field-input.error {
+    border-color: var(--coral);
+    animation: shake 0.3s ease;
+  }
+
+  .toggle-pass {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--plum-soft);
+    cursor: pointer;
+    font-size: 13px;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .toggle-pass:hover {
+    transform: translateY(-50%) scale(1.2);
+    color: var(--coral);
+  }
+
+  .field-error {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--coral);
+    margin-top: 3px;
+    display: none;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .field-error.show {
+    display: flex;
+  }
+
+  .field-row-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2px 0 14px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .remember-me {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    color: var(--plum-soft);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .remember-me:hover {
+    transform: translateX(2px);
+    color: var(--plum);
+  }
+
+  .remember-me input {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--coral);
+    cursor: pointer;
+  }
+
+  .forgot-link {
+    color: var(--coral);
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+
+  .forgot-link:hover {
+    text-decoration: underline;
+    transform: scale(1.06);
+  }
+
+  .auth-submit {
+    width: 100%;
+    background: var(--coral);
+    color: var(--white);
+    border: none;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--coral-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .auth-submit:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 0 var(--coral-dark), 0 0 20px rgba(255,111,89,0.3);
+  }
+
+  .auth-submit:active {
+    transform: translateY(2px) scale(0.98);
+    box-shadow: 0 2px 0 var(--coral-dark);
+  }
+
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0 10px;
+    color: var(--plum-soft);
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .auth-divider::before,
+  .auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: #EDEAFA;
+    border-radius: 2px;
+  }
+
+  .social-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+  }
+
+  .social-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px;
+    border-radius: 10px;
+    border: 2.5px solid #E3DFF5;
+    background: var(--white);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--plum);
+    cursor: pointer;
+    box-shadow: 0 3px 0 rgba(46,38,87,0.08);
+    transition: all 0.2s ease;
+  }
+
+  .social-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 5px 0 rgba(46,38,87,0.08), 0 0 16px rgba(255,210,63,0.3);
+    border-color: var(--star);
+  }
+
+  .social-btn:active {
+    transform: translateY(1px) scale(0.97);
+    box-shadow: 0 2px 0 rgba(46,38,87,0.08);
+  }
+
+  .social-btn.google .fa { color: #EA4335; }
+  .social-btn.apple .fa { color: #111; }
+
+  .auth-switch {
+    text-align: center;
+    margin-top: 8px;
+    font-weight: 700;
+    color: var(--plum-soft);
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .auth-switch a {
+    color: var(--coral);
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+
+  .auth-switch a:hover {
+    text-decoration: underline;
+    transform: scale(1.06);
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--grass);
+    color: var(--white);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @media (max-width: 1024px) {
+    .auth-wrap { gap: 30px; padding: 0 3%; }
+    .auth-mascot { flex: 0 0 280px; max-width: 280px; }
+    .auth-cat-video { max-height: 280px; }
+    .auth-card { flex: 0 0 360px; max-width: 360px; padding: 18px 22px 16px; }
+  }
+
+  @media (max-width: 820px) {
+    .auth-wrap { flex-direction: column; gap: 10px; padding: 10px 16px 20px; justify-content: flex-start; overflow-y: auto; height: auto; }
+    html, body { overflow: auto; height: auto; }
+    body { display: block; }
+    main { display: block; overflow: visible; }
+    .auth-mascot { flex: 0 0 auto; max-width: 160px; margin-top: 10px; }
+    .auth-cat-video { max-height: 150px; }
+    .auth-card { flex: 0 0 auto; max-width: 100%; width: 100%; padding: 16px 20px 14px; max-height: none; overflow: visible; }
+    .brand-logo { height: 45px; }
+    .brand-name { font-size: 18px; }
+    .card-logo-img { height: 40px; }
+    .auth-title { font-size: 18px; }
+  }
+
+  @media (max-width: 480px) {
+    .auth-wrap { padding: 8px 10px 16px; }
+    .auth-mascot { max-width: 120px; }
+    .auth-cat-video { max-height: 110px; }
+    .auth-card { padding: 12px 14px 12px; border-radius: 16px; }
+    .field-input { padding: 6px 10px; font-size: 12px; }
+    .auth-title { font-size: 17px; }
+    .auth-submit { padding: 8px 14px; font-size: 13px; }
+    .social-btn { padding: 6px; font-size: 10px; }
+    .card-logo-img { height: 35px; }
+    .brand-logo { height: 35px; }
+    .brand-name { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sky">
+  <div class="sun" id="sun">
+    <div class="sun-face">
+      <div class="sun-eye left"></div>
+      <div class="sun-eye right"></div>
+      <div class="sun-smile"></div>
+    </div>
+  </div>
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="cloud cloud-3"></div>
+  <div class="star star-1">★</div>
+  <div class="star star-2">★</div>
+  <div class="star star-3">★</div>
+  <div class="star star-4">★</div>
+</div>
+
+<header class="topbar">
+  <div class="topbar-top">
+    <a class="brand interactive" href="index.html" style="text-decoration:none;">
+      <img src="imgs/Cattoimages/cattologo.png" class="brand-logo" alt="Language Island Logo">
+      <span class="brand-name">Language<span class="brand-accent">Island</span></span>
+    </a>
+    <div class="topbar-right"></div>
+  </div>
+</header>
+
+<main>
+  <section class="auth-wrap">
+    <div class="auth-mascot">
+      <video class="auth-cat-video" id="authCatVideo" autoplay loop muted playsinline aria-label="Catto waving hello">
+        <source src="imgs/Cattoimages/CattoHi.webm" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-card-logo">
+        <img src="imgs/Cattoimages/cattologo.png" alt="Language Island" class="card-logo-img">
+      </div>
+      <h1 class="auth-title"><i class="fas fa-map-marked-alt"></i>Sign In</h1>
+
+      <form id="signinForm" novalidate>
+        <div class="field-group">
+          <label class="field-label" for="email"><i class="fas fa-envelope"></i>Email</label>
+          <div class="field-input-wrap">
+            <input type="email" id="email" class="field-input" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+          <div class="field-error" id="emailError"><i class="fas fa-exclamation-circle"></i>Please enter a valid email</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="password"><i class="fas fa-lock"></i>Password</label>
+          <div class="field-input-wrap">
+            <input type="password" id="password" class="field-input" placeholder="Enter your password" autocomplete="current-password" required>
+            <button type="button" class="toggle-pass" id="togglePass" aria-label="Show password"><i class="fas fa-eye"></i></button>
+          </div>
+          <div class="field-error" id="passwordError"><i class="fas fa-exclamation-circle"></i>Password is required</div>
+        </div>
+
+        <div class="field-row-between">
+          <label class="remember-me">
+            <input type="checkbox" id="rememberMe">
+            Remember me
+          </label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="auth-submit">
+          Sign In <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="auth-divider">or continue with</div>
+      <div class="social-row">
+        <button type="button" class="social-btn google interactive"><i class="fab fa-google"></i>Google</button>
+        <button type="button" class="social-btn apple interactive"><i class="fab fa-apple"></i>Apple</button>
+      </div>
+
+      <p class="auth-switch">New to Language Island? <a href="signup.html">Create an account</a></p>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMessage">Signed in!</span></div>
+
+<script src="assets/js/sounds.js"></script>
+<script src="assets/js/auth-ui.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // If already logged in, redirect to home
+    if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    var form = document.getElementById('signinForm');
+    var email = document.getElementById('email');
+    var password = document.getElementById('password');
+    var emailError = document.getElementById('emailError');
+    var passwordError = document.getElementById('passwordError');
+    var togglePass = document.getElementById('togglePass');
+    var toast = document.getElementById('toast');
+    var toastMessage = document.getElementById('toastMessage');
+
+    if (togglePass) {
+      togglePass.addEventListener('click', function() {
+        var isHidden = password.type === 'password';
+        password.type = isHidden ? 'text' : 'password';
+        togglePass.innerHTML = isHidden ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+        if (typeof Sound !== 'undefined') Sound.pop();
+      });
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      var emailVal = email.value.trim();
+      var passwordVal = password.value;
+
+      var emailValid = typeof isValidEmail !== 'undefined' ? isValidEmail(emailVal) : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+      var passwordValid = passwordVal.length > 2;
+
+      if (typeof setFieldState !== 'undefined') {
+        setFieldState(email, emailError, emailValid);
+        setFieldState(password, passwordError, passwordValid);
+      }
+
+      if (emailValid && passwordValid) {       
+        fetch('../Backend/signin.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: emailVal,
+                password: passwordVal
+            })
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            if (data.success) {
+                localStorage.setItem('starShells', data.user.star_shells);
+                
+                localStorage.setItem('languageIslandUser', JSON.stringify(data.user));
+                
+                if (toastMessage) toastMessage.textContent = '🎉 Welcome back, ' + data.user.first_name + '!';
+                if (toast) toast.classList.add('show');
+                if (typeof Sound !== 'undefined') Sound.win();
+                
+                setTimeout(function() {
+                  window.location.href = 'index.html';
+                }, 1000);
+            } else {
+                // This triggers if PHP says the password or email is wrong
+                if (toastMessage) toastMessage.textContent = '❌ ' + data.message;
+                if (toast) toast.classList.add('show');
+                if (typeof Sound !== 'undefined') Sound.locked();
+            }
+        })
+        .catch(function(error) {
+            // This catches network errors 
+            if (toastMessage) toastMessage.textContent = '❌ Connection error. Please try again.';
+            if (toast) toast.classList.add('show');
+            if (typeof Sound !== 'undefined') Sound.locked();
+        });
+
+      } else {
+        if (typeof Sound !== 'undefined') Sound.locked();
+        if (toastMessage) toastMessage.textContent = '❌ Please fill in all fields correctly.';
+        if (toast) toast.classList.add('show');
+      }
+    });
+
+    // Real-time validation
+    email.addEventListener('input', function() {
+      if (typeof setFieldState !== 'undefined') {
+        setFieldState(email, emailError, true);
+      }
+    });
+    
+    password.addEventListener('input', function() {
+      if (typeof setFieldState !== 'undefined') {
+        setFieldState(password, passwordError, true);
+      }
+    });
+
+    // Catto video interaction
+    var authCatVideo = document.getElementById('authCatVideo');
+    var catUnmuted = false;
+    function unmuteCatto() {
+      if (catUnmuted || !authCatVideo) return;
+      catUnmuted = true;
+      authCatVideo.muted = false;
+      authCatVideo.play().catch(function() {});
+    }
+    document.addEventListener('click', unmuteCatto, { once: true });
+    document.addEventListener('touchstart', unmuteCatto, { once: true });
+
+    if (authCatVideo) {
+      authCatVideo.addEventListener('click', function() {
+        if (typeof Sound !== 'undefined') Sound.pop();
+      });
+      authCatVideo.addEventListener('mouseenter', function() {
+        if (typeof Sound !== 'undefined') Sound.hover();
+      });
+    }
+
+    // Hover sounds
+    var soundHoverSelector = [
+      '.brand', '.auth-submit', '.social-btn',
+      '.toggle-pass', '.auth-switch a', '.card-logo-img',
+      '.forgot-link', '.remember-me'
+    ].join(',');
+
+    document.querySelectorAll(soundHoverSelector).forEach(function(el) {
+      var hoverTimeout;
+      el.addEventListener('mouseenter', function() {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = setTimeout(function() {
+          if (typeof Sound !== 'undefined') Sound.hover();
+        }, 60);
+      });
+      el.addEventListener('mouseleave', function() {
+        clearTimeout(hoverTimeout);
+      });
+      el.addEventListener('click', function() {
+        if (typeof Sound !== 'undefined') Sound.pop();
+      });
+    });
+
+    // Auto-close toast after 2.5 seconds
+    if (toast) {
+      setInterval(function() {
+        if (toast.classList.contains('show')) {
+          setTimeout(function() {
+            toast.classList.remove('show');
+          }, 2500);
+        }
+      }, 100);
+    }
+  });
+</script>
+</body>
+</html>

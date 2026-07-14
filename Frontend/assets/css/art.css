@@ -1,0 +1,717 @@
+/* =========================================================
+   ART.CSS — Art Studio Page Styles
+   ========================================================= */
+
+/* ---------- Hero ---------- */
+.page-hero {
+  text-align: center;
+  padding: 30px clamp(20px, 5vw, 60px) 10px;
+}
+.page-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 48px);
+  color: var(--plum);
+  margin: 0 0 8px;
+}
+.page-hero p {
+  font-size: 18px;
+  color: var(--plum-soft);
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+/* ---------- Language Selection ---------- */
+.lang-selection {
+  padding: 20px clamp(20px, 5vw, 60px) 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.lang-grid-art {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 20px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.lang-art-btn {
+  background: transparent;
+  border: none;
+  border-radius: 22px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.25s ease, filter 0.25s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.lang-art-btn:hover {
+  transform: translateY(-8px) scale(1.02);
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.15));
+}
+
+.lang-art-btn:active {
+  transform: scale(0.95);
+}
+
+.lang-art-btn img {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 8px 0 var(--shadow), 0 8px 24px rgba(0,0,0,0.08);
+  transition: box-shadow 0.3s ease;
+  display: block;
+}
+
+.lang-art-btn:hover img {
+  box-shadow: 0 10px 0 var(--shadow), 0 16px 40px rgba(0,0,0,0.12);
+}
+
+.lang-art-btn .lang-label {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--plum);
+  margin-top: 4px;
+}
+
+/* ---------- Studio Section ---------- */
+.studio-section {
+  padding: 20px clamp(20px, 5vw, 60px) 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.section-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 32px);
+  color: var(--plum);
+  margin: 0;
+  text-align: center;
+  flex: 1;
+}
+
+.section-header .back-btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  background: var(--white);
+  padding: 10px 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 0 rgba(46,38,87,0.1);
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--plum);
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+  order: -1;
+}
+
+.section-header .back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 rgba(46,38,87,0.1);
+  background: #f8f6ff;
+}
+
+.section-header .back-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(46,38,87,0.1);
+}
+
+.section-header .back-btn i {
+  font-size: 14px;
+  transition: transform 0.2s ease;
+}
+
+.section-header .back-btn:hover i {
+  transform: translateX(-3px);
+}
+
+/* ---------- Tabs ---------- */
+.tab-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--plum-soft);
+  background: var(--white);
+  padding: 12px 28px;
+  border-radius: 999px;
+  box-shadow: 0 4px 0 rgba(46,38,87,0.08);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.tab-btn i {
+  font-size: 18px;
+}
+
+.tab-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 rgba(46,38,87,0.08);
+}
+
+.tab-btn.active {
+  background: var(--coral);
+  color: #fff;
+  box-shadow: 0 4px 0 var(--coral-dark);
+}
+
+.tab-btn.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--coral-dark);
+}
+
+/* ---------- Word Row ---------- */
+.word-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.word-pick-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--white);
+  border-radius: 16px;
+  padding: 8px 16px 8px 8px;
+  box-shadow: 0 4px 0 rgba(46,38,87,0.08);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--plum);
+  transition: 0.15s;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+.word-pick-btn .pic {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F1EEFB;
+}
+.word-pick-btn:hover {
+  transform: translateY(-2px);
+}
+.word-pick-btn.active {
+  background: #FFF3E9;
+  box-shadow: 0 4px 0 var(--star);
+  border-color: var(--star);
+  padding: 6px 14px 6px 6px;
+}
+
+/* ---------- Studio Panel ---------- */
+.studio-panel {
+  background: var(--white);
+  border-radius: 26px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 8px 0 rgba(46,38,87,0.08), 0 8px 24px rgba(0,0,0,0.06);
+}
+.studio-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.color-swatches {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  box-shadow: 0 3px 0 rgba(46,38,87,0.15);
+  transition: transform 0.12s ease;
+  cursor: pointer;
+}
+.swatch:hover {
+  transform: scale(1.1);
+}
+.swatch.active {
+  border-color: var(--plum);
+  transform: scale(1.12);
+}
+
+.tool-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--plum-soft);
+}
+.tool-field input[type="range"] {
+  width: 110px;
+}
+
+.eraser-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--plum-soft);
+  cursor: pointer;
+}
+
+.canvas-stack {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/10;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #FFFDF6;
+  box-shadow: inset 0 0 0 3px #F1EEFB;
+  touch-action: none;
+}
+.canvas-stack canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+#guideCanvas {
+  z-index: 1;
+}
+#drawCanvas {
+  z-index: 2;
+  cursor: crosshair;
+}
+
+.studio-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.mini-btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--plum);
+  background: #F1EEFB;
+  padding: 10px 18px;
+  border-radius: 14px;
+  box-shadow: 0 4px 0 rgba(46,38,87,0.08);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.12s ease;
+  border: none;
+  cursor: pointer;
+}
+.mini-btn:active {
+  transform: translateY(2px);
+}
+.mini-btn.primary {
+  background: var(--coral);
+  color: #fff;
+  box-shadow: 0 4px 0 var(--coral-dark);
+}
+.mini-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- Catto Companion ---------- */
+.catto-companion {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  max-width: 320px;
+}
+.catto-bubble {
+  background: var(--white);
+  border: 3px solid var(--star);
+  border-radius: 20px;
+  padding: 10px 14px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--plum);
+  box-shadow: 0 4px 0 rgba(46,38,87,0.1);
+  max-width: 200px;
+  line-height: 1.3;
+}
+.catto-img-wrap {
+  flex-shrink: 0;
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--star);
+  box-shadow: 0 4px 10px rgba(46,38,87,0.18);
+  background: #fff;
+}
+.catto-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: bottom center;
+}
+.catto-img-wrap.bounce img {
+  animation: bounce 0.6s ease;
+}
+.catto-img-wrap.shake img {
+  animation: shakeAnim 0.5s ease;
+}
+.catto-img-wrap.spin img {
+  animation: spinWin 0.9s ease;
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-14px) scale(1.05); }
+  60% { transform: translateY(0) scale(0.97); }
+  100% { transform: translateY(0) scale(1); }
+}
+@keyframes shakeAnim {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  20% { transform: translateX(-8px) rotate(-4deg); }
+  40% { transform: translateX(8px) rotate(4deg); }
+  60% { transform: translateX(-6px) rotate(-3deg); }
+  80% { transform: translateX(6px) rotate(3deg); }
+}
+@keyframes spinWin {
+  0% { transform: rotate(0) scale(1); }
+  50% { transform: rotate(180deg) scale(1.15); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  transform: translate(-50%, 20px);
+  background: var(--plum);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 60;
+}
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* =========================================================
+   LOGIN REQUIRED MODAL - FIXED
+   ========================================================= */
+.login-required-modal .modal-card {
+  max-width: 420px;
+  padding: 34px 30px 28px;
+  text-align: center;
+}
+
+.login-required-modal .modal-catto-image {
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 12px;
+  overflow: hidden;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.login-required-modal .modal-catto-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.login-required-modal .modal-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--plum);
+  margin: 0 0 6px;
+}
+
+.login-required-modal .modal-subtitle {
+  color: var(--plum-soft);
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.login-required-modal .modal-message {
+  color: #8C87A8;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 20px;
+}
+
+.login-required-modal .modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.login-required-modal .modal-actions .cta-btn {
+  font-size: 15px;
+  padding: 12px 24px;
+  min-width: 130px;
+  flex: 1;
+  max-width: 180px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  border-radius: 999px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  line-height: 1.2;
+  height: 48px;
+}
+
+.login-required-modal .modal-actions .cta-btn,
+.login-required-modal .modal-actions .cta-btn.secondary {
+  height: 48px;
+  min-width: 130px;
+  max-width: 180px;
+  flex: 1;
+}
+
+.login-required-modal .modal-actions .cta-btn {
+  background: var(--coral);
+  color: var(--white);
+  box-shadow: 0 5px 0 var(--coral-dark);
+}
+
+.login-required-modal .modal-actions .cta-btn:hover {
+  transform: translateY(-2px);
+}
+
+.login-required-modal .modal-actions .cta-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 var(--coral-dark);
+}
+
+.login-required-modal .modal-actions .cta-btn.secondary {
+  background: #F1EEFB;
+  color: var(--plum);
+  box-shadow: 0 5px 0 rgba(46,38,87,0.08);
+}
+
+.login-required-modal .modal-actions .cta-btn.secondary:hover {
+  transform: translateY(-2px);
+  background: #E8E4F5;
+}
+
+.login-required-modal .modal-actions .cta-btn.secondary:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(46,38,87,0.08);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 1024px) {
+  .lang-grid-art {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .lang-grid-art {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  .lang-art-btn img {
+    max-width: 200px;
+  }
+  .canvas-stack {
+    aspect-ratio: 1/1;
+  }
+  .section-header h2 {
+    font-size: clamp(20px, 3vw, 26px);
+  }
+  .section-header .back-btn {
+    font-size: 12px;
+    padding: 8px 14px;
+  }
+  .studio-panel {
+    padding: 14px;
+  }
+  .tab-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+  .login-required-modal .modal-card {
+    padding: 24px 20px 20px;
+  }
+  .login-required-modal .modal-catto-image {
+    width: 100px;
+    height: 100px;
+  }
+  .login-required-modal .modal-actions .cta-btn {
+    font-size: 13px;
+    padding: 10px 16px;
+    min-width: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lang-grid-art {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .lang-art-btn img {
+    max-width: 150px;
+  }
+  .catto-companion {
+    right: 10px;
+    bottom: 10px;
+    max-width: 230px;
+  }
+  .catto-img-wrap {
+    width: 56px;
+    height: 56px;
+  }
+  .catto-bubble {
+    font-size: 12px;
+    padding: 8px 12px;
+    max-width: 150px;
+  }
+  .canvas-stack {
+    aspect-ratio: 1/1;
+  }
+  .studio-panel {
+    padding: 10px;
+  }
+  .section-header h2 {
+    font-size: 16px;
+  }
+  .section-header .back-btn {
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+  .word-pick-btn {
+    font-size: 12px;
+    padding: 6px 12px 6px 6px;
+  }
+  .word-pick-btn .pic {
+    width: 28px;
+    height: 28px;
+    font-size: 6px;
+  }
+  .swatch {
+    width: 26px;
+    height: 26px;
+  }
+  .mini-btn {
+    font-size: 12px;
+    padding: 8px 14px;
+  }
+  .tab-btn {
+    font-size: 13px;
+    padding: 8px 18px;
+  }
+  .tab-btn i {
+    font-size: 14px;
+  }
+  
+  /* Login Modal Mobile */
+  .login-required-modal .modal-card {
+    padding: 20px 16px 16px;
+  }
+  
+  .login-required-modal .modal-catto-image {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .login-required-modal .modal-title {
+    font-size: 20px;
+  }
+  
+  .login-required-modal .modal-subtitle {
+    font-size: 13px;
+  }
+  
+  .login-required-modal .modal-message {
+    font-size: 12px;
+  }
+  
+  .login-required-modal .modal-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .login-required-modal .modal-actions .cta-btn,
+  .login-required-modal .modal-actions .cta-btn.secondary {
+    min-width: 100%;
+    max-width: 100%;
+    height: 44px;
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+}
