@@ -753,9 +753,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('🔍 Click the Edit Profile button and check the console.');
 });
 
-// =========================================================
-// MY THEMES & MY COLLECTION LOGIC
-// =========================================================
+// Add this to your profile.js file
 document.addEventListener('DOMContentLoaded', () => {
   fetch('../Backend/get_profile.php')
     .then(res => res.json())
@@ -763,173 +761,52 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!data.success) return;
       
       const inventory = data.data.inventory || [];
-      const equippedSkin = data.data.equipped_skin || 'default-catto';
       const equippedTheme = data.data.equipped_theme || 'default';
-      
-      // 1. RESTORE "MY THEMES" TOP BUTTONS LOGIC
       const purpleThemeBtn = document.getElementById('purpleThemeBtn');
+      
+      // Unhide the Purple Theme button if they own it
       if (inventory.includes('purple-theme') && purpleThemeBtn) {
         purpleThemeBtn.style.display = 'inline-block';
       }
 
+      // Highlight the currently equipped button
       document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
-        // Highlight the equipped theme button
         if (btn.getAttribute('data-theme') === equippedTheme) {
-          btn.classList.remove('secondary');
-        } else {
-          btn.classList.add('secondary');
+          btn.classList.remove('secondary'); // Make it look active
         }
 
-        // Add the click listener to the top buttons
+        // Add click listener to switch themes
         btn.addEventListener('click', () => {
-          if (typeof Sound !== 'undefined') Sound.pop();
           const themeName = btn.getAttribute('data-theme');
           equipTheme(themeName);
         });
       });
-      
-      // 2. RENDER THE BOTTOM COLLECTION GRID
-      renderCollection(inventory, equippedSkin, equippedTheme);
+    });
+
+  function equipTheme(themeName) {
+    fetch('../Backend/update_theme.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme: themeName })
     })
-    .catch(err => console.error("Error fetching profile data:", err));
-});
-
-function renderCollection(ownedItems, currentSkin, currentTheme) {
-  const grid = document.getElementById('inventoryGrid'); // Ensure your HTML grid has id="inventoryGrid"
-  if (!grid) return;
-  grid.innerHTML = '';
-
-  // Filter out defaults just in case they accidentally got saved in the DB, then force them at the front
-  const safeInventory = ownedItems.filter(item => item !== 'default-catto' && item !== 'default');
-  const fullCollection = ['default-catto', 'default', ...safeInventory];
-
-  fullCollection.forEach(itemKey => {
-    let type = 'skin';
-    // Replace hyphens/underscores with spaces for a clean title
-    let title = itemKey.replace(/[_-]/g, ' ').toUpperCase(); 
-    let actionText = 'Equip';
-    let isEquipped = false;
-    let imageSrc = `imgs/Cattoimages/${itemKey}.png`; 
-    
-    let lowerItemKey = itemKey.toLowerCase(); // Makes checks case-insensitive
-
-    // Categorize the item based on its name
-    if (lowerItemKey.includes('theme') || lowerItemKey === 'default') {
-      type = 'theme';
-      actionText = 'Apply Theme';
-      isEquipped = (itemKey === currentTheme);
-      imageSrc = lowerItemKey === 'default' ? 'imgs/buttons/default.png' : 'imgs/buttons/purple.png'; 
-      if(lowerItemKey === 'default') title = 'DEFAULT THEME';
-    } 
-    else if (lowerItemKey.includes('sudoku') || lowerItemKey.includes('coloring')) {
-      type = 'printable';
-      actionText = 'Print / Download';
-      // Fallback image for printables if they don't have one
-      imageSrc = `imgs/Cattoimages/${itemKey}.png`; 
-    } 
-    else {
-      type = 'skin';
-      actionText = 'Equip Skin';
-      isEquipped = (itemKey === currentSkin);
-    }
-
-    // Build the card HTML
-    const card = document.createElement('div');
-    card.className = `shop-card ${isEquipped ? 'equipped-card' : ''}`;
-    
-    let equippedBadge = isEquipped ? `<span class="equipped-badge">✓ Equipped</span>` : '';
-    
-    card.innerHTML = `
-      ${equippedBadge}
-      <div class="shop-icon">
-        <img src="${imageSrc}" alt="${title}" style="max-width: 80px;" onerror="this.src='imgs/Cattoimages/default-catto.png'">
-      </div>
-      <h3>${title}</h3>
-      <p class="item-type-label" style="font-size:12px; color:gray; letter-spacing:1px;">${type.toUpperCase()}</p>
-      <button class="cta-btn ${isEquipped ? 'secondary' : ''} action-btn" data-item="${itemKey}" data-type="${type}" ${isEquipped ? 'disabled' : ''}>
-        ${isEquipped ? 'Equipped' : actionText}
-      </button>
-    `;
-
-    // Add the click listener to route to the correct function
-    const actionBtn = card.querySelector('.action-btn');
-    if (actionBtn && !isEquipped) {
-      actionBtn.addEventListener('click', () => {
-        if (typeof Sound !== 'undefined') Sound.pop();
-        
-        if (type === 'skin') {
-          equipSkin(itemKey);
-        } else if (type === 'theme') {
-          equipTheme(itemKey);
-        } else if (type === 'printable') {
-          printItem(itemKey);
+    .then(res => res.json())
+    .then(response => {
+      if (response.success) {
+        // Instantly toggle the CSS class so the page changes without refreshing
+        if (themeName === 'purple-theme') {
+          document.body.classList.add('theme-royal-purple');
+        } else {
+          document.body.classList.remove('theme-royal-purple');
         }
-      });
-    }
-
-    grid.appendChild(card);
-  });
-}
-
-// =========================================================
-// INVENTORY ACTION FUNCTIONS
-// =========================================================
-
-function equipSkin(skinName) {
-  fetch('../Backend/update_skin.php', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ skin: skinName })
-  })
-  .then(res => res.json())
-  .then(response => {
-    if (response.success) {
-      if (typeof showToast === 'function') showToast('Skin Equipped!');
-      setTimeout(() => location.reload(), 800);
-    } else {
-      if (typeof showToast === 'function') showToast(response.message || 'Error updating skin');
-    }
-  });
-}
-
-function equipTheme(themeName) {
-  fetch('../Backend/update_theme.php', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ theme: themeName })
-  })
-  .then(res => res.json())
-  .then(response => {
-    if (response.success) {
-      if (themeName === 'purple-theme') {
-        document.body.classList.add('theme-royal-purple');
+        
+        // Update button styles
+        document.querySelectorAll('.theme-toggle-btn').forEach(b => b.classList.add('secondary'));
+        document.querySelector(`.theme-toggle-btn[data-theme="${themeName}"]`).classList.remove('secondary');
+        
+        if (typeof showToast === 'function') showToast('Theme Updated!');
       } else {
-        document.body.classList.remove('theme-royal-purple');
+        if (typeof showToast === 'function') showToast(response.message || 'Error updating theme');
       }
-      
-      if (typeof showToast === 'function') showToast('Theme Applied!');
-      setTimeout(() => location.reload(), 800);
-    } else {
-      if (typeof showToast === 'function') showToast(response.message || 'Error updating theme');
-    }
-  });
-}
-
-function printItem(itemName) {
-  let lowerItem = itemName.toLowerCase();
-  let filePath = '';
-  
-  // Checks the name flexibly (handles "Sudoku", "sudoku", "Coloring_book", etc.)
-  if (lowerItem.includes('sudoku')) {
-    filePath = 'Printables/sudoku.pdf'; // Path relative to profile.html
-  } else if (lowerItem.includes('coloring')) {
-    filePath = 'Printables/coloring_book.pdf';
+    });
   }
-  
-  if (filePath) {
-    window.open(filePath, '_blank');
-  } else {
-    console.error("Printable file path not found for:", itemName);
-    if (typeof showToast === 'function') showToast('Error: Printable file not found.');
-  }
-}
+});
