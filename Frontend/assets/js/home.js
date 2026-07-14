@@ -1,311 +1,242 @@
+/* =========================================================
+   HOME.JS - Home page (index.html) specific behavior only.
+
+   IMPORTANT: This file must NOT redeclare `Auth` — auth.js
+   already owns that object and is loaded first. Redeclaring
+   `const Auth = {...}` here throws a SyntaxError that stops
+   this whole file from running, which is why "Let's Learn"
+   was silently doing nothing for logged-in users.
+   ========================================================= */
+
+// Languages that already have a dedicated lesson page.
+// Add more here as you build out english.html-style pages for them.
+const READY_LANGUAGES = {
+  en: 'english.html',
+  es: 'spanish.html'
+};
+
 // ============================================
-// UI VISUAL STATE MANAGER (Real Backend + Enhanced UI)
+// LOGIN REQUIRED MODAL (the one already in index.html
+// with id="loginRequiredModal")
 // ============================================
+function showLoginRequiredModal() {
+  const modal = document.getElementById('loginRequiredModal');
+  if (!modal) return;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (typeof Sound !== 'undefined') Sound.pop();
+}
 
-const Auth = {
-  // Storage key we will use to check if PHP logged us in
-  STORAGE_KEY: 'languageIslandUser',
-  
-  _currentUser: null,
-  _isLoggedIn: false,
-  
-  init() {
-    this.loadSession(); // paint instantly from cache so the UI doesn't flash
-    this.updateUI();
-    this.setupProtectedContent();
-    this.verifySessionWithServer(); // then confirm the session is REAL
-    console.log('UI Auth system initialized!');
-  },
+function hideLoginRequiredModal() {
+  const modal = document.getElementById('loginRequiredModal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+  if (typeof Sound !== 'undefined') Sound.pop();
+}
 
-  // Asks the server "is my session actually still valid?" instead of
-  // trusting localStorage forever.
-  verifySessionWithServer() {
-    fetch('../Backend/check_session.php')
-      .then(res => res.json())
-      .then(data => {
-        if (data.logged_in) {
-          // Refresh the cached copy
-          localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data.user));
-          this._currentUser = data.user;
-          this._isLoggedIn = true;
-          this.updateUI();
-          // Update header displays with server data
-          this.updateHeaderDisplays(data.user.star_shells || 0, data.user.total_stars || 0);
-        } else if (this._isLoggedIn) {
-          console.warn('Session expired or invalid on the server — logging out locally.');
-          this.clearSession();
-        }
-      })
-      .catch(err => {
-        console.warn('Could not verify session with server:', err);
-      });
-  },
-  
-  // Checks if our PHP fetch script saved the user locally
-  loadSession() {
-    const stored = localStorage.getItem(this.STORAGE_KEY);
-    if (stored) {
-      try {
-        const user = JSON.parse(stored);
-        this._currentUser = user;
-        this._isLoggedIn = true;
-        // Update header displays from cached user data
-        this.updateHeaderDisplays(user.star_shells || 0, user.total_stars || 0);
-        return true;
-      } catch (e) {
-        this.clearSession();
-        return false;
-      }
-    }
-    return false;
-  },
-  
-  clearSession() {
-    localStorage.removeItem(this.STORAGE_KEY);
-    this._currentUser = null;
-    this._isLoggedIn = false;
-    this.updateUI();
-    // Hide coin/star displays when logged out
-    this.updateHeaderDisplays(0, 0, true);
-  },
-  
-  getCurrentUser() {
-    return this._currentUser;
-  },
-  
-  isLoggedIn() {
-    return this._isLoggedIn;
-  },
-  
-  logout() {
-    fetch('../Backend/logout.php', { method: 'POST' })
-      .catch(err => console.warn('Could not reach logout endpoint:', err))
-      .finally(() => {
-        this.clearSession();
-        window.location.href = 'index.html';
-      });
-  },
+// Expose globally — auth.js's showLoginPrompt() calls window.showLoginRequiredModal()
+window.showLoginRequiredModal = showLoginRequiredModal;
+window.hideLoginRequiredModal = hideLoginRequiredModal;
 
-  getRoadmapProgress() {
-    return JSON.parse(localStorage.getItem('roadmapProgress')) || {}; 
-  },
+// ============================================
+// COMING SOON MODAL (built dynamically — reuses your
+// existing .modal-backdrop / .modal-card styling)
+// ============================================
+function showComingSoonModal(languageName) {
+  let modal = document.getElementById('comingSoonModal');
 
-  saveRoadmapProgress(progress) {
-    localStorage.setItem('roadmapProgress', JSON.stringify(progress));
-  },
-  
-  // ============================================
-  // HEADER DISPLAY UPDATES
-  // ============================================
-  updateHeaderDisplays(starShells, totalStars, hide = false) {
-    const coinsDisplay = document.getElementById('headerCoins');
-    const starsDisplay = document.getElementById('headerStars');
-    const coinsPill = document.querySelector('.coins-display');
-    const starsPill = document.querySelector('.stars-display');
-    
-    if (hide) {
-      if (coinsPill) coinsPill.style.display = 'none';
-      if (starsPill) starsPill.style.display = 'none';
-      return;
-    }
-    
-    if (coinsDisplay) coinsDisplay.textContent = starShells || 0;
-    if (starsDisplay) starsDisplay.textContent = totalStars || 0;
-    if (coinsPill) coinsPill.style.display = 'flex';
-    if (starsPill) starsPill.style.display = 'flex';
-  },
-  
-  // ============================================
-  // UI UPDATES 
-  // ============================================
-  updateUI() {
-    const isLoggedIn = this.isLoggedIn();
-    const user = this.getCurrentUser();
-    
-    const authButtons = document.getElementById('authButtons');
-    if (authButtons) {
-      if (isLoggedIn) {
-        authButtons.innerHTML = '';
-        authButtons.style.display = 'none';
-      } else {
-        authButtons.style.display = 'flex';
-        authButtons.innerHTML = `
-          <a href="signin.html" class="auth-btn login interactive">Sign In</a>
-          <a href="signup.html" class="auth-btn signup interactive">Sign Up</a>
-        `;
-      }
-    }
-    
-    this.updateSidebar(isLoggedIn, user);
-    this.updateProtectedContent(isLoggedIn);
-    this.updateRoadmapLock(isLoggedIn);
-  },
-  
-  updateSidebar(isLoggedIn, user) {
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-    const menuToggle = document.getElementById('menuToggle');
-    const userAvatarIcon = document.getElementById('userAvatarIcon');
-    
-    if (isLoggedIn && user) {
-      if (sidebar) {
-          sidebar.style.display = 'flex';
-          sidebar.classList.remove('open');
-      }
-      if (menuToggle) menuToggle.style.display = 'flex';
-      if (sidebarOverlay) sidebarOverlay.classList.remove('active');
-      
-      // Update sidebar avatar - ALWAYS USE PROFILE FOLDER
-      const sidebarUserImage = document.getElementById('sidebarUserImage');
-      if (sidebarUserImage) {
-        const skin = user.equipped_skin || user.equippedSkin || 'default-catto';
-        // ONLY use profile folder
-        const skinPath = `imgs/profile/${skin}.png`;
-        sidebarUserImage.src = skinPath;
-        sidebarUserImage.onerror = function() {
-          console.warn('Sidebar avatar not found, using default');
-          this.src = 'imgs/profile/default-catto.png';
-          this.onerror = null;
-        };
-      }
-      
-      // Update header avatar - ALWAYS USE PROFILE FOLDER
-      if (userAvatarIcon) {
-        const skin = user.equipped_skin || user.equippedSkin || 'default-catto';
-        const skinPath = `imgs/profile/${skin}.png`;
-        userAvatarIcon.src = skinPath;
-        userAvatarIcon.onerror = function() {
-          console.warn('Header avatar not found, using default');
-          this.src = 'imgs/profile/default-catto.png';
-          this.onerror = null;
-        };
-      }
-      
-      const username = document.getElementById('sidebarUsername');
-      const email = document.getElementById('sidebarEmail');
-      
-      if (username) username.textContent = user.first_name || user.firstName || 'Explorer';
-      if (email) email.textContent = user.email || '';
-      
-    } else {
-      if (sidebar) {
-          sidebar.style.display = 'none';
-          sidebar.classList.remove('open');
-      }
-      if (sidebarOverlay) sidebarOverlay.classList.remove('active');
-      if (menuToggle) menuToggle.style.display = 'none';
-      
-      // Reset avatar to default - USE PROFILE FOLDER
-      if (userAvatarIcon) {
-        userAvatarIcon.src = 'imgs/profile/default-catto.png';
-        userAvatarIcon.onerror = null;
-      }
-      
-      // Reset sidebar avatar
-      const sidebarUserImage = document.getElementById('sidebarUserImage');
-      if (sidebarUserImage) {
-        sidebarUserImage.src = 'imgs/profile/default-catto.png';
-        sidebarUserImage.onerror = null;
-      }
-    }
-  },
-  
-  updateProtectedContent(isLoggedIn) {
-    document.querySelectorAll('.protected-content').forEach(el => {
-      if (isLoggedIn) {
-        el.style.display = '';
-        el.style.pointerEvents = '';
-      } else {
-        el.style.display = 'none';
-      }
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'comingSoonModal';
+    modal.className = 'modal-backdrop';
+    modal.innerHTML = `
+      <div class="modal-card login-required-modal">
+        <button class="modal-close interactive" id="comingSoonModalClose" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="modal-catto-image">
+          <img src="imgs/Cattoimages/Catto_Login.png" alt="Catto" onerror="this.style.display='none'">
+        </div>
+        <h2 class="modal-title">Coming Soon!</h2>
+        <p class="modal-subtitle" id="comingSoonText">This language isn't ready yet.</p>
+        <div class="modal-actions">
+          <button class="cta-btn interactive" id="comingSoonOk">Got it!</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    modal.querySelector('#comingSoonModalClose').addEventListener('click', hideComingSoonModal);
+    modal.querySelector('#comingSoonOk').addEventListener('click', hideComingSoonModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) hideComingSoonModal();
     });
-  },
-  
-  updateRoadmapLock(isLoggedIn) {
-    const roadmapContainer = document.getElementById('roadmapContainer');
-    const roadmapLock = document.getElementById('roadmapLockOverlay');
-    
-    if (!isLoggedIn && roadmapContainer) {
-      if (!roadmapLock) {
-        const overlay = document.createElement('div');
-        overlay.id = 'roadmapLockOverlay';
-        overlay.className = 'roadmap-lock-overlay';
-        overlay.innerHTML = `
-          <div class="lock-content">
-            <i class="fas fa-lock"></i>
-            <h3>Unlock Your Learning Journey</h3>
-            <p>Create an account or sign in to start learning!</p>
-            <div class="lock-buttons">
-              <a href="signup.html" class="auth-btn signup">Sign Up</a>
-              <a href="signin.html" class="auth-btn login">Sign In</a>
-            </div>
-          </div>
-        `;
-        roadmapContainer.style.position = 'relative';
-        roadmapContainer.appendChild(overlay);
-      }
-      roadmapContainer.classList.add('locked');
-    } else if (isLoggedIn && roadmapContainer) {
-      roadmapContainer.classList.remove('locked');
-      const overlay = document.getElementById('roadmapLockOverlay');
-      if (overlay) overlay.remove();
-    }
-  },
-  
-  setupProtectedContent() {
-    const protectedSections = ['.levels-section', '.language-selection', '.roadmap-container', '#lessonModalBackdrop'];
-    protectedSections.forEach(selector => {
-      document.querySelectorAll(selector).forEach(el => el.classList.add('protected-content'));
-    });
-
-    const startBtn = document.getElementById('startBtn');
-    if (startBtn) {
-      startBtn.addEventListener('click', (e) => {
-        if (!Auth.isLoggedIn()) {
-          e.preventDefault();
-          // Use the global function from home.js if available
-          if (window.showLoginRequiredModal) {
-            window.showLoginRequiredModal();
-          }
-        }
-      });
-    }
-  },
-
-  // ============================================
-  // LOGIN PROMPT MODAL - DISABLED (using home.js modal)
-  // ============================================
-  showLoginPrompt() {
-    // Use the global modal from home.js instead
-    if (window.showLoginRequiredModal) {
-      window.showLoginRequiredModal();
-    } else {
-      // Fallback - try to open the modal directly
-      const modal = document.getElementById('loginRequiredModal');
-      if (modal && !modal.classList.contains('open')) {
-        modal.classList.add('open');
-        document.body.style.overflow = 'hidden';
-        if (typeof Sound !== 'undefined') Sound.pop();
-      }
-    }
   }
-};
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() { 
-  Auth.init(); 
-});
+  const text = document.getElementById('comingSoonText');
+  if (text) {
+    text.textContent = `${languageName} is on its way — Catto's still packing for that trip! Try English or Spanish for now.`;
+  }
 
-// Also re-init on pageshow (for back/forward cache)
-window.addEventListener('pageshow', function() { 
-  Auth.init(); 
-});
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (typeof Sound !== 'undefined') Sound.pop();
+}
 
-// Expose Auth globally for other scripts
-window.Auth = Auth;
-window.isUserLoggedIn = function() {
-  return Auth.isLoggedIn();
-};
-window.currentUserData = function() {
-  return Auth.getCurrentUser();
-};
+function hideComingSoonModal() {
+  const modal = document.getElementById('comingSoonModal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+  if (typeof Sound !== 'undefined') Sound.pop();
+}
+
+// ============================================
+// LANGUAGE BAR (the .lang-nav-btn flags in the header)
+// ============================================
+function getSelectedLanguage() {
+  const activeBtn = document.querySelector('.lang-nav-btn.active');
+  return activeBtn ? activeBtn.dataset.lang : 'en';
+}
+
+function getSelectedLanguageName() {
+  const activeBtn = document.querySelector('.lang-nav-btn.active');
+  return activeBtn ? (activeBtn.title || activeBtn.dataset.lang) : 'This language';
+}
+
+function wireLanguageBar() {
+  const langButtons = document.querySelectorAll('.lang-nav-btn');
+  langButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      langButtons.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (typeof Sound !== 'undefined') Sound.pop();
+      try {
+        localStorage.setItem('selectedLanguage', btn.dataset.lang);
+      } catch (e) {}
+    });
+  });
+
+  // Restore last-picked language on load, if any
+  try {
+    const saved = localStorage.getItem('selectedLanguage');
+    if (saved) {
+      const savedBtn = document.querySelector(`.lang-nav-btn[data-lang="${saved}"]`);
+      if (savedBtn) {
+        langButtons.forEach((b) => b.classList.remove('active'));
+        savedBtn.classList.add('active');
+      }
+    }
+  } catch (e) {}
+}
+
+// ============================================
+// LOGIN STATE HELPER
+// ============================================
+function isLoggedIn() {
+  // header.js sets window.userLogStatus from the server check.
+  // auth.js's Auth.isLoggedIn() reflects the cached/local state.
+  // Prefer the server-verified one when available, fall back to Auth.
+  if (typeof window.isUserLoggedIn === 'function') {
+    return window.isUserLoggedIn();
+  }
+  if (window.Auth && typeof window.Auth.isLoggedIn === 'function') {
+    return window.Auth.isLoggedIn();
+  }
+  return false;
+}
+
+// ============================================
+// ROUTE TO THE SELECTED LANGUAGE'S LESSON PAGE
+// ============================================
+function goToSelectedLanguage() {
+  const lang = getSelectedLanguage();
+  const destination = READY_LANGUAGES[lang];
+
+  if (destination) {
+    window.location.href = destination;
+  } else {
+    showComingSoonModal(getSelectedLanguageName());
+  }
+}
+
+// ============================================
+// HOME PAGE INIT
+// ============================================
+function initHomePage() {
+  wireLoginModalControls();
+  wireLanguageBar();
+  wireStartButtons();
+}
+
+function wireLoginModalControls() {
+  const modal = document.getElementById('loginRequiredModal');
+  const closeBtn = document.getElementById('loginModalClose');
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', hideLoginRequiredModal);
+  }
+
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) hideLoginRequiredModal();
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      hideLoginRequiredModal();
+      hideComingSoonModal();
+    }
+  });
+}
+
+function wireStartButtons() {
+  // Hero "Let's Learn!" button
+  const startBtn = document.getElementById('startBtn');
+  if (startBtn) {
+    startBtn.addEventListener('click', () => {
+      // auth.js already attaches a listener that calls Auth.showLoginPrompt()
+      // (which now delegates to showLoginRequiredModal above) when logged out
+      // and calls e.preventDefault() in that case. We only need to handle
+      // the logged-in case here.
+      if (isLoggedIn()) {
+        if (typeof Sound !== 'undefined') Sound.pop();
+        goToSelectedLanguage();
+      }
+    });
+  }
+
+  // "Meet Catto" / "Start Your Adventure!" button lower on the page
+  const meetCattoBtn = document.getElementById('meetCattoBtn');
+  if (meetCattoBtn) {
+    meetCattoBtn.addEventListener('click', () => {
+      if (typeof Sound !== 'undefined') Sound.pop();
+      if (isLoggedIn()) {
+        goToSelectedLanguage();
+      } else {
+        showLoginRequiredModal();
+      }
+    });
+  }
+}
+
+// ============================================
+// Optional hook header.js looks for after a successful
+// login check: `if (typeof window.renderHome === 'function') window.renderHome();`
+// ============================================
+function renderHome() {
+  const user = (window.Auth && window.Auth.getCurrentUser && window.Auth.getCurrentUser())
+    || (typeof window.currentUserData === 'function' ? window.currentUserData() : window.currentUserData);
+
+  if (!user) return;
+
+  const speechText = document.getElementById('speechText');
+  if (speechText && user.first_name) {
+    speechText.textContent = `Welcome back, ${user.first_name}!`;
+  }
+}
+window.renderHome = renderHome;
+
+document.addEventListener('DOMContentLoaded', initHomePage);
