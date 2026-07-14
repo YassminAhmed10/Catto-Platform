@@ -15,6 +15,30 @@ const READY_LANGUAGES = {
   es: 'spanish.html'
 };
 
+// Maps each flag's language code to Catto's matching outfit video.
+// These filenames match what's actually in imgs/Catto_Videos/ —
+// note it's a mix of language names and country names, so don't
+// assume a single naming pattern when adding more later.
+const CATTO_LANGUAGE_VIDEOS = {
+  en: 'imgs/Catto_Videos/Catto_English.webm',
+  fr: 'imgs/Catto_Videos/Catto_French.webm',
+  es: 'imgs/Catto_Videos/Catto_Spain.webm',
+  it: 'imgs/Catto_Videos/Catto_Italy.webm',
+  de: 'imgs/Catto_Videos/Catto_German.webm',
+  ar: 'imgs/Catto_Videos/Catto_Egypt.webm'
+};
+const CATTO_FALLBACK_VIDEO = CATTO_LANGUAGE_VIDEOS.en;
+
+// Matching speech-bubble greeting per language.
+const CATTO_LANGUAGE_GREETINGS = {
+  en: 'Hello, my friend! I am Catto!',
+  fr: 'Bonjour, mon ami ! Je suis Catto !',
+  es: '¡Hola, mi amigo! ¡Soy Catto!',
+  it: 'Ciao, amico mio! Sono Catto!',
+  de: 'Hallo, mein Freund! Ich bin Catto!',
+  ar: 'مرحباً يا صديقي! أنا كاتو!'
+};
+
 // ============================================
 // LOGIN REQUIRED MODAL (the one already in index.html
 // with id="loginRequiredModal")
@@ -105,6 +129,63 @@ function getSelectedLanguageName() {
   return activeBtn ? (activeBtn.title || activeBtn.dataset.lang) : 'This language';
 }
 
+// Swaps the <source> of every Catto video on the page to match the
+// selected language, reloads it so the browser actually picks up the
+// new file, and updates the speech-bubble greeting to match.
+// This is what was missing before — clicking a flag only toggled the
+// "active" class, nothing ever told the <video> element to change.
+function updateCattoForLanguage(lang, options = {}) {
+  const allowSound = !!options.allowSound;
+  const videoSrc = CATTO_LANGUAGE_VIDEOS[lang] || CATTO_FALLBACK_VIDEO;
+
+  document.querySelectorAll('.catto-video, .meet-video video').forEach((video) => {
+    const source = video.querySelector('source');
+    if (!source) return;
+
+    // If this language's clip 404s (not produced yet), quietly fall back
+    // to the English clip instead of leaving a blank/frozen video.
+    const onError = () => {
+      if (source.src.indexOf(CATTO_FALLBACK_VIDEO) === -1) {
+        source.src = CATTO_FALLBACK_VIDEO;
+        video.load();
+        attemptPlay(video, allowSound);
+      }
+    };
+
+    source.removeEventListener('error', onError);
+    source.src = videoSrc;
+    source.addEventListener('error', onError, { once: true });
+
+    // Changing source.src alone does nothing until the element reloads.
+    video.load();
+    attemptPlay(video, allowSound);
+  });
+
+  const speechText = document.getElementById('speechText');
+  if (speechText) {
+    speechText.textContent = CATTO_LANGUAGE_GREETINGS[lang] || CATTO_LANGUAGE_GREETINGS.en;
+  }
+}
+
+// Clicking a flag is a real user gesture, so the browser will happily
+// autoplay WITH sound at that point — that's when we unmute. On page
+// load (restoring the saved language) there's no gesture yet, so the
+// video has to stay muted or the browser blocks autoplay entirely.
+function attemptPlay(video, allowSound) {
+  video.muted = !allowSound;
+  const playPromise = video.play();
+  if (playPromise && typeof playPromise.catch === 'function') {
+    playPromise.catch(() => {
+      // Autoplay-with-sound got blocked (e.g. gesture didn't count) —
+      // fall back to muted so the video still shows instead of freezing.
+      if (!video.muted) {
+        video.muted = true;
+        video.play().catch(() => {});
+      }
+    });
+  }
+}
+
 function wireLanguageBar() {
   const langButtons = document.querySelectorAll('.lang-nav-btn');
   langButtons.forEach((btn) => {
@@ -112,13 +193,16 @@ function wireLanguageBar() {
       langButtons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       if (typeof Sound !== 'undefined') Sound.pop();
+      updateCattoForLanguage(btn.dataset.lang, { allowSound: true });
       try {
         localStorage.setItem('selectedLanguage', btn.dataset.lang);
       } catch (e) {}
     });
   });
 
-  // Restore last-picked language on load, if any
+  // Restore last-picked language on load, if any. No user gesture has
+  // happened yet at this point, so this stays muted (allowSound: false)
+  // — the browser would otherwise block the video from autoplaying at all.
   try {
     const saved = localStorage.getItem('selectedLanguage');
     if (saved) {
@@ -126,6 +210,7 @@ function wireLanguageBar() {
       if (savedBtn) {
         langButtons.forEach((b) => b.classList.remove('active'));
         savedBtn.classList.add('active');
+        updateCattoForLanguage(saved);
       }
     }
   } catch (e) {}

@@ -55,6 +55,23 @@ if (typeof window !== "undefined" && window.Sound && window.Sound.__soundSystemL
       this._preloadPageTurnAudio();
     },
 
+    // Every effect below used to do:
+    //   if (ctx.state === "suspended") { ctx.resume(); return; }
+    // which meant the FIRST click that has to wake up the AudioContext
+    // (right after the page loads, before anything else has used Web
+    // Audio) resumed the context but threw away the sound instead of
+    // playing it — so effects looked broken on the first tap and only
+    // started working from the second click onward. This helper resumes
+    // (if needed) and always plays afterward.
+    _runWhenReady(fn) {
+      if (!this._ctx) return;
+      if (this._ctx.state === "suspended") {
+        this._ctx.resume().then(fn).catch(() => {});
+      } else {
+        fn();
+      }
+    },
+
     _preloadPageTurnAudio() {
       if (this._pageTurnAudioPool.length || typeof Audio === "undefined") return;
       for (let i = 0; i < this._pageTurnAudioPoolSize; i++) {
@@ -154,257 +171,233 @@ if (typeof window !== "undefined" && window.Sound && window.Sound.__soundSystemL
       if (!this._enabled) return;
       this._init();
 
-      try {
-        if (!this._ctx || this._ctx.state === "suspended") {
-          if (this._ctx && this._ctx.state === "suspended") this._ctx.resume();
-          return;
-        }
+      this._runWhenReady(() => {
+        try {
+          const osc = this._ctx.createOscillator();
+          const gain = this._ctx.createGain();
+          osc.connect(gain);
+          gain.connect(this._ctx.destination);
 
-        const osc = this._ctx.createOscillator();
-        const gain = this._ctx.createGain();
-        osc.connect(gain);
-        gain.connect(this._ctx.destination);
+          osc.frequency.value = 600 + Math.random() * 300;
+          osc.type = "sine";
 
-        osc.frequency.value = 600 + Math.random() * 300;
-        osc.type = "sine";
+          const now = this._ctx.currentTime;
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
 
-        const now = this._ctx.currentTime;
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-
-        osc.start(now);
-        osc.stop(now + 0.15);
-      } catch (e) {}
+          osc.start(now);
+          osc.stop(now + 0.15);
+        } catch (e) {}
+      });
     },
 
     match() {
       if (!this._enabled) return;
       this._init();
 
-      try {
-        if (!this._ctx || this._ctx.state === "suspended") {
-          if (this._ctx) this._ctx.resume();
-          return;
-        }
+      this._runWhenReady(() => {
+        try {
+          const notes = [659, 523];
+          const now = this._ctx.currentTime;
 
-        const notes = [659, 523];
-        const now = this._ctx.currentTime;
+          notes.forEach(
+            function (freq, i) {
+              const osc = this._ctx.createOscillator();
+              const gain = this._ctx.createGain();
+              osc.connect(gain);
+              gain.connect(this._ctx.destination);
 
-        notes.forEach(
-          function (freq, i) {
-            const osc = this._ctx.createOscillator();
-            const gain = this._ctx.createGain();
-            osc.connect(gain);
-            gain.connect(this._ctx.destination);
+              osc.frequency.value = freq;
+              osc.type = "sine";
 
-            osc.frequency.value = freq;
-            osc.type = "sine";
+              const startTime = now + i * 0.08;
+              gain.gain.setValueAtTime(0.15, startTime);
+              gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.12);
 
-            const startTime = now + i * 0.08;
-            gain.gain.setValueAtTime(0.15, startTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.12);
-
-            osc.start(startTime);
-            osc.stop(startTime + 0.12);
-          }.bind(this)
-        );
-      } catch (e) {}
+              osc.start(startTime);
+              osc.stop(startTime + 0.12);
+            }.bind(this)
+          );
+        } catch (e) {}
+      });
     },
 
     navGo() {
       if (!this._enabled) return;
       this._init();
 
-      try {
-        if (!this._ctx || this._ctx.state === "suspended") {
-          if (this._ctx) this._ctx.resume();
-          return;
-        }
+      this._runWhenReady(() => {
+        try {
+          const notes = [523, 659, 784];
+          const now = this._ctx.currentTime;
 
-        const notes = [523, 659, 784];
-        const now = this._ctx.currentTime;
+          notes.forEach(
+            function (freq, i) {
+              const osc = this._ctx.createOscillator();
+              const gain = this._ctx.createGain();
+              osc.connect(gain);
+              gain.connect(this._ctx.destination);
 
-        notes.forEach(
-          function (freq, i) {
-            const osc = this._ctx.createOscillator();
-            const gain = this._ctx.createGain();
-            osc.connect(gain);
-            gain.connect(this._ctx.destination);
+              osc.frequency.value = freq;
+              osc.type = "sine";
 
-            osc.frequency.value = freq;
-            osc.type = "sine";
+              const startTime = now + i * 0.06;
+              gain.gain.setValueAtTime(0.12, startTime);
+              gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.1);
 
-            const startTime = now + i * 0.06;
-            gain.gain.setValueAtTime(0.12, startTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.1);
-
-            osc.start(startTime);
-            osc.stop(startTime + 0.1);
-          }.bind(this)
-        );
-      } catch (e) {}
+              osc.start(startTime);
+              osc.stop(startTime + 0.1);
+            }.bind(this)
+          );
+        } catch (e) {}
+      });
     },
 
     unlock() {
       if (!this._enabled) return;
       this._init();
 
-      try {
-        if (!this._ctx || this._ctx.state === "suspended") {
-          if (this._ctx) this._ctx.resume();
-          return;
-        }
+      this._runWhenReady(() => {
+        try {
+          const notes = [523, 659, 784, 1047];
+          const now = this._ctx.currentTime;
 
-        const notes = [523, 659, 784, 1047];
-        const now = this._ctx.currentTime;
+          notes.forEach(
+            function (freq, i) {
+              const osc = this._ctx.createOscillator();
+              const gain = this._ctx.createGain();
+              osc.connect(gain);
+              gain.connect(this._ctx.destination);
 
-        notes.forEach(
-          function (freq, i) {
-            const osc = this._ctx.createOscillator();
-            const gain = this._ctx.createGain();
-            osc.connect(gain);
-            gain.connect(this._ctx.destination);
+              osc.frequency.value = freq;
+              osc.type = "sine";
 
-            osc.frequency.value = freq;
-            osc.type = "sine";
+              const startTime = now + i * 0.15;
+              gain.gain.setValueAtTime(0.15, startTime);
+              gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.2);
 
-            const startTime = now + i * 0.15;
-            gain.gain.setValueAtTime(0.15, startTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.2);
-
-            osc.start(startTime);
-            osc.stop(startTime + 0.2);
-          }.bind(this)
-        );
-      } catch (e) {}
+              osc.start(startTime);
+              osc.stop(startTime + 0.2);
+            }.bind(this)
+          );
+        } catch (e) {}
+      });
     },
 
     locked() {
       if (!this._enabled) return;
       this._init();
 
-      try {
-        if (!this._ctx || this._ctx.state === "suspended") {
-          if (this._ctx) this._ctx.resume();
-          return;
-        }
+      this._runWhenReady(() => {
+        try {
+          const now = this._ctx.currentTime;
 
-        const now = this._ctx.currentTime;
+          const osc1 = this._ctx.createOscillator();
+          const gain1 = this._ctx.createGain();
+          osc1.connect(gain1);
+          gain1.connect(this._ctx.destination);
+          osc1.frequency.value = 300;
+          osc1.type = "square";
+          gain1.gain.setValueAtTime(0.1, now);
+          gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+          osc1.start(now);
+          osc1.stop(now + 0.15);
 
-        const osc1 = this._ctx.createOscillator();
-        const gain1 = this._ctx.createGain();
-        osc1.connect(gain1);
-        gain1.connect(this._ctx.destination);
-        osc1.frequency.value = 300;
-        osc1.type = "square";
-        gain1.gain.setValueAtTime(0.1, now);
-        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-        osc1.start(now);
-        osc1.stop(now + 0.15);
-
-        const osc2 = this._ctx.createOscillator();
-        const gain2 = this._ctx.createGain();
-        osc2.connect(gain2);
-        gain2.connect(this._ctx.destination);
-        osc2.frequency.value = 200;
-        osc2.type = "square";
-        gain2.gain.setValueAtTime(0.08, now + 0.15);
-        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-        osc2.start(now + 0.15);
-        osc2.stop(now + 0.3);
-      } catch (e) {}
+          const osc2 = this._ctx.createOscillator();
+          const gain2 = this._ctx.createGain();
+          osc2.connect(gain2);
+          gain2.connect(this._ctx.destination);
+          osc2.frequency.value = 200;
+          osc2.type = "square";
+          gain2.gain.setValueAtTime(0.08, now + 0.15);
+          gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+          osc2.start(now + 0.15);
+          osc2.stop(now + 0.3);
+        } catch (e) {}
+      });
     },
 
     win() {
       if (!this._enabled) return;
       this._init();
 
-      try {
-        if (!this._ctx || this._ctx.state === "suspended") {
-          if (this._ctx) this._ctx.resume();
-          return;
-        }
+      this._runWhenReady(() => {
+        try {
+          const melody = [523, 587, 659, 784, 880, 784, 880, 1047];
+          const now = this._ctx.currentTime;
 
-        const melody = [523, 587, 659, 784, 880, 784, 880, 1047];
-        const now = this._ctx.currentTime;
+          melody.forEach(
+            function (freq, i) {
+              const osc = this._ctx.createOscillator();
+              const gain = this._ctx.createGain();
+              osc.connect(gain);
+              gain.connect(this._ctx.destination);
 
-        melody.forEach(
-          function (freq, i) {
-            const osc = this._ctx.createOscillator();
-            const gain = this._ctx.createGain();
-            osc.connect(gain);
-            gain.connect(this._ctx.destination);
+              osc.frequency.value = freq;
+              osc.type = "sine";
 
-            osc.frequency.value = freq;
-            osc.type = "sine";
+              const startTime = now + i * 0.1;
+              gain.gain.setValueAtTime(0.12, startTime);
+              gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.15);
 
-            const startTime = now + i * 0.1;
-            gain.gain.setValueAtTime(0.12, startTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.15);
-
-            osc.start(startTime);
-            osc.stop(startTime + 0.15);
-          }.bind(this)
-        );
-      } catch (e) {}
+              osc.start(startTime);
+              osc.stop(startTime + 0.15);
+            }.bind(this)
+          );
+        } catch (e) {}
+      });
     },
 
     hover() {
       if (!this._enabled) return;
       this._init();
 
-      try {
-        if (!this._ctx || this._ctx.state === "suspended") {
-          if (this._ctx) this._ctx.resume();
-          return;
-        }
+      this._runWhenReady(() => {
+        try {
+          const osc = this._ctx.createOscillator();
+          const gain = this._ctx.createGain();
+          osc.connect(gain);
+          gain.connect(this._ctx.destination);
 
-        const osc = this._ctx.createOscillator();
-        const gain = this._ctx.createGain();
-        osc.connect(gain);
-        gain.connect(this._ctx.destination);
+          osc.frequency.value = 1200 + Math.random() * 300;
+          osc.type = "sine";
 
-        osc.frequency.value = 1200 + Math.random() * 300;
-        osc.type = "sine";
+          const now = this._ctx.currentTime;
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
 
-        const now = this._ctx.currentTime;
-        gain.gain.setValueAtTime(0.06, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-
-        osc.start(now);
-        osc.stop(now + 0.05);
-      } catch (e) {}
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } catch (e) {}
+      });
     },
 
     chime() {
       if (!this._enabled) return;
       this._init();
 
-      try {
-        if (!this._ctx || this._ctx.state === "suspended") {
-          if (this._ctx) this._ctx.resume();
-          return;
-        }
+      this._runWhenReady(() => {
+        try {
+          const notes = [523, 659];
+          const now = this._ctx.currentTime;
 
-        const notes = [523, 659];
-        const now = this._ctx.currentTime;
-
-        notes.forEach(
-          function (freq, i) {
-            const osc = this._ctx.createOscillator();
-            const gain = this._ctx.createGain();
-            osc.connect(gain);
-            gain.connect(this._ctx.destination);
-            osc.frequency.value = freq;
-            osc.type = "sine";
-            const startTime = now + i * 0.1;
-            gain.gain.setValueAtTime(0.1, startTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.15);
-            osc.start(startTime);
-            osc.stop(startTime + 0.15);
-          }.bind(this)
-        );
-      } catch (e) {}
+          notes.forEach(
+            function (freq, i) {
+              const osc = this._ctx.createOscillator();
+              const gain = this._ctx.createGain();
+              osc.connect(gain);
+              gain.connect(this._ctx.destination);
+              osc.frequency.value = freq;
+              osc.type = "sine";
+              const startTime = now + i * 0.1;
+              gain.gain.setValueAtTime(0.1, startTime);
+              gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.15);
+              osc.start(startTime);
+              osc.stop(startTime + 0.15);
+            }.bind(this)
+          );
+        } catch (e) {}
+      });
     },
 
     toggle() {
@@ -472,7 +465,14 @@ if (typeof window !== "undefined" && window.Sound && window.Sound.__soundSystemL
   }
 
   function boot() {
-    Sound._init();
+    // NOTE: we deliberately do NOT call Sound._init() here anymore.
+    // Creating the AudioContext at page load (before any click) is
+    // exactly what triggers Chrome's "AudioContext was not allowed to
+    // start" warning, because the context isn't tied to a user gesture.
+    // Sound._init() already runs lazily inside pop()/match()/etc., which
+    // are only ever called from click handlers — so the context now
+    // gets created at the right time automatically.
+    Sound._preloadPageTurnAudio();
     wirePageTurnEvents();
   }
 
