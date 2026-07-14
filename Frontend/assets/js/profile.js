@@ -753,7 +753,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('🔍 Click the Edit Profile button and check the console.');
 });
 
-// Add this to your profile.js file
 document.addEventListener('DOMContentLoaded', () => {
   fetch('../Backend/get_profile.php')
     .then(res => res.json())
