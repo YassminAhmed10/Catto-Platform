@@ -554,6 +554,41 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
+.closet-item .item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.closet-item .theme-swatch-default {
+  background: linear-gradient(135deg, #F1EEFB, #E5E1F7);
+}
+
+.closet-item .theme-swatch-purple {
+  background: linear-gradient(135deg, #B08CE0, #6C3FB5);
+}
+
+.closet-item.printable .item-image {
+  background: #FFF3E0;
+  border-color: #FFE0B2;
+}
+
+.closet-item .download-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #2E7D32;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 2px solid var(--white);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
 .closet-empty {
   grid-column: 1 / -1;
   text-align: center;

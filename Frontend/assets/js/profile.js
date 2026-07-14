@@ -55,6 +55,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var skinModalClose = document.getElementById('skinModalClose');
     var skinGrid = document.getElementById('skinGrid');
 
+    // Theme elements ("My Themes" buttons)
+    var themeButtons = document.querySelectorAll('.theme-toggle-btn');
+    var purpleThemeBtn = document.getElementById('purpleThemeBtn');
+
     // Toast elements
     var updateToast = document.getElementById('updateToast');
     var updateToastMessage = document.getElementById('updateToastMessage');
@@ -81,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
         gender: '',
         dob: '',
         equipped_skin: 'default-catto',
+        equipped_theme: 'default',
         id: 0,
         star_shells: 0,
         total_stars: 0,
@@ -118,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     current.gender = d.gender || 'prefer-not';
                     current.dob = d.dob || '';
                     current.equipped_skin = d.equipped_skin || 'default-catto';
+                    current.equipped_theme = d.equipped_theme || 'default';
                     current.id = d.id || 0;
                     current.star_shells = d.star_shells || 0;
                     current.total_stars = d.total_stars || 0;
@@ -128,6 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateStats(d);
                     loadCloset(d);
                     calculateStreak(d);
+                    updateThemeButtonsUI();
                 }
             })
             .catch(function(err) {
@@ -284,12 +291,37 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================================================
     // LOAD CLOSET
     // =========================================================
+    var PRINT_ICONS = {
+        'coloring_book': '🖍️',
+        'sudoku': '🧩',
+        'nonogram': '🎨',
+        'fantasy-book': '📚'
+    };
+
+    var THEME_LABELS = {
+        'default': 'Default Theme',
+        'purple-theme': 'Purple Theme'
+    };
+
+    function prettifyName(name) {
+        return name.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+    }
+
     function loadCloset(d) {
         var grid = document.getElementById('closetGrid');
         if (!grid) return;
 
-        var inventory = d.inventory_details || [];
-        
+        var inventory = (d.inventory_details || []).slice();
+
+        // The Default Theme is always available (it's free), so make sure it
+        // always shows up in the collection even though it's not "purchased".
+        var hasDefaultTheme = inventory.some(function(item) {
+            return item.item_type === 'theme' && item.item_name === 'default';
+        });
+        if (!hasDefaultTheme) {
+            inventory.unshift({ item_name: 'default', item_type: 'theme' });
+        }
+
         if (inventory.length === 0) {
             grid.innerHTML = `
                 <div class="closet-empty">
@@ -300,16 +332,47 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        var equippedTheme = d.equipped_theme || 'default';
+
         var html = '';
         inventory.forEach(function(item) {
-            var isEquipped = item.item_name === d.equipped_skin;
-            var itemName = item.item_name.replace(/-/g, ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+            var itemType = item.item_type || 'skin';
+            var itemName = item.item_name;
+            var isEquipped = false;
+            var isPrintable = (itemType === 'prints' || itemType === 'books');
+            var displayName;
+            var mediaHtml;
+            var typeLabel;
+
+            if (itemType === 'skin') {
+                isEquipped = itemName === d.equipped_skin;
+                displayName = prettifyName(itemName);
+                mediaHtml = `<img src="imgs/profile/${itemName}.png" alt="${displayName}" class="item-image" onerror="this.src='imgs/profile/default-catto.png'">`;
+                typeLabel = 'Skin';
+            } else if (itemType === 'theme') {
+                isEquipped = itemName === equippedTheme;
+                displayName = THEME_LABELS[itemName] || prettifyName(itemName);
+                var swatchClass = itemName === 'purple-theme' ? 'theme-swatch-purple' : 'theme-swatch-default';
+                mediaHtml = `<div class="item-image item-icon ${swatchClass}">🎨</div>`;
+                typeLabel = 'Theme';
+            } else if (isPrintable) {
+                displayName = prettifyName(itemName);
+                var icon = PRINT_ICONS[itemName] || '📄';
+                mediaHtml = `<div class="item-image item-icon">${icon}</div>`;
+                typeLabel = itemType === 'books' ? 'Book' : 'Printable';
+            } else {
+                displayName = prettifyName(itemName);
+                mediaHtml = `<img src="imgs/profile/${itemName}.png" alt="${displayName}" class="item-image" onerror="this.src='imgs/profile/default-catto.png'">`;
+                typeLabel = prettifyName(itemType);
+            }
+
             html += `
-                <div class="closet-item ${isEquipped ? 'equipped' : ''}" data-item="${item.item_name}" data-type="${item.item_type}">
+                <div class="closet-item ${isEquipped ? 'equipped' : ''} ${isPrintable ? 'printable' : ''}" data-item="${itemName}" data-type="${itemType}">
                     ${isEquipped ? '<span class="equipped-badge">✓ Equipped</span>' : ''}
-                    <img src="imgs/profile/${item.item_name}.png" alt="${itemName}" class="item-image" onerror="this.src='imgs/profile/default-catto.png'">
-                    <span class="item-name">${itemName}</span>
-                    <span class="item-type">${item.item_type || 'Skin'}</span>
+                    ${isPrintable ? '<span class="download-badge">📥 Download</span>' : ''}
+                    ${mediaHtml}
+                    <span class="item-name">${displayName}</span>
+                    <span class="item-type">${typeLabel}</span>
                 </div>
             `;
         });
@@ -320,8 +383,17 @@ document.addEventListener('DOMContentLoaded', function() {
             el.addEventListener('click', function() {
                 var itemName = this.dataset.item;
                 var itemType = this.dataset.type;
-                if (itemType === 'skin' && itemName !== current.equipped_skin) {
-                    equipSkin(itemName);
+
+                if (itemType === 'skin') {
+                    if (itemName !== current.equipped_skin) {
+                        equipSkin(itemName);
+                    }
+                } else if (itemType === 'theme') {
+                    if (itemName !== current.equipped_theme) {
+                        equipTheme(itemName);
+                    }
+                } else if (itemType === 'prints' || itemType === 'books') {
+                    window.open('../Backend/download.php?item=' + encodeURIComponent(itemName), '_blank');
                 }
             });
         });
@@ -358,6 +430,77 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(function(err) {
             console.error('❌ Error equipping skin:', err);
             showUpdateToast('Network error', 'error', 'Please try again');
+        });
+    }
+
+    // =========================================================
+    // EQUIP THEME (used by "My Themes" buttons AND the closet grid)
+    // =========================================================
+    function equipTheme(themeName) {
+        console.log('🎨 Equipping theme:', themeName);
+
+        fetch('../Backend/update_theme.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ theme: themeName })
+        })
+        .then(function(res) {
+            if (!res.ok) throw new Error('Network response was not ok');
+            return res.json();
+        })
+        .then(function(data) {
+            console.log('📥 Theme equip response:', data);
+            if (data.success) {
+                current.equipped_theme = themeName;
+
+                // Instantly toggle the CSS class so the page changes without a refresh
+                if (themeName === 'purple-theme') {
+                    document.body.classList.add('theme-royal-purple');
+                } else {
+                    document.body.classList.remove('theme-royal-purple');
+                }
+
+                updateThemeButtonsUI();
+                loadProfile();
+                showUpdateToast('Theme equipped!', 'success', 'Your new theme is ready');
+            } else {
+                showUpdateToast('Failed to equip theme', 'error', data.message || 'Please try again');
+            }
+        })
+        .catch(function(err) {
+            console.error('❌ Error equipping theme:', err);
+            showUpdateToast('Network error', 'error', 'Please try again');
+        });
+    }
+
+    // Sync the "My Themes" buttons (show/hide Purple, highlight active one)
+    function updateThemeButtonsUI() {
+        if (!themeButtons || themeButtons.length === 0) return;
+
+        var ownsPurple = current.inventory.some(function(item) {
+            return item.item_name === 'purple-theme';
+        });
+        if (purpleThemeBtn) {
+            purpleThemeBtn.style.display = ownsPurple ? 'inline-block' : 'none';
+        }
+
+        var equippedTheme = current.equipped_theme || 'default';
+        themeButtons.forEach(function(btn) {
+            if (btn.getAttribute('data-theme') === equippedTheme) {
+                btn.classList.remove('secondary');
+            } else {
+                btn.classList.add('secondary');
+            }
+        });
+    }
+
+    // Attach click listeners to the "My Themes" buttons once
+    if (themeButtons && themeButtons.length > 0) {
+        themeButtons.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                equipTheme(btn.getAttribute('data-theme'));
+            });
         });
     }
 
@@ -751,61 +894,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log('✅ Profile.js initialized successfully!');
     console.log('🔍 Click the Edit Profile button and check the console.');
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  fetch('../Backend/get_profile.php')
-    .then(res => res.json())
-    .then(data => {
-      if (!data.success) return;
-      
-      const inventory = data.data.inventory || [];
-      const equippedTheme = data.data.equipped_theme || 'default';
-      const purpleThemeBtn = document.getElementById('purpleThemeBtn');
-      
-      // Unhide the Purple Theme button if they own it
-      if (inventory.includes('purple-theme') && purpleThemeBtn) {
-        purpleThemeBtn.style.display = 'inline-block';
-      }
-
-      // Highlight the currently equipped button
-      document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
-        if (btn.getAttribute('data-theme') === equippedTheme) {
-          btn.classList.remove('secondary'); // Make it look active
-        }
-
-        // Add click listener to switch themes
-        btn.addEventListener('click', () => {
-          const themeName = btn.getAttribute('data-theme');
-          equipTheme(themeName);
-        });
-      });
-    });
-
-  function equipTheme(themeName) {
-    fetch('../Backend/update_theme.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ theme: themeName })
-    })
-    .then(res => res.json())
-    .then(response => {
-      if (response.success) {
-        // Instantly toggle the CSS class so the page changes without refreshing
-        if (themeName === 'purple-theme') {
-          document.body.classList.add('theme-royal-purple');
-        } else {
-          document.body.classList.remove('theme-royal-purple');
-        }
-        
-        // Update button styles
-        document.querySelectorAll('.theme-toggle-btn').forEach(b => b.classList.add('secondary'));
-        document.querySelector(`.theme-toggle-btn[data-theme="${themeName}"]`).classList.remove('secondary');
-        
-        if (typeof showToast === 'function') showToast('Theme Updated!');
-      } else {
-        if (typeof showToast === 'function') showToast(response.message || 'Error updating theme');
-      }
-    });
-  }
 });
