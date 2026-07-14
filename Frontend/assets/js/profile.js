@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var itemType = item.item_type || 'skin';
             var itemName = item.item_name;
             var isEquipped = false;
-            var isPrintable = (itemType === 'prints' || itemType === 'books');
+            var isPrintable = (itemType === 'prints' || itemType === 'books' || itemType === 'print' || itemType === 'book');
             var displayName;
             var mediaHtml;
             var typeLabel;
@@ -359,7 +359,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 displayName = prettifyName(itemName);
                 var icon = PRINT_ICONS[itemName] || '📄';
                 mediaHtml = `<div class="item-image item-icon">${icon}</div>`;
-                typeLabel = itemType === 'books' ? 'Book' : 'Printable';
+                typeLabel = (itemType === 'books' || itemType === 'book') ? 'Book' : 'Printable';
             } else {
                 displayName = prettifyName(itemName);
                 mediaHtml = `<img src="imgs/profile/${itemName}.png" alt="${displayName}" class="item-image" onerror="this.src='imgs/profile/default-catto.png'">`;
@@ -392,8 +392,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (itemName !== current.equipped_theme) {
                         equipTheme(itemName);
                     }
-                } else if (itemType === 'prints' || itemType === 'books') {
-                    window.open('../Backend/download.php?item=' + encodeURIComponent(itemName), '_blank');
+                } else if (itemType === 'prints' || itemType === 'books' || itemType === 'print' || itemType === 'book') {
+                    window.location.href = '../Backend/download.php?item=' + encodeURIComponent(itemName);
                 }
             });
         });
