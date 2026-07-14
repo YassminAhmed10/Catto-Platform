@@ -110,19 +110,25 @@
         <div class="profile-avatar-badge" id="userLevelBadge">#001</div>
         <div class="profile-avatar-hint"> Change Skin</div>
       </div>
+      
       <div class="profile-info">
         <h1 id="userName">Explorer</h1>
         <p class="profile-email" id="userEmail">explorer@languageisland.com</p>
         <p class="profile-member">Member since <span id="memberSince">Today</span></p>
       </div>
-      <!-- Add this to profile.html inside your main content area -->
-      <div class="theme-selection-section">
+      
+      <!-- The margin-left: auto trick -->
+      <div class="theme-selection-section" style="margin-left: auto;">
         <h3 class="section-title">My Themes</h3>
         <div class="theme-buttons">
           <button class="cta-btn secondary theme-toggle-btn" data-theme="default">Default Theme</button>
           <button class="cta-btn secondary theme-toggle-btn" data-theme="purple-theme" id="purpleThemeBtn" style="display: none;">Purple Theme</button>
         </div>
       </div>
+      
+      <!-- The invisible flex-break trick -->
+      <div style="flex-basis: 100%; height: 0; margin: 0; padding: 0;"></div>
+      
       <button class="edit-profile-btn interactive" id="editProfileBtn">
         <i class="fas fa-pen"></i> Edit Profile
       </button>
