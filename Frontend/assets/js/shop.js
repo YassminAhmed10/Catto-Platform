@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentCoins = 0;
   let purchasedItems = [];
   let currentSkin = '';
+  let currentTheme = 'default';
   let currentCategory = 'all';
   let isLoggedIn = false;
 
@@ -113,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentCoins = data.data.star_shells || 0;
         purchasedItems = data.data.inventory || [];
         currentSkin = data.data.equipped_skin || 'default-catto';
+        currentTheme = data.data.equipped_theme || 'default';
         
         console.log('Coins:', currentCoins);
         console.log('Purchased items:', purchasedItems);
@@ -214,8 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    if (purchasedItems.includes('purple-theme')) {
+    if (currentTheme === 'purple-theme') {
       document.body.classList.add('theme-royal-purple');
+    } else {
+      document.body.classList.remove('theme-royal-purple');
     }
 
     filterItems();
