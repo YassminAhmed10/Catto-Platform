@@ -42,8 +42,8 @@
   height: 70px;
   min-width: 60px;
   border-radius: 9px;
-  overflow:
 }
+
 .brand-logo img {
   display: block;
   width: 12rem;
@@ -341,9 +341,9 @@ main {
   white-space: nowrap;
 }
 
-* =========================================================
+/* * =========================================================
    SIDEBAR - FIXED WITH SAFETY LINES
-   ========================================================= */
+   ========================================================= */ 
 .sidebar-overlay {
   position: fixed;
   inset: 0;
