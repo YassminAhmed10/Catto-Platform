@@ -752,3 +752,61 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ Profile.js initialized successfully!');
     console.log('🔍 Click the Edit Profile button and check the console.');
 });
+
+// Add this to your profile.js file
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('../Backend/get_profile.php')
+    .then(res => res.json())
+    .then(data => {
+      if (!data.success) return;
+      
+      const inventory = data.data.inventory || [];
+      const equippedTheme = data.data.equipped_theme || 'default';
+      const purpleThemeBtn = document.getElementById('purpleThemeBtn');
+      
+      // Unhide the Purple Theme button if they own it
+      if (inventory.includes('purple-theme') && purpleThemeBtn) {
+        purpleThemeBtn.style.display = 'inline-block';
+      }
+
+      // Highlight the currently equipped button
+      document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+        if (btn.getAttribute('data-theme') === equippedTheme) {
+          btn.classList.remove('secondary'); // Make it look active
+        }
+
+        // Add click listener to switch themes
+        btn.addEventListener('click', () => {
+          const themeName = btn.getAttribute('data-theme');
+          equipTheme(themeName);
+        });
+      });
+    });
+
+  function equipTheme(themeName) {
+    fetch('../Backend/update_theme.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme: themeName })
+    })
+    .then(res => res.json())
+    .then(response => {
+      if (response.success) {
+        // Instantly toggle the CSS class so the page changes without refreshing
+        if (themeName === 'purple-theme') {
+          document.body.classList.add('theme-royal-purple');
+        } else {
+          document.body.classList.remove('theme-royal-purple');
+        }
+        
+        // Update button styles
+        document.querySelectorAll('.theme-toggle-btn').forEach(b => b.classList.add('secondary'));
+        document.querySelector(`.theme-toggle-btn[data-theme="${themeName}"]`).classList.remove('secondary');
+        
+        if (typeof showToast === 'function') showToast('Theme Updated!');
+      } else {
+        if (typeof showToast === 'function') showToast(response.message || 'Error updating theme');
+      }
+    });
+  }
+});

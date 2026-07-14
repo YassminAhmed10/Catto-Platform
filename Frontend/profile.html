@@ -115,6 +115,14 @@
         <p class="profile-email" id="userEmail">explorer@languageisland.com</p>
         <p class="profile-member">Member since <span id="memberSince">Today</span></p>
       </div>
+      <!-- Add this to profile.html inside your main content area -->
+      <div class="theme-selection-section">
+        <h3 class="section-title">My Themes</h3>
+        <div class="theme-buttons">
+          <button class="cta-btn secondary theme-toggle-btn" data-theme="default">Default Theme</button>
+          <button class="cta-btn secondary theme-toggle-btn" data-theme="purple-theme" id="purpleThemeBtn" style="display: none;">Purple Theme</button>
+        </div>
+      </div>
       <button class="edit-profile-btn interactive" id="editProfileBtn">
         <i class="fas fa-pen"></i> Edit Profile
       </button>
@@ -288,5 +296,6 @@
 <script src="assets/js/header.js"></script>
 <script src="assets/js/sounds.js"></script>
 <script src="assets/js/profile.js"></script>
+<script src="assets/js/global-theme.js"></script>
 </body>
 </html>

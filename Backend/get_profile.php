@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = (int) $_SESSION['user_id'];
 
 // 1. Get all user data - INCLUDING equipped_skin
-$query = "SELECT id, first_name, last_name, email, dob, gender, star_shells, total_stars, daily_streak, equipped_skin, created_at FROM users WHERE id = ?";
+$query = "SELECT id, first_name, last_name, email, dob, gender, star_shells, total_stars, daily_streak, equipped_skin, created_at, equipped_theme FROM users WHERE id = ?";
 $stmt = $connection->prepare($query);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();

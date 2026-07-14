@@ -1634,3 +1634,20 @@ button:focus-visible {
 }
 .topic-word-chip .tw-emoji { font-size: 26px; display: block; margin-bottom: 4px; }
 .topic-word-chip .tw-en { display: block; font-size: 11px; color: var(--plum-soft); font-weight: 700; }
+
+
+/* ============================================
+   ROYAL PURPLE THEME OVERRIDE
+   ============================================ */
+body.theme-royal-purple {
+  --plum: #4A154B;        
+  --plum-soft: #7A5C7A;   
+  --coral: #9D8DF1;       
+  --coral-dark: #7A69D1;  
+  --star: #E3DFF5;        
+  --grass: #B9B3D9;       
+}
+
+body.theme-royal-purple .sky {
+  background: linear-gradient(180deg, #EAE5F9 0%, #F5F3FC 100%);
+}
