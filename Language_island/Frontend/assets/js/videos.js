@@ -522,15 +522,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  function closeVideoModal() {
+function closeVideoModal() {
     console.log('Closing video modal...');
     var modal = document.getElementById('videoModal');
     if (modal) {
       modal.classList.remove('open');
       document.body.style.overflow = '';
+      
       var video = document.getElementById('videoPlayer');
+      var source = document.getElementById('videoSource');
+      
       if (video) {
-        video.pause();
+        video.pause();          
+        video.currentTime = 0;  
+        
+        if (source) {
+          source.src = ''; 
+        }
+        video.removeAttribute('src');
+        video.load();
       }
     }
   }
