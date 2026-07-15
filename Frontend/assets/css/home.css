@@ -1,5 +1,5 @@
 /* =========================================================
-   HOME.CSS - Home page styles (Complete - Fixed)
+   HOME.CSS - Home page styles with Layers
    ========================================================= */
 
 /* ---------- Floating Background Elements ---------- */
@@ -29,7 +29,7 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  margin: 6px auto 0;
+  margin: 17px auto 0;
   padding: 6px 12px;
   max-width: 760px;
   background: rgba(255, 255, 255, 0.5);
@@ -83,20 +83,6 @@
   color: var(--plum);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* ============================================
    HERO
    ============================================ */
@@ -138,7 +124,7 @@
 }
 
 /* ============================================
-   CATTO SECTION - FIXED SIDE-BY-SIDE
+   CATTO SECTION - WITH LAYERS
    ============================================ */
 .catto-section {
   display: flex;
@@ -152,64 +138,117 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px; /* FIX: was 30px — bubble now sits close to Catto instead of floating away */
+  gap: 10px;
   flex-wrap: wrap;
 }
 
-.catto-video-wrapper {
-  flex-shrink: 0;
+/* ---- WRAPPER: The container for all layers ---- */
+.catto-wrapper {
+  position: relative;  /* IMPORTANT: Makes absolute positioning work inside */
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
 }
 
-.catto-video {
+
+/* ---- LANGUAGE-SPECIFIC MAIN VIDEO STYLES ---- */
+.catto-video.lang-en {
+  width: 480px;
+  height: 500px;
+  object-fit:contain;
+}
+
+.catto-video.lang-fr {
+  width: 440px;
+  height: 440px;
+  object-fit: cover;
+}
+
+.catto-video.lang-es {
   width: 460px;
   height: 460px;
-  border-radius: 0;
-  object-fit: contain; /* FIX: was "cover" — "cover" force-cropped the character to fill the square box */
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: block;
-  filter: drop-shadow(0 8px 24px rgba(46,38,87,0.08));
+  object-fit: cover;
 }
 
-.catto-video:hover {
-  transform: scale(1.02);
-  filter: drop-shadow(0 12px 32px rgba(46,38,87,0.12));
+.catto-video.lang-it {
+  width: 440px;
+  height: 440px;
+  object-fit: cover;
 }
 
-.catto-video.talking {
-  animation: cattoTalk 0.6s ease;
+.catto-video.lang-de {
+ width: 490px;
+  height: 520px;
+  object-fit:contain;
 }
 
-@keyframes cattoTalk {
-  0% { transform: scale(1) rotate(0deg); }
-  25% { transform: scale(1.05) rotate(-2deg); }
-  50% { transform: scale(1.08) rotate(2deg); }
-  75% { transform: scale(1.05) rotate(-1deg); }
-  100% { transform: scale(1) rotate(0deg); }
+
+.catto-video.lang-ar {
+  width: 440px;
+  height: 440px;
+  object-fit: cover;
 }
+
 
 
 /* ============================================
-   MEET CATTO SECTION
+   LANGUAGE SELECTION MODAL - 3x2 Grid
+   ============================================ */
+.language-grid-modal {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 16px;
+  margin: 20px 0;
+}
+
+/* Keep 3 columns on tablets */
+@media (max-width: 1024px) {
+  .language-grid-modal {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+}
+
+/* Only on small phones reduce to 2 columns */
+@media (max-width: 480px) {
+  .language-grid-modal {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ============================================
+   MEET CATTO SECTION - WITH LAYERS (FIXED)
    ============================================ */
 .meet-catto-section {
+  display: flex;
   padding: 50px clamp(20px, 5vw, 60px) 60px;
   max-width: 1100px;
   margin: 0 auto;
-  display: flex;
   align-items: center;
   gap: 50px;
   background: linear-gradient(135deg, #FFF9F0, #FFF3E9);
   border-radius: 40px;
   position: relative;
   overflow: hidden;
-  border: 3px solid var(--star);
 }
 
 .meet-catto-section .meet-content {
   flex: 1;
   padding: 20px 0;
+  position: relative;
+  z-index: 2;
 }
 
 .meet-catto-section .meet-content h2 {
@@ -228,22 +267,193 @@
   max-width: 500px;
 }
 
-.meet-catto-section .meet-video {
+/* ---- MEET VIDEO WRAPPER (The container for layers) ---- */
+.meet-video-wrapper {
   flex: 0 0 280px;
-  border-radius: 20px;
+  width: -12rem;
+  height: -12rem;
   overflow: hidden;
-  background: transparent;
-  border: none;
-  box-shadow: none;
- 
+  z-index:5;
 }
 
-.meet-catto-section .meet-video video {
-  width: 18rem;
-  height: auto;
+/* ---- LAYER 1: MEET VIDEO (Background) ---- */
+.meet-video {
+  width: 100%;
+  height: 100%;
   display: block;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.meet-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- LAYER 2: MEET OVERLAY (On top of video) ---- */
+.meet-overlay {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  pointer-events: none;
+  background: rgba(255, 210, 63, 0.92);
+  padding: 8px 24px;
+  border-radius: 999px;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+}
+
+/* Show overlay on hover */
+.meet-video-wrapper:hover .meet-overlay {
+  opacity: 1;
+  transform: translateX(-50%) scale(1.05);
+}
+
+.meet-badge {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--plum);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meet-badge::before {
+  content: '🌟';
+  font-size: 16px;
+}
+
+/* ---- LANGUAGE-SPECIFIC MEET VIDEO STYLES ---- */
+.meet-video.lang-en {
+  border-color: #012169;
   border-radius: 20px;
-  background: transparent;
+  border-width: 4px;
+}
+
+.meet-video.lang-fr {
+  border-color: #002395;
+  border-radius: 30px;
+  border-width: 4px;
+}
+
+.meet-video.lang-es {
+  border-color: #C60B1E;
+  border-radius: 15px;
+  border-width: 4px;
+}
+
+.meet-video.lang-it {
+  border-color: #009246;
+  border-radius: 30px 5px 30px 5px;
+  border-width: 4px;
+}
+
+.meet-video.lang-de {
+  border-color: #DD0000;
+  border-radius: 5px 30px 5px 30px;
+  border-width: 4px;
+}
+
+.meet-video.lang-ar {
+  border-color: #CE1126;
+  border-radius: 20px 5px 20px 5px;
+  border-width: 4px;
+}
+
+/* ---- MEET VIDEO HOVER EFFECT ---- */
+.meet-video-wrapper:hover .meet-video {
+  transform: scale(1.03);
+  filter: brightness(1.05);
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 1024px) {
+  .meet-catto-section {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+    padding: 40px clamp(20px, 5vw, 60px) 30px;
+  }
+  
+  .meet-catto-section .meet-content p {
+    max-width: 100%;
+  }
+  
+  .meet-video-wrapper {
+    flex: 0 0 auto;
+    max-width: 300px;
+    width: 100%;
+    height: 300px;
+  }
+  
+  .meet-overlay {
+    bottom: 12px;
+    padding: 6px 18px;
+  }
+  
+  .meet-badge {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .meet-catto-section {
+    padding: 30px 20px 20px;
+    gap: 20px;
+    border-radius: 30px;
+  }
+  
+  .meet-video-wrapper {
+    max-width: 250px;
+    height: 250px;
+  }
+  
+  .meet-overlay {
+    bottom: 10px;
+    padding: 5px 14px;
+  }
+  
+  .meet-badge {
+    font-size: 11px;
+  }
+  
+  .meet-badge::before {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .meet-catto-section {
+    padding: 20px 15px 15px;
+    border-radius: 25px;
+    gap: 15px;
+  }
+  
+  .meet-video-wrapper {
+    max-width: 200px;
+    height: 200px;
+  }
+  
+  .meet-overlay {
+    bottom: 8px;
+    padding: 4px 12px;
+  }
+  
+  .meet-badge {
+    font-size: 10px;
+  }
+  
+  .meet-badge::before {
+    font-size: 10px;
+  }
 }
 
 /* ============================================
@@ -310,22 +520,21 @@
 }
 
 /* ============================================
-   GRID 4 - CLEAN IMAGES
+   GRID 3 - WHY LEARN WITH CATTO
    ============================================ */
-.grid-4 {
+.grid-3 {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 30px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Why Learn With Catto - Clean */
 .card-uniform {
   background: transparent;
   border: none;
   box-shadow: none;
   padding: 0;
-  min-height: auto;
-  border-radius: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -335,7 +544,7 @@
 }
 
 .card-uniform:hover {
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-10px) scale(1.03);
 }
 
 .card-uniform:active {
@@ -343,19 +552,28 @@
 }
 
 .card-uniform .card-image {
-  width: 100%;
-  max-width: 200px;
-  height: auto;
+  width: 23rem;
+  max-width: 23rem;
   display: block;
-  margin: 0 auto;
-  border-radius: 1.2rem;
-  border: 9px solid var(--star);
+  margin: 8px auto 0;
+  border-radius: 1.5rem;
+  border: 5px solid var(--star);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  box-shadow: 0 8px 30px rgba(46, 38, 87, 0.1);
 }
 
-/* What You'll Learn - Clean */
-.topics-section {
-  background: transparent;
-  border-radius: 0;
+.card-uniform:hover .card-image {
+  transform: scale(1.06);
+  box-shadow: 0 16px 50px rgba(255, 210, 63, 0.35);
+}
+
+/* ============================================
+   GRID 4 - TOPICS & SAFE FOR KIDS
+   ============================================ */
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
 }
 
 .topic-card-uniform {
@@ -389,13 +607,6 @@
   margin: 0 auto;
   border-radius: 1.2rem;
   border: 9px solid var(--star);
-  
-}
-
-/* Safe for Kids - Clean */
-.parent-section {
-  background: transparent;
-  border-radius: 0;
 }
 
 .parent-grid {
@@ -461,59 +672,109 @@
 }
 
 /* ============================================
-   LOGIN REQUIRED MODAL
+   MODALS
    ============================================ */
-.login-required-modal .modal-card {
-  max-width: 420px;
-  padding: 34px 30px 28px;
-}
-
-.login-required-modal .modal-catto-image {
-  width: 140px;
-  height: 140px;
-  margin: 0 auto 12px;
-  overflow: hidden;
-  border: none;
-  box-shadow: none;
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(46, 38, 87, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
 }
 
-.login-required-modal .modal-catto-image img {
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: var(--white);
+  border-radius: 28px;
+  padding: 34px 30px 28px;
+  max-width: 420px;
+  width: 90vw;
+  text-align: center;
+  position: relative;
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 20px 60px rgba(46, 38, 87, 0.2);
+}
+
+.modal-backdrop.open .modal-card {
+  transform: scale(1) translateY(0);
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #F1EEFB;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--plum);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: var(--coral);
+  color: var(--white);
+  transform: rotate(90deg);
+}
+
+.modal-catto-image {
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-catto-image img {
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
 
-.login-required-modal .modal-title {
+.modal-title {
   font-family: var(--font-display);
   font-size: 24px;
   color: var(--plum);
   margin: 0 0 6px;
 }
 
-.login-required-modal .modal-subtitle {
+.modal-subtitle {
   color: var(--plum-soft);
   font-size: 15px;
   font-weight: 600;
-  margin: 0 0 4px;
+  margin: 0 0 20px;
 }
 
-.login-required-modal .modal-actions {
+.modal-actions {
   display: flex;
   gap: 12px;
   justify-content: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 }
 
-.login-required-modal .modal-actions .cta-btn {
+.modal-actions .cta-btn {
   font-size: 15px;
   padding: 12px 24px;
   min-width: 130px;
-  flex: 1;
-  max-width: 180px;
   font-family: var(--font-display);
   font-weight: 700;
   border-radius: 999px;
@@ -523,50 +784,40 @@
   justify-content: center;
   gap: 8px;
   transition: all 0.15s ease;
-  white-space: nowrap;
   border: none;
   cursor: pointer;
-  line-height: 1.2;
   height: 48px;
 }
 
-.login-required-modal .modal-actions .cta-btn,
-.login-required-modal .modal-actions .cta-btn.secondary {
-  height: 48px;
-  min-width: 130px;
-  max-width: 180px;
-  flex: 1;
-}
-
-.login-required-modal .modal-actions .cta-btn {
+.modal-actions .cta-btn {
   background: var(--coral);
   color: var(--white);
   box-shadow: 0 5px 0 var(--coral-dark);
 }
 
-.login-required-modal .modal-actions .cta-btn:hover {
+.modal-actions .cta-btn:hover {
   transform: translateY(-2px);
 }
 
-.login-required-modal .modal-actions .cta-btn:active {
+.modal-actions .cta-btn:active {
   transform: translateY(3px);
   box-shadow: 0 2px 0 var(--coral-dark);
 }
 
-.login-required-modal .modal-actions .cta-btn.secondary {
+.modal-actions .cta-btn.secondary {
   background: #F1EEFB;
   color: var(--plum);
-  box-shadow: 0 5px 0 rgba(46,38,87,0.08);
+  box-shadow: 0 5px 0 rgba(46, 38, 87, 0.08);
 }
 
-.login-required-modal .modal-actions .cta-btn.secondary:hover {
+.modal-actions .cta-btn.secondary:hover {
   transform: translateY(-2px);
   background: #E8E4F5;
 }
 
-.login-required-modal .modal-actions .cta-btn.secondary:active {
+.modal-actions .cta-btn.secondary:active {
   transform: translateY(3px);
-  box-shadow: 0 2px 0 rgba(46,38,87,0.08);
+  box-shadow: 0 2px 0 rgba(46, 38, 87, 0.08);
 }
 
 /* ============================================
@@ -642,13 +893,46 @@
 /* ============================================
    RESPONSIVE
    ============================================ */
+@media (max-width: 1200px) {
+  .grid-3 {
+    gap: 30px;
+    max-width: 1000px;
+  }
+  .card-uniform .card-image {
+    max-width: 320px;
+  }
+}
+
 @media (max-width: 1024px) {
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .parent-grid { grid-template-columns: repeat(2, 1fr); }
-  .meet-catto-section { flex-direction: column; text-align: center; }
-  .meet-catto-section .meet-content p { max-width: 100%; }
-  .meet-catto-section .meet-video { flex: 0 0 auto; max-width: 280px; }
   .language-grid-modal { grid-template-columns: repeat(3, 1fr); }
+  .grid-3 {
+    gap: 25px;
+    max-width: 800px;
+  }
+  .card-uniform .card-image {
+    max-width: 280px;
+    border-width: 10px;
+  }
+  
+  /* Responsive main video */
+  .catto-video.lang-en,
+  .catto-video.lang-fr,
+  .catto-video.lang-es,
+  .catto-video.lang-it,
+  .catto-video.lang-de,
+  .catto-video.lang-ar {
+    width: 380px;
+    height: 380px;
+  }
+  
+  .catto-title {
+    font-size: 24px;
+  }
+  .catto-subtitle {
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -672,43 +956,27 @@
   }
   .catto-center {
     flex-direction: column;
-    gap: 8px; /* FIX: was 20px — tightens vertical spacing so bubble sits close to Catto */
+    gap: 8px;
   }
-  .catto-video {
-    width: 200px;
-    height: 200px;
+  
+  /* Responsive main video */
+  .catto-video.lang-en,
+  .catto-video.lang-fr,
+  .catto-video.lang-es,
+  .catto-video.lang-it,
+  .catto-video.lang-de,
+  .catto-video.lang-ar {
+    width: 280px;
+    height: 280px;
   }
-  .speech-bubble-wrapper {
-    max-width: 280px;
-    min-width: 160px;
+  
+  .catto-title {
+    font-size: 20px;
   }
-  .speech-bubble {
-    padding: 14px 20px;
-    border-width: 3px;
-    border-radius: 20px;
-    min-height: 50px;
+  .catto-subtitle {
+    font-size: 12px;
   }
-  .speech-bubble::before {
-    left: 50%;
-    top: -22px; /* FIX: was -18px — tail lengthened to reach Catto's mouth above */
-    transform: translateX(-50%);
-    border-left: 16px solid transparent;
-    border-right: 16px solid transparent;
-    border-bottom: 22px solid var(--white);
-    border-top: none;
-  }
-  .speech-bubble::after {
-    left: 50%;
-    top: -28px; /* FIX: was -24px — outline tail lengthened to match ::before */
-    transform: translateX(-50%);
-    border-left: 18px solid transparent;
-    border-right: 18px solid transparent;
-    border-bottom: 24px solid var(--star);
-    border-top: none;
-  }
-  .speech-text {
-    font-size: 18px;
-  }
+  
   .lang-navbar {
     gap: 4px;
     padding: 4px 10px;
@@ -726,21 +994,8 @@
   .parent-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
   .language-grid-modal { grid-template-columns: repeat(2, 1fr); }
   .lang-image-btn img { max-width: 100px; }
-  .card-uniform .card-image { max-width: 160px; }
   .topic-card-uniform .topic-image { max-width: 120px; }
   .parent-image { max-width: 140px; }
-  .meet-catto-section {
-    flex-direction: column;
-    text-align: center;
-    padding: 30px 20px;
-  }
-  .meet-catto-section .meet-content p {
-    max-width: 100%;
-  }
-  .meet-catto-section .meet-video {
-    flex: 0 0 auto;
-    max-width: 220px;
-  }
   .login-required-modal .modal-card {
     padding: 24px 20px 20px;
   }
@@ -753,38 +1008,47 @@
     padding: 10px 16px;
     min-width: 100px;
   }
+  .grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 700px;
+  }
+  .card-uniform .card-image {
+    max-width: 220px;
+    border-width: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 15rem;
+  }
+  .card-uniform .card-image {
+    max-width: 200px;
+    border-width: 8px;
+  }
 }
 
 @media (max-width: 480px) {
-  .catto-video {
-    width: 160px;
-    height: 160px;
+  .catto-video.lang-en,
+  .catto-video.lang-fr,
+  .catto-video.lang-es,
+  .catto-video.lang-it,
+  .catto-video.lang-de,
+  .catto-video.lang-ar {
+    width: 200px;
+    height: 200px;
   }
-  .speech-bubble-wrapper {
-    max-width: 220px;
-    min-width: 130px;
+  
+  .catto-title {
+    font-size: 16px;
   }
-  .speech-bubble {
-    padding: 12px 16px;
-    border-width: 3px;
-    border-radius: 18px;
-    min-height: 40px;
+  .catto-subtitle {
+    font-size: 10px;
   }
-  .speech-bubble::before {
-    top: -18px; /* FIX: was -14px — tail lengthened to reach Catto's mouth above */
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    border-bottom: 18px solid var(--white);
-  }
-  .speech-bubble::after {
-    top: -23px; /* FIX: was -19px — outline tail lengthened to match ::before */
-    border-left: 14px solid transparent;
-    border-right: 14px solid transparent;
-    border-bottom: 20px solid var(--star);
-  }
-  .speech-text {
-    font-size: 15px;
-  }
+  
   .lang-navbar {
     gap: 3px;
     padding: 3px 8px;
@@ -803,12 +1067,8 @@
   .parent-grid { grid-template-columns: 1fr 1fr; gap: 15px; }
   .language-grid-modal { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .lang-image-btn img { max-width: 80px; }
-  .card-uniform .card-image { max-width: 130px; }
   .topic-card-uniform .topic-image { max-width: 100px; }
   .parent-image { max-width: 120px; }
-  .meet-catto-section .meet-video {
-    max-width: 180px;
-  }
   .meet-catto-section .meet-content h2 {
     font-size: 28px;
   }
@@ -840,6 +1100,15 @@
     font-size: 14px;
     padding: 10px 16px;
   }
+  .grid-3 {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    max-width: 350px;
+  }
+  .card-uniform .card-image {
+    max-width: 280px;
+    border-width: 8px;
+  }
 }
 
 @keyframes bounce-in {
@@ -851,265 +1120,4 @@
 
 .bounce-in {
   animation: bounce-in 0.5s ease;
-}
-/* Modal Backdrop - Full screen overlay */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(46, 38, 87, 0.6);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 1000;
-}
-
-.modal-backdrop.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Modal Card */
-.modal-card {
-  background: var(--white);
-  border-radius: 28px;
-  padding: 34px 30px 28px;
-  max-width: 420px;
-  width: 90vw;
-  text-align: center;
-  position: relative;
-  transform: scale(0.9) translateY(20px);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 20px 60px rgba(46, 38, 87, 0.2);
-}
-
-.modal-backdrop.open .modal-card {
-  transform: scale(1) translateY(0);
-}
-
-/* Modal Close Button */
-.modal-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  background: #F1EEFB;
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  font-size: 14px;
-  color: var(--plum);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.modal-close:hover {
-  background: var(--coral);
-  color: var(--white);
-  transform: rotate(90deg);
-}
-
-/* Catto Image */
-.modal-catto-image {
-  width: 130px;
-  height: 130px;
-  margin: 0 auto 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-catto-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-/* Modal Title & Subtitle */
-.modal-title {
-  font-family: var(--font-display);
-  font-size: 24px;
-  color: var(--plum);
-  margin: 0 0 6px;
-}
-
-.modal-subtitle {
-  color: var(--plum-soft);
-  font-size: 15px;
-  font-weight: 600;
-  margin: 0 0 20px;
-}
-
-/* Modal Actions - Buttons */
-.modal-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.modal-actions .cta-btn {
-  font-size: 15px;
-  padding: 12px 24px;
-  min-width: 130px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  border-radius: 999px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.15s ease;
-  border: none;
-  cursor: pointer;
-  height: 48px;
-}
-
-.modal-actions .cta-btn {
-  background: var(--coral);
-  color: var(--white);
-  box-shadow: 0 5px 0 var(--coral-dark);
-}
-
-.modal-actions .cta-btn:hover {
-  transform: translateY(-2px);
-}
-
-.modal-actions .cta-btn:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px 0 var(--coral-dark);
-}
-
-.modal-actions .cta-btn.secondary {
-  background: #F1EEFB;
-  color: var(--plum);
-  box-shadow: 0 5px 0 rgba(46, 38, 87, 0.08);
-}
-
-.modal-actions .cta-btn.secondary:hover {
-  transform: translateY(-2px);
-  background: #E8E4F5;
-}
-
-.modal-actions .cta-btn.secondary:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px 0 rgba(46, 38, 87, 0.08);
-}
-/* ============================================
-   WHY LEARN WITH CATTO - LARGE IMAGES IN ONE ROW
-   ============================================ */
-
-.grid-3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.card-uniform {
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  cursor: pointer;
-}
-
-.card-uniform:hover {
-  transform: translateY(-10px) scale(1.03);
-}
-
-.card-uniform:active {
-  transform: scale(0.96);
-}
-
-.card-uniform .card-image {
-  width: 23rem;
-  max-width: 23rem;  /* LARGER - increased from 280px */
-  display: block;
-  margin: 8 px auto 0;
-  border-radius: 1.5rem;
-  border: 5px solid var(--star);  /* THICKER border */
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-
-  box-shadow: 0 8px 30px rgba(46, 38, 87, 0.1);
-}
-
-.card-uniform:hover .card-image {
-  transform: scale(1.06);
-  box-shadow: 0 16px 50px rgba(255, 210, 63, 0.35);
-}
-
-/* ============================================
-   RESPONSIVE FOR LARGE IMAGES
-   ============================================ */
-
-@media (max-width: 1200px) {
-  .grid-3 {
-    gap: 30px;
-    max-width: 1000px;
-  }
-  .card-uniform .card-image {
-    max-width: 320px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .grid-3 {
-    gap: 25px;
-    max-width: 800px;
-  }
-  .card-uniform .card-image {
-    max-width: 280px;
-    border-width: 10px;
-  }
-}
-
-@media (max-width: 768px) {
-  .grid-3 {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    max-width: 700px;
-  }
-  .card-uniform .card-image {
-    max-width: 220px;
-    border-width: 8px;
-  }
-}
-
-@media (max-width: 600px) {
-  .grid-3 {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    max-width: 15rem;
-  }
-  .card-uniform .card-image {
-    max-width: 200px;
-    border-width: 8px;
-  }
-}
-
-@media (max-width: 400px) {
-  .grid-3 {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    max-width: 350px;
-  }
-  .card-uniform .card-image {
-    max-width: 280px;
-    border-width: 8px;
-  }
 }

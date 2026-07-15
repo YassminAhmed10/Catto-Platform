@@ -88,20 +88,20 @@
 /* My Items tab special style */
 .tab-btn[data-category="myitems"] {
   background: linear-gradient(135deg, #FFF5F0, #FFE8E4);
-  border-color: var(--coral);
-  color: var(--coral-dark);
+  border-color: #489344;
+  color:#419038;
 }
 
 .tab-btn[data-category="myitems"]:hover {
-  border-color: var(--coral);
+  border-color: #dad727;
   background: #FFE8E4;
 }
 
 .tab-btn[data-category="myitems"].active {
-  background: var(--coral);
-  border-color: var(--coral);
+  background: var(--grass);
+  border-color: var(--grass dar);
   color: #fff;
-  box-shadow: 0 4px 0 var(--coral-dark);
+  box-shadow: 0 4px 0 var(--grass);
 }
 
 /* ---------- Shop Grid ---------- */
@@ -169,6 +169,23 @@
   transform: scale(1.05);
 }
 
+/* Book cards - No border or background */
+.shop-card.book-card .card-image {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 12px;
+  border-radius: 0;
+  object-fit: contain;
+  background: transparent !important;
+  border: none !important;
+  transition: all 0.3s ease;
+}
+
+.shop-card.book-card:hover .card-image {
+  transform: scale(1.05);
+  border: none !important;
+}
+
 .shop-card .card-image-placeholder {
   width: 120px;
   height: 120px;
@@ -218,8 +235,8 @@
 }
 
 .shop-card.my-item-card .card-category {
-  background: #FFE8E4;
-  color: var(--coral-dark);
+  background: #b4fa9f;
+  color: #419038;
 }
 
 .shop-card.hidden {
@@ -231,13 +248,13 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  background: var(--coral);
+  background: var(--grass);
   color: #fff;
   font-size: 10px;
   font-weight: 700;
   padding: 3px 12px;
   border-radius: 999px;
-  border: 2px solid var(--white);
+  border: 2px solid #07882c;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
@@ -345,7 +362,7 @@
 .shop-overlay-content .cta-btn:not(.secondary) {
   background: var(--coral);
   color: #fff;
-  box-shadow: 0 4px 0 var(--coral-dark);
+  box-shadow: 0 4px 0 var(--grass);
 }
 
 .shop-overlay-content .cta-btn:not(.secondary):hover {
@@ -354,7 +371,7 @@
 
 .shop-overlay-content .cta-btn:not(.secondary):active {
   transform: translateY(3px);
-  box-shadow: 0 1px 0 var(--coral-dark);
+  box-shadow: 0 1px 0 var(--grass);
 }
 
 .shop-overlay-content .cta-btn.secondary {
@@ -443,8 +460,18 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid var(--coral);
+  border: 4px solid var(--gress);
   box-shadow: 0 4px 16px rgba(255,107,89,0.25);
+}
+
+/* Book image in purchase modal - No border */
+.purchase-icon img.book-modal-img {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  object-fit: contain;
+  border-color: var(--gress);
+ 
 }
 
 .purchase-icon span {
@@ -626,6 +653,11 @@
   .shop-card .card-image-placeholder {
     font-size: 32px;
   }
+  /* Book card images on mobile */
+  .shop-card.book-card .card-image {
+    width: 80px;
+    height: 80px;
+  }
   .shop-card h3 {
     font-size: 15px;
   }
@@ -672,4 +704,94 @@
     font-size: 13px;
     margin-bottom: 16px;
   }
+}
+
+/* ============================================
+   SHOP CARD ICONS - Image based
+   ============================================ */
+.shop-card .card-image-placeholder {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F1EEFB;
+    border: 3px solid #F1EEFB;
+    overflow: hidden;
+}
+
+.shop-card .card-image-placeholder img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.print-card .card-image-placeholder {
+    background: #FFF3E0;
+    border-color: #FFE0B2;
+}
+
+.shop-card .card-image {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #F1EEFB;
+    border: 3px solid #F1EEFB;
+}
+
+/* Book cards - No border or background for images */
+.shop-card.book-card .card-image {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 12px;
+    border-radius: 0 !important;
+    object-fit: contain;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.shop-card.book-card:hover .card-image {
+    transform: scale(1.05);
+}
+
+/* ============================================
+   THEME SWATCHES IN SHOP - Like Settings
+   ============================================ */
+.theme-swatch-shop {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 4px rgba(255,255,255,0.6), 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.shop-card:hover .theme-swatch-shop {
+  transform: scale(1.05);
+}
+
+.theme-swatch-shop.swatch-default {
+  background: linear-gradient(135deg, #6EC6FF, #FFE9A8, #FF6F59);
+}
+
+.theme-swatch-shop.swatch-purple {
+  background: linear-gradient(135deg, #EAE5F9, #9D8DF1, #4A154B);
+}
+
+.theme-swatch-shop.swatch-night {
+  background: linear-gradient(135deg, #0B1E3D, #24406E, #F5F7FA);
+}
+
+.theme-swatch-shop.swatch-space {
+  background: linear-gradient(135deg, #0A0518, #5A4FCF, #FF9BD2);
+}
+
+.theme-swatch-shop.swatch-boys {
+  background: linear-gradient(135deg, #0A1F0A, #00E676, #69F0AE);
 }

@@ -14,7 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentCategory = 'all';
   let isLoggedIn = false;
 
-  // Shop items data with categories and images
+  // =========================================================
+  // SHOP ITEMS - Replace image paths with your actual images
+  // =========================================================
   const shopItems = {
     skins: [
       { id: 'wizard-catto', name: 'Wizard Catto', price: 250, category: 'skins', image: 'imgs/Cattoimages/wizard-catto.png', description: 'Equip Catto with his magical wizard hat and wand.' },
@@ -27,15 +29,20 @@ document.addEventListener('DOMContentLoaded', () => {
       { id: 'pirate-catto', name: 'Pirate Catto', price: 250, category: 'skins', image: 'imgs/Cattoimages/pirate-catto.png', description: 'Equip Catto with his cool pirate hat and eye patch.' }
     ],
     prints: [
-      { id: 'coloring_book', name: 'Animal Coloring Book', price: 150, category: 'prints', image: '', description: 'A printable coloring book featuring all the new animals you learned!', icon: '🖍️' },
-      { id: 'sudoku', name: 'Animal Sudoku', price: 150, category: 'prints', image: '', description: 'A printable solo puzzle game using the animals you just learned!', icon: '🧩' },
-      { id: 'nonogram', name: 'Food Nonogram', price: 150, category: 'prints', image: '', description: 'Solve the printable number grid to reveal a secret food picture.', icon: '🎨' }
+      { id: 'coloring_book', name: 'Animal Coloring Book', price: 150, category: 'prints', image: 'imgs/shop/icons/coloring-book.png', description: 'A printable coloring book featuring all the new animals you learned!' },
+      { id: 'sudoku', name: 'Animal Sudoku', price: 150, category: 'prints', image: 'imgs/shop/icons/sudoku.png', description: 'A printable solo puzzle game using the animals you just learned!' },
+      { id: 'nonogram', name: 'Food Nonogram', price: 150, category: 'prints', image: 'imgs/shop/icons/nonogram.png', description: 'Solve the printable number grid to reveal a secret food picture.' }
     ],
     books: [
-      { id: 'fantasy-book', name: 'Fantasy Adventure Novel', price: 200, category: 'books', image: '', description: 'Unlock a special chapter book in the Reading Corner.', icon: '🐉' }
+      { id: 'catto-space', name: 'Catto in Space', price: 200, category: 'books', image: 'imgs/shop/Books/Catto-space.png', description: 'Join Catto on an adventure through the stars and planets!' },
+      { id: 'catto-fruits', name: 'Catto & Fruits', price: 200, category: 'books', image: 'imgs/shop/Books/Catto-fruits.png', description: 'Learn about healthy fruits with Catto in this colorful book!' },
+      { id: 'catto-numbers', name: 'Catto & Numbers', price: 200, category: 'books', image: 'imgs/shop/Books/Catto-numbers.png', description: 'Count along with Catto and discover the world of numbers!' }
     ],
     themes: [
-      { id: 'purple-theme', name: 'Royal Purple Theme', price: 300, category: 'themes', image: '', description: 'Unlock a magical purple color palette for your entire dashboard.', icon: '💜' }
+      { id: 'purple-theme', name: 'Royal Purple Theme', price: 300, category: 'themes', image: '', description: 'Unlock a magical purple color palette for your entire dashboard.', isTheme: true, swatchClass: 'swatch-purple' },
+      { id: 'night-theme', name: 'Night Theme', price: 300, category: 'themes', image: '', description: 'Swap the sun for a glowing moon and dress your dashboard in navy & white.', isTheme: true, swatchClass: 'swatch-night' },
+      { id: 'space-theme', name: 'Space Theme', price: 350, category: 'themes', image: '', description: 'Blast into a galaxy of planets and stars across your whole dashboard.', isTheme: true, swatchClass: 'swatch-space' },
+      { id: 'boys-theme', name: 'Boys Theme', price: 300, category: 'themes', image: '', description: 'Cool green energy, waves, and a dynamic nature-inspired look.', isTheme: true, swatchClass: 'swatch-boys' }
     ]
   };
 
@@ -57,6 +64,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   console.log('shopGrid exists:', !!shopGrid);
   console.log('Tab buttons found:', tabButtons.length);
+
+  // =========================================================
+  // Deep-link support: ?category=themes coming from Settings page
+  // =========================================================
+  function applyCategoryFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    var cat = params.get('category');
+    if (cat) {
+      var targetTab = document.querySelector('.tab-btn[data-category="' + cat + '"]');
+      if (targetTab) {
+        tabButtons.forEach(b => b.classList.remove('active'));
+        targetTab.classList.add('active');
+        currentCategory = cat;
+      }
+    }
+  }
+  applyCategoryFromUrl();
 
   // Category tab click handlers
   tabButtons.forEach(btn => {
@@ -156,23 +180,18 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateAllAvatars(skinPath) {
     console.log('Updating all avatars to:', skinPath);
     
-    // Header avatar
     const headerAvatar = document.getElementById('userAvatarIcon');
     if (headerAvatar) headerAvatar.src = skinPath;
     
-    // Sidebar avatar
     const sidebarAvatar = document.getElementById('sidebarUserImage');
     if (sidebarAvatar) sidebarAvatar.src = skinPath;
     
-    // Profile avatar
     const profileAvatar = document.getElementById('cattoAvatar');
     if (profileAvatar) profileAvatar.src = skinPath;
     
-    // Games page Catto
     const gameCatto = document.getElementById('cattoImg');
     if (gameCatto) gameCatto.src = skinPath;
     
-    // Store in localStorage for persistence
     try {
       localStorage.setItem('currentSkin', skinPath);
     } catch(e) {}
@@ -216,10 +235,9 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    if (currentTheme === 'purple-theme') {
-      document.body.classList.add('theme-royal-purple');
-    } else {
-      document.body.classList.remove('theme-royal-purple');
+    // Apply theme using global function
+    if (typeof window.applyThemeClass === 'function') {
+      window.applyThemeClass(currentTheme);
     }
 
     filterItems();
@@ -228,8 +246,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function createItemCard(item, isOwned) {
     const card = document.createElement('div');
     card.className = 'shop-card';
-    if (item.category === 'prints' || item.category === 'books') {
+    
+    // Add specific classes based on category
+    if (item.category === 'prints') {
       card.classList.add('print-card');
+    }
+    if (item.category === 'books') {
+      card.classList.add('print-card');
+      card.classList.add('book-card');
     }
     if (isOwned) {
       card.classList.add('my-item-card');
@@ -238,12 +262,17 @@ document.addEventListener('DOMContentLoaded', () => {
     card.dataset.itemId = item.id;
     card.dataset.owned = isOwned ? 'true' : 'false';
 
+    // Image HTML - For themes, show a color swatch instead of image
     let imageHtml = '';
-    if (item.image) {
-      imageHtml = `<img src="${item.image}" alt="${item.name}" class="card-image" onerror="this.src='imgs/Cattoimages/default-catto.png'">`;
-    } else if (item.icon) {
-      imageHtml = `<div class="card-image-placeholder">${item.icon}</div>`;
+    if (item.isTheme) {
+      // Themes - show as CSS circle with gradient
+      const swatchClass = item.swatchClass || 'swatch-default';
+      imageHtml = `<div class="theme-swatch-shop ${swatchClass}"></div>`;
+    } else if (item.image && item.image.length > 0) {
+      // Regular items - show image
+      imageHtml = `<img src="${item.image}" alt="${item.name}" class="card-image shop-item-img" loading="lazy">`;
     } else {
+      // Fallback placeholder
       imageHtml = `<div class="card-image-placeholder">🪙</div>`;
     }
 
@@ -269,6 +298,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } else if (item.category === 'prints' || item.category === 'books') {
         buttonHtml = `<a href="../Backend/download.php?item=${item.id}" class="buy-btn purchased" style="text-decoration:none;display:inline-block;">Download PDF 📥</a>`;
+      } else if (item.isTheme) {
+        // For owned themes, show a message to go to Settings
+        buttonHtml = `<button class="buy-btn purchased" disabled>Owned ✔</button>`;
       } else {
         buttonHtml = `<button class="buy-btn purchased" disabled>Owned ✔</button>`;
       }
@@ -284,6 +316,20 @@ document.addEventListener('DOMContentLoaded', () => {
       <p>${item.description}</p>
       ${buttonHtml}
     `;
+
+    // Handle image loading errors with fallback - only once
+    const img = card.querySelector('.shop-item-img');
+    if (img) {
+      img.addEventListener('error', function() {
+        if (!this.dataset.fallbackAttempted) {
+          this.dataset.fallbackAttempted = 'true';
+          const placeholder = document.createElement('div');
+          placeholder.className = 'card-image-placeholder';
+          placeholder.textContent = '🪙';
+          this.parentNode.replaceChild(placeholder, this);
+        }
+      });
+    }
 
     const buyBtn = card.querySelector('.buy-btn');
     if (buyBtn && !buyBtn.disabled && !buyBtn.classList.contains('purchased')) {
@@ -319,12 +365,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!item) return;
 
     const purchaseIcon = document.getElementById('purchaseIcon');
-    if (item.image) {
-      purchaseIcon.innerHTML = `<img src="${item.image}" alt="${item.name}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid var(--coral);">`;
-    } else if (item.icon) {
-      purchaseIcon.innerHTML = `<span style="font-size:56px;">${item.icon}</span>`;
+    
+    // For themes, show swatch in modal
+    if (item.isTheme) {
+      const swatchClass = item.swatchClass || 'swatch-default';
+      purchaseIcon.innerHTML = `<div class="theme-swatch-shop ${swatchClass}" style="width:100px;height:100px;border-radius:50%;margin:0 auto;"></div>`;
+    } else if (item.image && item.image.length > 0) {
+      // For books, remove border and background in modal
+      const isBook = item.category === 'books';
+      const borderStyle = isBook ? 'border:none !important;border-radius:0 !important;box-shadow:none !important;' : 'border:4px solid var(--coral);border-radius:50%;';
+      const objectFit = isBook ? 'contain' : 'cover';
+      purchaseIcon.innerHTML = `<img src="${item.image}" alt="${item.name}" class="purchase-item-img" style="width:100px;height:100px;${borderStyle}object-fit:${objectFit};background:transparent !important;">`;
     } else {
       purchaseIcon.innerHTML = `<span style="font-size:56px;">🪙</span>`;
+    }
+
+    // Handle purchase image error
+    const purchaseImg = purchaseIcon.querySelector('.purchase-item-img');
+    if (purchaseImg) {
+      purchaseImg.addEventListener('error', function() {
+        if (!this.dataset.fallbackAttempted) {
+          this.dataset.fallbackAttempted = 'true';
+          this.parentNode.innerHTML = `<span style="font-size:56px;">🪙</span>`;
+        }
+      });
     }
 
     document.getElementById('purchaseTitle').textContent = `Buy ${item.name}?`;
@@ -397,23 +461,18 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(response => {
       console.log('Equip response:', response);
       if (response.success) {
-        // Update skin globally
         const skinPath = `imgs/Cattoimages/${itemId}.png`;
         
-        // Update all avatars using the global function
         if (typeof window.updateAllAvatars === 'function') {
           window.updateAllAvatars(skinPath);
         } else {
-          // Fallback: local update
           updateAllAvatars(skinPath);
         }
         
-        // Store in localStorage
         try {
           localStorage.setItem('currentSkin', skinPath);
         } catch(e) {}
         
-        // Refresh shop data and header
         fetchShopData();
         if (typeof initHeader === 'function') initHeader();
         
@@ -481,7 +540,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch(e) {}
   }
   
-  // Call on load
   applyCachedSkin();
 
   window.fetchShopData = fetchShopData;

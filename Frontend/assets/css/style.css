@@ -1,3 +1,7 @@
+/* =========================================================
+   MAIN STYLES
+   ========================================================= */
+
 :root {
   --sky-top: #6EC6FF;
   --sky-bottom: #FFE9A8;
@@ -232,24 +236,27 @@ main { position: relative; z-index: 2; }
 
 .speech-bubble {
   position: absolute;
-  top: -6px;
-  left: -190px;
-  width: 180px;
+  top: 200px;
+  right: calc(100% + -140px);
+  left: auto;
+  width: 210px;
   background: var(--white);
   border-radius: 18px;
-  padding: 12px 14px;
+  padding: 12px 20px;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 13.5px;
   color: var(--plum);
-  box-shadow: 0 6px 0 rgba(46,38,87,0.1);
+  box-shadow: 0 6px 0 rgba(46, 38, 87, 0.1);
 }
 .speech-bubble::after {
   content: "";
   position: absolute;
-  right: -14px;
+  left: 100%;
+  right: auto;
   top: 40%;
   border: 9px solid transparent;
+  border-right-color: transparent;
   border-left-color: var(--white);
 }
 
@@ -1637,17 +1644,1043 @@ button:focus-visible {
 
 
 /* ============================================
-   ROYAL PURPLE THEME OVERRIDE
+   ROYAL PURPLE THEME - Enhanced with Flower
    ============================================ */
 body.theme-royal-purple {
-  --plum: #4A154B;        
-  --plum-soft: #7A5C7A;   
-  --coral: #9D8DF1;       
-  --coral-dark: #7A69D1;  
-  --star: #E3DFF5;        
-  --grass: #B9B3D9;       
+  --plum: #2D1B4E;
+  --plum-soft: #7A5C9E;
+  --coral: #B28CFF;
+  --coral-dark: #7A4FD1;
+  --star: #E8D5FF;
+  --grass: #BFA5E8;
+  --sky-top: #6B3FA0;
+  --sky-bottom: #D4B8FF;
 }
 
 body.theme-royal-purple .sky {
-  background: linear-gradient(180deg, #EAE5F9 0%, #F5F3FC 100%);
+  background: linear-gradient(180deg, #1A0A2E 0%, #3B1B6E 25%, #6B3FA0 55%, #A87DCC 80%, #D4B8FF 100%);
+  animation: purpleSkyShift 12s ease-in-out infinite;
+  overflow: hidden;
+}
+
+@keyframes purpleSkyShift {
+  0%, 100% {
+    background: linear-gradient(180deg, #1A0A2E 0%, #3B1B6E 25%, #6B3FA0 55%, #A87DCC 80%, #D4B8FF 100%);
+  }
+  33% {
+    background: linear-gradient(180deg, #2D1545 0%, #4A2580 25%, #7A4FD1 55%, #B895E0 80%, #DFC8FF 100%);
+  }
+  66% {
+    background: linear-gradient(180deg, #1F0F38 0%, #3B1B6E 25%, #6B3FA0 55%, #A87DCC 80%, #D4B8FF 100%);
+  }
+  100% {
+    background: linear-gradient(180deg, #1A0A2E 0%, #3B1B6E 25%, #6B3FA0 55%, #A87DCC 80%, #D4B8FF 100%);
+  }
+}
+
+/* ----- Purple Flower instead of Sun ----- */
+body.theme-royal-purple .sun {
+  position: absolute;
+  top: 6%;
+  right: 8%;
+  width: 150px;
+  height: 150px;
+  background: transparent;
+  box-shadow: none;
+  animation: none;
+  z-index: 2;
+}
+
+body.theme-royal-purple .sun-face {
+  display: none;
+}
+
+/* Flower SVG using pure CSS */
+.flower-container {
+  position: absolute;
+  top: 6%;
+  right: 8%;
+  width: 150px;
+  height: 150px;
+  animation: flowerFloat 6s ease-in-out infinite;
+  z-index: 10;
+  transform: translate(0, 0);
+}
+
+@keyframes flowerFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+/* Petals */
+.flower-petal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 60px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  transform-origin: center bottom;
+  background: linear-gradient(135deg, #E8D5FF, #B28CFF 40%, #7A4FD1 80%);
+  box-shadow: 0 0 20px rgba(178, 140, 255, 0.4);
+  animation: petalGlow 3s ease-in-out infinite;
+}
+
+.flower-petal::after {
+  content: "";
+  position: absolute;
+  top: 15%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.3), transparent 70%);
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.flower-petal:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg) translateY(-30px); }
+.flower-petal:nth-child(2) { transform: translate(-50%, -50%) rotate(60deg) translateY(-30px); }
+.flower-petal:nth-child(3) { transform: translate(-50%, -50%) rotate(120deg) translateY(-30px); }
+.flower-petal:nth-child(4) { transform: translate(-50%, -50%) rotate(180deg) translateY(-30px); }
+.flower-petal:nth-child(5) { transform: translate(-50%, -50%) rotate(240deg) translateY(-30px); }
+.flower-petal:nth-child(6) { transform: translate(-50%, -50%) rotate(300deg) translateY(-30px); }
+
+@keyframes petalGlow {
+  0%, 100% { opacity: 0.8; filter: brightness(1); }
+  50% { opacity: 1; filter: brightness(1.2) drop-shadow(0 0 20px rgba(178, 140, 255, 0.6)); }
+}
+
+/* Inner petals (smaller layer) */
+.flower-petal-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 25px;
+  height: 35px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  transform-origin: center bottom;
+  background: linear-gradient(135deg, #D4B8FF, #B28CFF 40%, #8A5CD6 80%);
+  box-shadow: 0 0 15px rgba(178, 140, 255, 0.3);
+  animation: petalInnerGlow 2.5s ease-in-out infinite;
+}
+
+.flower-petal-inner::after {
+  content: "";
+  position: absolute;
+  top: 15%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.4), transparent 70%);
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.flower-petal-inner:nth-child(7) { transform: translate(-50%, -50%) rotate(30deg) translateY(-20px); }
+.flower-petal-inner:nth-child(8) { transform: translate(-50%, -50%) rotate(90deg) translateY(-20px); }
+.flower-petal-inner:nth-child(9) { transform: translate(-50%, -50%) rotate(150deg) translateY(-20px); }
+.flower-petal-inner:nth-child(10) { transform: translate(-50%, -50%) rotate(210deg) translateY(-20px); }
+.flower-petal-inner:nth-child(11) { transform: translate(-50%, -50%) rotate(270deg) translateY(-20px); }
+.flower-petal-inner:nth-child(12) { transform: translate(-50%, -50%) rotate(330deg) translateY(-20px); }
+
+@keyframes petalInnerGlow {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* Flower Center */
+.flower-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #FFE8A0, #E8D5FF 40%, #B28CFF 70%, #7A4FD1 100%);
+  box-shadow: 0 0 30px rgba(178, 140, 255, 0.6), inset 0 -5px 15px rgba(122, 79, 209, 0.3);
+  z-index: 5;
+  animation: centerPulse 2s ease-in-out infinite;
+}
+
+@keyframes centerPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 30px rgba(178, 140, 255, 0.6); }
+  50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 50px rgba(178, 140, 255, 0.9), 0 0 80px rgba(122, 79, 209, 0.3); }
+}
+
+/* Glowing aura around flower */
+body.theme-royal-purple .sun::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(178, 140, 255, 0.15) 0%, rgba(122, 79, 209, 0.05) 60%, transparent 100%);
+  border-radius: 50%;
+  animation: auraPulse 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes auraPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+  50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+}
+
+/* Sparkles around the flower */
+.sparkle-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, #E8D5FF, #B28CFF);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(178, 140, 255, 0.8);
+  animation: sparkleFloat 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.sparkle-particle:nth-child(13) { top: -20px; left: 30px; animation-delay: 0s; width: 4px; height: 4px; }
+.sparkle-particle:nth-child(14) { top: -15px; right: 20px; animation-delay: 1.2s; width: 6px; height: 6px; }
+.sparkle-particle:nth-child(15) { bottom: -10px; left: 50px; animation-delay: 2.5s; width: 3px; height: 3px; }
+.sparkle-particle:nth-child(16) { bottom: -15px; right: 40px; animation-delay: 0.8s; width: 5px; height: 5px; }
+.sparkle-particle:nth-child(17) { top: 10px; left: -15px; animation-delay: 1.8s; width: 4px; height: 4px; }
+.sparkle-particle:nth-child(18) { top: 15px; right: -20px; animation-delay: 3.2s; width: 5px; height: 5px; }
+.sparkle-particle:nth-child(19) { bottom: 20px; left: -10px; animation-delay: 0.5s; width: 3px; height: 3px; }
+.sparkle-particle:nth-child(20) { bottom: 25px; right: -10px; animation-delay: 2s; width: 4px; height: 4px; }
+
+@keyframes sparkleFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(0.5);
+    opacity: 0.2;
+  }
+  25% {
+    transform: translate(15px, -20px) scale(1.2);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-10px, -35px) scale(0.8);
+    opacity: 0.6;
+  }
+  75% {
+    transform: translate(10px, -45px) scale(1.1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(0, 0) scale(0.5);
+    opacity: 0.2;
+  }
+}
+
+/* Purple Clouds */
+body.theme-royal-purple .cloud {
+  background: rgba(178, 140, 255, 0.25);
+  filter: drop-shadow(0 6px 0 rgba(122, 79, 209, 0.1));
+  animation: purpleCloudDrift 50s linear infinite, purpleCloudFloat 6s ease-in-out infinite;
+}
+
+body.theme-royal-purple .cloud::before,
+body.theme-royal-purple .cloud::after {
+  background: rgba(178, 140, 255, 0.25);
+}
+
+@keyframes purpleCloudFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+body.theme-royal-purple .cloud-1 { animation: purpleCloudDrift 45s linear infinite, purpleCloudFloat 5.5s ease-in-out infinite; }
+body.theme-royal-purple .cloud-2 { animation: purpleCloudDrift 58s linear infinite, purpleCloudFloat 7s ease-in-out infinite; animation-delay: -18s; }
+body.theme-royal-purple .cloud-3 { animation: purpleCloudDrift 68s linear infinite, purpleCloudFloat 6.5s ease-in-out infinite; animation-delay: -35s; }
+
+@keyframes purpleCloudDrift {
+  from { transform: translateX(0); }
+  to { transform: translateX(130vw); }
+}
+
+/* Purple Stars - Extra twinkling */
+body.theme-royal-purple .star {
+  color: #E8D5FF;
+  text-shadow: 0 0 10px rgba(178, 140, 255, 0.9), 0 0 20px rgba(122, 79, 209, 0.5);
+  animation: purpleStarTwinkle 2.8s ease-in-out infinite;
+}
+
+@keyframes purpleStarTwinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.3) rotate(45deg); }
+}
+
+/* Extra floating sparkles in the sky */
+body.theme-royal-purple .sky::before {
+  content: "✦";
+  position: absolute;
+  top: 15%;
+  left: 10%;
+  font-size: 20px;
+  color: #E8D5FF;
+  text-shadow: 0 0 20px rgba(178, 140, 255, 0.8);
+  animation: floatSparkle 8s ease-in-out infinite;
+  opacity: 0.6;
+  z-index: 1;
+}
+
+body.theme-royal-purple .sky::after {
+  content: "✧";
+  position: absolute;
+  top: 45%;
+  right: 12%;
+  font-size: 16px;
+  color: #D4B8FF;
+  text-shadow: 0 0 20px rgba(178, 140, 255, 0.6);
+  animation: floatSparkle 10s ease-in-out infinite 2s;
+  opacity: 0.5;
+  z-index: 1;
+}
+
+@keyframes floatSparkle {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.4; }
+  50% { transform: translateY(-30px) rotate(180deg) scale(1.3); opacity: 1; }
+}
+
+/* ============================================
+   NIGHT THEME - Moon & Navy Colors
+   ============================================ */
+body.theme-night {
+  --plum: #0B1E3D;
+  --plum-soft: #5C7FB8;
+  --coral: #4A7BC8;
+  --coral-dark: #1F3A75;
+  --star: #F5F7FA;
+  --grass: #C9D6E8;
+}
+
+body.theme-night .sky {
+  background: linear-gradient(180deg, #061127 0%, #0F2247 30%, #1B3560 60%, #2C4A7E 100%);
+  animation: nightSkyShift 15s ease-in-out infinite;
+}
+
+@keyframes nightSkyShift {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 0% 20%; }
+}
+
+/* Turn the sun into a glowing moon */
+body.theme-night .sun {
+  background: radial-gradient(circle at 35% 30%, #FFFFFF, #E4E9F2 55%, #C7D0DE 100%);
+  box-shadow:
+    0 0 0 14px rgba(255,255,255,0.15),
+    0 0 0 28px rgba(255,255,255,0.08),
+    0 0 40px rgba(255,255,255,0.5);
+  animation: moonGlow 5s ease-in-out infinite;
+}
+
+@keyframes moonGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 14px rgba(255,255,255,0.15),
+      0 0 0 28px rgba(255,255,255,0.08),
+      0 0 40px rgba(255,255,255,0.5);
+  }
+  50% {
+    box-shadow:
+      0 0 0 18px rgba(255,255,255,0.22),
+      0 0 0 34px rgba(255,255,255,0.12),
+      0 0 60px rgba(255,255,255,0.75);
+  }
+}
+
+body.theme-night .sun-face { display: none; }
+
+/* Craters on the moon */
+body.theme-night .sun::before,
+body.theme-night .sun::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(170,182,202,0.55);
+}
+body.theme-night .sun::before { width: 18px; height: 18px; top: 22px; left: 20px; }
+body.theme-night .sun::after { width: 12px; height: 12px; top: 55px; left: 60px; }
+
+/* Clouds become soft night-mist */
+body.theme-night .cloud {
+  background: #3A5580;
+  opacity: 0.45;
+  filter: drop-shadow(0 6px 0 rgba(255,255,255,0.06));
+}
+body.theme-night .cloud::before,
+body.theme-night .cloud::after { background: #3A5580; }
+
+/* Brighter, twinklier stars */
+body.theme-night .star {
+  color: #FFFFFF;
+  text-shadow: 0 0 8px rgba(255,255,255,0.9), 0 0 16px rgba(140,180,255,0.6);
+  animation: twinkle 2.4s ease-in-out infinite, nightDrift 12s ease-in-out infinite;
+}
+
+@keyframes nightDrift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Extra twinkling stars scattered across the night sky */
+body.theme-night .sky::before,
+body.theme-night .sky::after {
+  content: "✦";
+  position: absolute;
+  color: #FFFFFF;
+  text-shadow: 0 0 10px rgba(255,255,255,0.9);
+  animation: twinkle 3s ease-in-out infinite;
+}
+body.theme-night .sky::before { top: 12%; left: 60%; font-size: 16px; animation-delay: 0.4s; }
+body.theme-night .sky::after { top: 30%; left: 80%; font-size: 11px; animation-delay: 1.4s; }
+
+/* Shooting star streak */
+.night-shooting-star {
+  position: absolute;
+  top: 10%;
+  left: -10%;
+  width: 3px;
+  height: 3px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 0 12px 3px rgba(255,255,255,0.9);
+  animation: shootStar 6s linear infinite;
+  animation-delay: 2s;
+}
+.night-shooting-star::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  width: 90px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8));
+  transform: translateY(-50%);
+}
+
+@keyframes shootStar {
+  0% { transform: translate(0, 0); opacity: 0; }
+  5% { opacity: 1; }
+  25% { transform: translate(70vw, 40vh); opacity: 0; }
+  100% { transform: translate(70vw, 40vh); opacity: 0; }
+}
+
+/* ============================================
+   SPACE THEME - Planets & Stars
+   ============================================ */
+body.theme-space {
+  --plum: #8e267f;
+  --plum-soft: #a71ca7;
+  --coral: #FF3EC8;
+  --coral-dark: #B00E8E;
+  --star: #FFD447;
+  --grass: #4FE3C1;
+}
+
+body.theme-space .sky {
+  background: radial-gradient(ellipse at top, #241150 0%, #12082E 55%, #030014 100%);
+  overflow: hidden;
+  animation: spaceSkyShift 8s ease-in-out infinite;
+}
+
+@keyframes spaceSkyShift {
+  0%, 100% { background-size: 100% 100%; }
+  50% { background-size: 110% 110%; }
+}
+
+/* Turn the sun into a vivid ringed planet */
+body.theme-space .sun {
+  background: radial-gradient(circle at 35% 30%, #FFE9A8, #FF9B3D 50%, #C85A1C 100%);
+  box-shadow:
+    0 0 0 10px rgba(255,180,90,0.2),
+    0 0 50px rgba(255,150,60,0.55),
+    0 0 90px rgba(255,120,40,0.3);
+  animation: spacePulse 3.5s ease-in-out infinite;
+}
+
+@keyframes spacePulse {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.06) rotate(3deg); }
+}
+
+body.theme-space .sun-face { display: none; }
+
+body.theme-space .sun::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 170px; height: 44px;
+  border: 4px solid rgba(255,212,71,0.65);
+  border-radius: 50%;
+  transform: translate(-50%,-50%) rotate(-20deg);
+  pointer-events: none;
+  animation: ringSpin 14s linear infinite;
+}
+
+@keyframes ringSpin {
+  0% { transform: translate(-50%,-50%) rotate(-20deg); }
+  100% { transform: translate(-50%,-50%) rotate(340deg); }
+}
+
+body.theme-space .cloud { display: none; }
+
+/* Vivid twinkling stars */
+body.theme-space .star {
+  color: #FFD447;
+  text-shadow: 0 0 10px rgba(255,212,71,0.9), 0 0 20px rgba(255,140,220,0.5);
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+/* Extra scattered stars */
+body.theme-space .sky::before,
+body.theme-space .sky::after {
+  content: "✦";
+  position: absolute;
+  color: #7FDBFF;
+  text-shadow: 0 0 10px rgba(127,219,255,0.9);
+  animation: twinkle 2.6s ease-in-out infinite;
+}
+body.theme-space .sky::before { top: 14%; left: 55%; font-size: 14px; animation-delay: 0.6s; }
+body.theme-space .sky::after { top: 45%; left: 78%; font-size: 10px; animation-delay: 1.8s; }
+
+/* Floating decorative planets (injected by global-theme.js) */
+.space-planet {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.95;
+  animation: floatElement 8s ease-in-out infinite, planetSpin 20s linear infinite;
+  box-shadow: 0 0 20px rgba(255,255,255,0.15);
+}
+
+@keyframes planetSpin {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(15deg); }
+}
+
+.space-planet.planet-1 {
+  width: 50px; height: 50px; top: 18%; left: 8%;
+  background: radial-gradient(circle at 35% 30%, #FFAEE8, #FF3EC8 70%);
+  animation-delay: 0s, 0s;
+  box-shadow: 0 0 25px rgba(255,62,200,0.5);
+}
+.space-planet.planet-2 {
+  width: 32px; height: 32px; top: 60%; left: 12%;
+  background: radial-gradient(circle at 35% 30%, #A8F5FF, #31C0EB 70%);
+  animation-delay: 2s, 1s;
+  box-shadow: 0 0 22px rgba(49,192,235,0.55);
+}
+.space-planet.planet-3 {
+  width: 38px; height: 38px; top: 35%; right: 15%;
+  background: radial-gradient(circle at 35% 30%, #E0D9FF, #7C5CFF 70%);
+  animation-delay: 3.5s, 2s;
+  box-shadow: 0 0 22px rgba(124,92,255,0.55);
+}
+.space-planet.planet-4 {
+  width: 20px; height: 20px; top: 75%; right: 30%;
+  background: radial-gradient(circle at 35% 30%, #FFF0A8, #FFD447 70%);
+  animation: floatElement 9s ease-in-out infinite;
+  animation-delay: 1.2s;
+  box-shadow: 0 0 18px rgba(255,212,71,0.6);
+}
+
+/* Distant nebula glow */
+.space-nebula {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  top: 5%;
+  left: 40%;
+  background: radial-gradient(circle, rgba(255,62,200,0.18) 0%, rgba(124,92,255,0.1) 45%, transparent 75%);
+  pointer-events: none;
+  filter: blur(6px);
+  animation: nebulaDrift 15s ease-in-out infinite;
+}
+
+@keyframes nebulaDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  50% { transform: translate(-20px, 15px) scale(1.15); opacity: 1; }
+}
+
+/* ============================================
+   DEFAULT THEME - Animated Background (fallback)
+   ============================================ */
+
+body:not(.theme-royal-purple):not(.theme-night):not(.theme-space) .sky {
+  background: linear-gradient(180deg, var(--sky-top) 0%, #A8DFFF 28%, var(--sky-bottom) 62%, #FFF6DD 100%);
+  animation: skyShift 12s ease-in-out infinite;
+}
+
+@keyframes skyShift {
+  0% {
+    filter: hue-rotate(0deg) saturate(1);
+  }
+  50% {
+    filter: hue-rotate(2deg) saturate(1.05);
+  }
+  100% {
+    filter: hue-rotate(0deg) saturate(1);
+  }
+}
+
+body:not(.theme-royal-purple):not(.theme-night):not(.theme-space) .sun {
+  animation: pulse-sun 4.5s ease-in-out infinite;
+}
+
+body:not(.theme-royal-purple):not(.theme-night):not(.theme-space) .cloud {
+  animation: drift 42s linear infinite;
+}
+
+body:not(.theme-royal-purple):not(.theme-night):not(.theme-space) .cloud-2 {
+  animation-duration: 55s;
+  animation-delay: -18s;
+}
+
+body:not(.theme-royal-purple):not(.theme-night):not(.theme-space) .cloud-3 {
+  animation-duration: 65s;
+  animation-delay: -35s;
+}
+
+/* ============================================
+   BOYS THEME - Green Waves & Nature
+   ============================================ */
+body.theme-boys {
+  --plum: #0A2A0A;
+  --plum-soft: #2D7A2D;
+  --coral: #00E676;
+  --coral-dark: #008C3A;
+  --star: #69F0AE;
+  --grass: #4CAF50;
+  --sky-top: #0A2A0A;
+  --sky-bottom: #1A5A1A;
+}
+
+body.theme-boys .sky {
+  background: 
+    /* Deep green gradient base */
+    linear-gradient(180deg, 
+      #0A1F0A 0%, 
+      #0D3A0D 25%, 
+      #1A5A1A 50%, 
+      #2D7A2D 70%, 
+      #4AAA4A 85%, 
+      #6AC96A 100%
+    );
+  animation: greenWaveBg 4s ease-in-out infinite;
+  overflow: hidden;
+}
+
+@keyframes greenWaveBg {
+  0%, 100% {
+    background: linear-gradient(180deg, 
+      #0A1F0A 0%, 
+      #0D3A0D 25%, 
+      #1A5A1A 50%, 
+      #2D7A2D 70%, 
+      #4AAA4A 85%, 
+      #6AC96A 100%
+    );
+  }
+  25% {
+    background: linear-gradient(180deg, 
+      #052005 0%, 
+      #0F4A0F 25%, 
+      #1F6A1F 50%, 
+      #3A8A3A 70%, 
+      #5ABA5A 85%, 
+      #7AD97A 100%
+    );
+  }
+  50% {
+    background: linear-gradient(180deg, 
+      #0A1F0A 0%, 
+      #0D3A0D 25%, 
+      #1A5A1A 50%, 
+      #2D7A2D 70%, 
+      #4AAA4A 85%, 
+      #6AC96A 100%
+    );
+  }
+  75% {
+    background: linear-gradient(180deg, 
+      #052005 0%, 
+      #0F4A0F 25%, 
+      #1F6A1F 50%, 
+      #3A8A3A 70%, 
+      #5ABA5A 85%, 
+      #7AD97A 100%
+    );
+  }
+  100% {
+    background: linear-gradient(180deg, 
+      #0A1F0A 0%, 
+      #0D3A0D 25%, 
+      #1A5A1A 50%, 
+      #2D7A2D 70%, 
+      #4AAA4A 85%, 
+      #6AC96A 100%
+    );
+  }
+}
+
+/* ----- Wavy Water Effect at Bottom ----- */
+body.theme-boys .sky .wave-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+body.theme-boys .sky .wave {
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 230, 118, 0.04) 10%,
+    rgba(105, 240, 174, 0.06) 20%,
+    transparent 30%
+  );
+  border-radius: 50%;
+  animation: waveMove 8s ease-in-out infinite;
+}
+
+body.theme-boys .sky .wave-1 {
+  bottom: 0;
+  height: 80%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 230, 118, 0.06) 15%,
+    rgba(105, 240, 174, 0.08) 30%,
+    transparent 45%
+  );
+  animation: waveMove 6s ease-in-out infinite;
+  opacity: 0.6;
+}
+
+body.theme-boys .sky .wave-2 {
+  bottom: -20px;
+  height: 70%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 230, 118, 0.04) 20%,
+    rgba(105, 240, 174, 0.06) 40%,
+    transparent 60%
+  );
+  animation: waveMove 8s ease-in-out infinite reverse;
+  opacity: 0.4;
+}
+
+body.theme-boys .sky .wave-3 {
+  bottom: -30px;
+  height: 90%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 230, 118, 0.03) 25%,
+    rgba(105, 240, 174, 0.04) 50%,
+    transparent 75%
+  );
+  animation: waveMove 10s ease-in-out infinite;
+  opacity: 0.3;
+}
+
+@keyframes waveMove {
+  0%, 100% {
+    transform: translateX(0) scaleY(1);
+  }
+  25% {
+    transform: translateX(-30px) scaleY(1.1);
+  }
+  50% {
+    transform: translateX(0) scaleY(0.9);
+  }
+  75% {
+    transform: translateX(30px) scaleY(1.1);
+  }
+  100% {
+    transform: translateX(0) scaleY(1);
+  }
+}
+
+/* ----- Green Energy Orb ----- */
+body.theme-boys .sun {
+  background: radial-gradient(circle at 35% 30%, #B9F6CA, #69F0AE 40%, #00E676 70%, #008C3A 100%);
+  box-shadow:
+    0 0 0 14px rgba(0, 230, 118, 0.25),
+    0 0 0 28px rgba(0, 230, 118, 0.12),
+    0 0 60px rgba(0, 230, 118, 0.5),
+    0 0 120px rgba(0, 140, 58, 0.25);
+  animation: greenSunPulse 3s ease-in-out infinite;
+}
+
+@keyframes greenSunPulse {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    box-shadow:
+      0 0 0 14px rgba(0, 230, 118, 0.25),
+      0 0 0 28px rgba(0, 230, 118, 0.12),
+      0 0 60px rgba(0, 230, 118, 0.5);
+  }
+  50% {
+    transform: scale(1.08) rotate(8deg);
+    box-shadow:
+      0 0 0 18px rgba(0, 230, 118, 0.35),
+      0 0 0 34px rgba(0, 230, 118, 0.18),
+      0 0 80px rgba(0, 230, 118, 0.7),
+      0 0 140px rgba(0, 140, 58, 0.35);
+  }
+}
+
+body.theme-boys .sun-face {
+  display: none;
+}
+
+/* Energy rings around the sun */
+body.theme-boys .sun::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 140px;
+  height: 140px;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(105, 240, 174, 0.35);
+  border-radius: 50%;
+  animation: greenEnergyRing 4s linear infinite;
+  pointer-events: none;
+}
+
+body.theme-boys .sun::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 180px;
+  height: 180px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(0, 230, 118, 0.2);
+  border-radius: 50%;
+  animation: greenEnergyRing 6s linear infinite reverse;
+  pointer-events: none;
+}
+
+@keyframes greenEnergyRing {
+  0% { transform: translate(-50%, -50%) rotate(0deg) scale(0.8); opacity: 0.4; }
+  50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) rotate(360deg) scale(0.8); opacity: 0.4; }
+}
+
+/* ----- Green Clouds ----- */
+body.theme-boys .cloud {
+  background: rgba(105, 240, 174, 0.1);
+  border: 1px solid rgba(0, 230, 118, 0.15);
+  border-radius: 50px;
+  backdrop-filter: blur(4px);
+  animation: greenCloudDrift 50s linear infinite, greenCloudFloat 4s ease-in-out infinite;
+  box-shadow: 0 0 40px rgba(0, 230, 118, 0.06);
+}
+
+body.theme-boys .cloud::before,
+body.theme-boys .cloud::after {
+  background: rgba(105, 240, 174, 0.08);
+  border: 1px solid rgba(0, 230, 118, 0.1);
+  border-radius: 50%;
+}
+
+@keyframes greenCloudFloat {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  25% { transform: translateY(-8px) scaleY(1.04); }
+  50% { transform: translateY(0) scaleY(0.96); }
+  75% { transform: translateY(-8px) scaleY(1.04); }
+}
+
+body.theme-boys .cloud-1 { animation: greenCloudDrift 45s linear infinite, greenCloudFloat 4.5s ease-in-out infinite; }
+body.theme-boys .cloud-2 { animation: greenCloudDrift 58s linear infinite, greenCloudFloat 5.5s ease-in-out infinite; animation-delay: -18s; }
+body.theme-boys .cloud-3 { animation: greenCloudDrift 68s linear infinite, greenCloudFloat 3.8s ease-in-out infinite; animation-delay: -35s; }
+
+@keyframes greenCloudDrift {
+  from { transform: translateX(0); }
+  to { transform: translateX(130vw); }
+}
+
+/* ----- Green Stars ----- */
+body.theme-boys .star {
+  color: #69F0AE;
+  text-shadow: 0 0 15px rgba(105, 240, 174, 0.8), 0 0 30px rgba(0, 230, 118, 0.4);
+  animation: greenStarTwinkle 2.5s ease-in-out infinite;
+}
+
+@keyframes greenStarTwinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.7) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.5) rotate(180deg); }
+}
+
+/* Extra floating green dots in sky */
+body.theme-boys .sky::before {
+  content: "✦ ✧ ✦ ✧ ✦";
+  position: absolute;
+  top: 12%;
+  left: 8%;
+  color: rgba(105, 240, 174, 0.15);
+  font-size: 16px;
+  letter-spacing: 12px;
+  animation: greenDotsFloat 8s ease-in-out infinite;
+  z-index: 0;
+}
+
+body.theme-boys .sky::after {
+  content: "✧ ✦ ✧ ✦ ✧";
+  position: absolute;
+  top: 50%;
+  right: 10%;
+  color: rgba(0, 230, 118, 0.1);
+  font-size: 14px;
+  letter-spacing: 10px;
+  animation: greenDotsFloat 10s ease-in-out infinite 2s;
+  z-index: 0;
+}
+
+@keyframes greenDotsFloat {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+  50% { transform: translateY(-30px) scale(1.2); opacity: 0.8; }
+}
+
+/* ----- Green Particles (Fireflies) ----- */
+.green-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #69F0AE, #00E676);
+  box-shadow: 0 0 20px rgba(0, 230, 118, 0.3);
+  animation: greenParticleFloat 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes greenParticleFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(0.3);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  40% {
+    transform: translate(40px, -60px) scale(1.2);
+    opacity: 0.9;
+  }
+  60% {
+    transform: translate(-20px, -100px) scale(0.8);
+    opacity: 0.6;
+  }
+  80% {
+    transform: translate(20px, -140px) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(0, 0) scale(0.3);
+    opacity: 0;
+  }
+}
+
+/* ----- Boys Theme UI Colors ----- */
+body.theme-boys .cta-btn {
+  background: linear-gradient(135deg, #00E676, #008C3A);
+  box-shadow: 0 7px 0 #004D1A;
+}
+
+body.theme-boys .cta-btn:hover {
+  background: linear-gradient(135deg, #69F0AE, #00E676);
+}
+
+body.theme-boys .nav-btn.active {
+  background: linear-gradient(135deg, #00E676, #008C3A);
+  box-shadow: 0 4px 0 #004D1A;
+}
+
+body.theme-boys .progress-pill {
+  border: 1px solid rgba(0, 230, 118, 0.2);
+  background: rgba(10, 31, 10, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+/* ----- Boys Theme Cards ----- */
+body.theme-boys .feature-card,
+body.theme-boys .how-card,
+body.theme-boys .profile-card,
+body.theme-boys .stat-box,
+body.theme-boys .closet-item,
+body.theme-boys .shop-card,
+body.theme-boys .game-panel,
+body.theme-boys .art-panel,
+body.theme-boys .reading-card {
+  background: rgba(10, 31, 10, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 230, 118, 0.12);
+  box-shadow: 0 8px 0 rgba(0, 140, 58, 0.15);
+}
+
+body.theme-boys .stat-box:hover,
+body.theme-boys .closet-item:hover,
+body.theme-boys .shop-card:hover {
+  border-color: rgba(105, 240, 174, 0.3);
+}
+
+/* ----- Boys Theme Inputs ----- */
+body.theme-boys input,
+body.theme-boys select,
+body.theme-boys textarea {
+  background: rgba(10, 31, 10, 0.9);
+  border: 1px solid rgba(0, 230, 118, 0.2);
+  color: #69F0AE;
+}
+
+body.theme-boys input:focus,
+body.theme-boys select:focus,
+body.theme-boys textarea:focus {
+  border-color: #00E676;
+  box-shadow: 0 0 20px rgba(0, 230, 118, 0.1);
+}
+
+/* ----- Boys Theme Modal ----- */
+body.theme-boys .modal-card {
+  background: rgba(10, 31, 10, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 230, 118, 0.15);
+}
+
+body.theme-boys .modal-close {
+  background: rgba(0, 230, 118, 0.1);
+  color: #69F0AE;
+}
+
+body.theme-boys .modal-close:hover {
+  background: rgba(0, 230, 118, 0.2);
+}
+
+/* ----- Boys Theme Badges ----- */
+body.theme-boys .profile-avatar-badge {
+  background: linear-gradient(135deg, #00E676, #008C3A);
+}
+
+body.theme-boys .equipped-badge {
+  background: linear-gradient(135deg, #69F0AE, #00E676);
+  color: #0A1F0A;
+}
+
+body.theme-boys .closet-item.equipped {
+  border-color: #69F0AE;
+  background: rgba(0, 230, 118, 0.05);
 }

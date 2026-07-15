@@ -116,19 +116,7 @@
         <p class="profile-email" id="userEmail">explorer@languageisland.com</p>
         <p class="profile-member">Member since <span id="memberSince">Today</span></p>
       </div>
-      
-      <!-- The margin-left: auto trick -->
-      <div class="theme-selection-section" style="margin-left: auto;">
-        <h3 class="section-title">My Themes</h3>
-        <div class="theme-buttons">
-          <button class="cta-btn secondary theme-toggle-btn" data-theme="default">Default Theme</button>
-          <button class="cta-btn secondary theme-toggle-btn" data-theme="purple-theme" id="purpleThemeBtn" style="display: none;">Purple Theme</button>
-        </div>
-      </div>
-      
-      <!-- The invisible flex-break trick -->
-      <div style="flex-basis: 100%; height: 0; margin: 0; padding: 0;"></div>
-      
+
       <button class="edit-profile-btn interactive" id="editProfileBtn">
         <i class="fas fa-pen"></i> Edit Profile
       </button>
@@ -250,9 +238,18 @@
       <div id="profileMessage" class="profile-message"></div>
     </div>
 
-    <!-- My Closet - Equipment -->
+    <!-- My Collection - with Tabs -->
     <section class="closet-section">
-      <h2 class="section-title"> My Collection</h2>
+      <div class="closet-header">
+        <h2 class="section-title"> My Collection</h2>
+        <div class="closet-tabs">
+          <button class="closet-tab active" data-tab="all">All</button>
+          <button class="closet-tab" data-tab="skins">Skins</button>
+          <button class="closet-tab" data-tab="themes">Themes</button>
+          <button class="closet-tab" data-tab="prints">Prints</button>
+          <button class="closet-tab" data-tab="books">Books</button>
+        </div>
+      </div>
       <div class="closet-grid" id="closetGrid">
         <!-- Items will be loaded by JavaScript -->
       </div>

@@ -1,14 +1,14 @@
 /* =========================================================
-   PRONUNCIATION.JS - Speak & Practice Page
+   PRONUNCIATION.JS - Speak & Practice Page (FIXED)
    ========================================================= */
 
-console.log(' Pronunciation.js loading...');
+console.log('Pronunciation.js loading...');
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM ready for Pronunciation page');
+    console.log('✅ DOM ready for Pronunciation page');
 
     // =========================================================
-    // LANGUAGE DATA - UPDATED WITH NEW SPEAKING IMAGES
+    // LANGUAGE DATA
     // =========================================================
     var languages = {
         en: { name: 'English', color: '#4C8DAF', speechLang: 'en-US', flag: 'us' },
@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
         it: { name: 'Italian', color: '#E5563F', speechLang: 'it-IT', flag: 'it' }
     };
 
-    // NEW: Speaking page images - no background, no border
     var langImages = {
         ar: 'imgs/Speaking/Speak-AR.png',
         en: 'imgs/Speaking/Speak-EN.png',
@@ -29,6 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
         es: 'imgs/Speaking/Speak-ES.png'
     };
 
+    // =========================================================
+    // PRONUNCIATION DATA
+    // =========================================================
     var pronunciationData = {
         en: {
             letters: [
@@ -196,10 +198,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var currentLang = null;
     var currentLetter = null;
     var currentWordIndex = 0;
-    var pronouncedWords = [];
-    var starsAwardedLanguages = [];
     var recognition = null;
     var isListening = false;
+    var isProcessing = false;
 
     // =========================================================
     // AUTH HELPERS
@@ -228,69 +229,66 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // PERSISTED PROGRESS
-    // =========================================================
-    function loadProgress() {
-        try {
-            var saved = localStorage.getItem('pronouncedWords');
-            if (saved) pronouncedWords = JSON.parse(saved);
-        } catch (e) { pronouncedWords = []; }
-
-        try {
-            var savedStars = localStorage.getItem('pronunciationStarsAwarded');
-            if (savedStars) starsAwardedLanguages = JSON.parse(savedStars);
-        } catch (e) { starsAwardedLanguages = []; }
-    }
-
-    function saveProgress() {
-        try {
-            localStorage.setItem('pronouncedWords', JSON.stringify(pronouncedWords));
-        } catch (e) {}
-    }
-
-    function markStarsAwarded(langKey) {
-        if (starsAwardedLanguages.indexOf(langKey) === -1) {
-            starsAwardedLanguages.push(langKey);
-            try {
-                localStorage.setItem('pronunciationStarsAwarded', JSON.stringify(starsAwardedLanguages));
-            } catch (e) {}
-        }
-    }
-
-    function wordId(langKey, letterChar, word) {
-        return langKey + '_' + letterChar + '_' + word;
-    }
-
-    function isWordDone(langKey, letterChar, word) {
-        return pronouncedWords.indexOf(wordId(langKey, letterChar, word)) !== -1;
-    }
-
-    function markWordDone(langKey, letterChar, word) {
-        var id = wordId(langKey, letterChar, word);
-        if (pronouncedWords.indexOf(id) === -1) {
-            pronouncedWords.push(id);
-            saveProgress();
-        }
-    }
-
-    function areAllWordsDone(langKey, letterChar) {
-        var words = pronunciationData[langKey].words[letterChar] || [];
-        return words.every(function (w) { return isWordDone(langKey, letterChar, w.word); });
-    }
-
-    function areAllLettersDone(langKey) {
-        var data = pronunciationData[langKey];
-        return data.letters.every(function (l) { return areAllWordsDone(langKey, l.char); });
-    }
-
-    // =========================================================
-    // TEXT SIMILARITY
+    // TEXT SIMILARITY - ENHANCED
     // =========================================================
     function normalize(str) {
         return (str || '')
             .toLowerCase()
             .trim()
-            .replace(/[.,!?؟،]/g, '');
+            .replace(/[.,!?؟،-]/g, '')
+            .replace(/\s+/g, ' ');
+    }
+
+    function getPhoneticPattern(word) {
+        var patterns = {
+            'apple': 'apel',
+            'ant': 'ant',
+            'ball': 'bol',
+            'bird': 'berd',
+            'cat': 'kat',
+            'car': 'kar',
+            'cup': 'kap',
+            'dog': 'dog',
+            'fish': 'fish',
+            'tree': 'tri',
+            'house': 'haus',
+            'water': 'woter',
+            'bee': 'bi',
+            'boat': 'bot',
+            'sky': 'skai',
+            'star': 'star',
+            'moon': 'mun',
+            'sun': 'san',
+            'rain': 'rein',
+            'snow': 'sno',
+            'cloud': 'klaud',
+            'book': 'buk',
+            'pen': 'pen',
+            'desk': 'desk',
+            'chair': 'cher',
+            'table': 'tebel',
+            'door': 'dor',
+            'window': 'windo',
+            'flower': 'flauer',
+            'garden': 'garden',
+            'animal': 'animal',
+            'friend': 'frend',
+            'family': 'fameli',
+            'school': 'skul',
+            'teacher': 'ticher',
+            'student': 'stjudent',
+            'happy': 'hapi',
+            'sad': 'sad',
+            'big': 'big',
+            'small': 'smol',
+            'fast': 'fast',
+            'slow': 'slo',
+            'alligator': 'aligeitor',
+            'butterfly': 'baterflai'
+        };
+        
+        var normalized = normalize(word);
+        return patterns[normalized] || normalized;
     }
 
     function levenshtein(a, b) {
@@ -317,8 +315,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!h) return false;
         if (t === h) return true;
 
-        var distance = levenshtein(t, h);
-        var allowance = t.length <= 3 ? 0 : (t.length <= 6 ? 1 : 2);
+        if (t.length > 3 && h.indexOf(t) !== -1) return true;
+        if (h.length > 3 && t.indexOf(h) !== -1) return true;
+
+        var targetPattern = getPhoneticPattern(target);
+        var heardPattern = getPhoneticPattern(heard);
+        
+        var distance = Math.min(levenshtein(t, h), levenshtein(targetPattern, heardPattern));
+        var allowance = t.length <= 3 ? 1 : (t.length <= 6 ? 2 : 3);
+        
+        if (t.length > 3) allowance += 1;
+        
         return distance <= allowance;
     }
 
@@ -336,11 +343,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = langCode;
-        utterance.rate = 0.8;
+        utterance.rate = 0.7;
         utterance.pitch = 1.1;
         utterance.volume = 1;
-        utterance.onend = function () { if (callback) callback(); };
-        utterance.onerror = function () { if (callback) callback(); };
+        utterance.onend = function() { if (callback) callback(); };
+        utterance.onerror = function() { if (callback) callback(); };
         synth.speak(utterance);
         if (typeof Sound !== 'undefined' && Sound.pop) Sound.pop();
     }
@@ -354,45 +361,43 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         if (isListening) return;
+        if (isProcessing) return;
 
         if (recognition) {
             try { recognition.abort(); } catch (e) {}
+            recognition = null;
         }
 
         recognition = new SpeechRecognitionAPI();
         recognition.lang = langCode;
-        recognition.maxAlternatives = 5;
-        recognition.interimResults = false;
+        recognition.maxAlternatives = 10;
+        recognition.interimResults = true;
         recognition.continuous = false;
 
         isListening = true;
 
-        recognition.onresult = function (event) {
-            isListening = false;
-            var alternatives = [];
+        var finalTranscript = '';
+        var allAlternatives = [];
+
+        recognition.onresult = function(event) {
+            var lastIndex = event.results.length - 1;
+            
             for (var i = 0; i < event.results.length; i++) {
                 for (var j = 0; j < event.results[i].length; j++) {
-                    alternatives.push(event.results[i][j].transcript);
+                    allAlternatives.push(event.results[i][j].transcript);
                 }
             }
 
-            var matched = false;
-            var bestMatch = alternatives[0] || null;
-            
-            for (var k = 0; k < alternatives.length; k++) {
-                if (isCloseEnough(targetWord, alternatives[k])) {
-                    matched = true;
-                    bestMatch = alternatives[k];
-                    break;
-                }
+            if (event.results[lastIndex].isFinal) {
+                finalTranscript = event.results[lastIndex][0].transcript;
             }
-
-            onDone(matched ? 'correct' : 'incorrect', bestMatch);
         };
 
-        recognition.onerror = function (event) {
+        recognition.onerror = function(event) {
             isListening = false;
+            isProcessing = false;
             console.log('Recognition error:', event.error);
+            
             if (event.error === 'no-speech') {
                 onDone('no-speech', null);
             } else if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
@@ -404,15 +409,45 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
 
-        recognition.onend = function () {
+        recognition.onend = function() {
             isListening = false;
+            isProcessing = false;
+            
+            var heard = finalTranscript || (allAlternatives.length > 0 ? allAlternatives[0] : null);
+            
+            if (heard) {
+                var matched = false;
+                for (var k = 0; k < allAlternatives.length; k++) {
+                    if (isCloseEnough(targetWord, allAlternatives[k])) {
+                        matched = true;
+                        heard = allAlternatives[k];
+                        break;
+                    }
+                }
+                
+                if (matched) {
+                    onDone('correct', heard);
+                } else {
+                    onDone('incorrect', heard);
+                }
+            } else {
+                onDone('no-speech', null);
+            }
         };
 
         try {
             recognition.start();
             console.log('Listening for:', targetWord);
+            setTimeout(function() {
+                if (isListening) {
+                    try {
+                        recognition.stop();
+                    } catch(e) {}
+                }
+            }, 5000);
         } catch (e) {
             isListening = false;
+            isProcessing = false;
             console.error('Error starting recognition:', e);
             onDone('error', null);
         }
@@ -428,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
             toastMessage.textContent = message;
             toast.classList.add('show');
             clearTimeout(toast._timer);
-            toast._timer = setTimeout(function () { toast.classList.remove('show'); }, 3000);
+            toast._timer = setTimeout(function() { toast.classList.remove('show'); }, 3000);
         }
     }
 
@@ -450,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var loginModalClose = document.getElementById('loginModalClose');
     if (loginModalClose) {
-        loginModalClose.addEventListener('click', function () {
+        loginModalClose.addEventListener('click', function() {
             var modal = document.getElementById('loginRequiredModal');
             if (modal) { modal.classList.remove('open'); document.body.style.overflow = ''; }
         });
@@ -458,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var loginRequiredModal = document.getElementById('loginRequiredModal');
     if (loginRequiredModal) {
-        loginRequiredModal.addEventListener('click', function (e) {
+        loginRequiredModal.addEventListener('click', function(e) {
             if (e.target === this) { this.classList.remove('open'); document.body.style.overflow = ''; }
         });
     }
@@ -480,69 +515,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (micHelpCloseBtn) micHelpCloseBtn.addEventListener('click', closeMicHelpModal);
 
     // =========================================================
-    // STARS MODAL
-    // =========================================================
-    function earnStarsForPronunciation(langKey) {
-        var activityId = 'pronunciation_' + langKey + '_' + Date.now();
-
-        if (typeof Activity !== 'undefined' && Activity.completeActivity) {
-            Activity.completeActivity('pronunciation', activityId, 5)
-                .then(function (data) {
-                    if (data.success) {
-                        showStarEarnedModal(5, data.total_stars);
-                    } else {
-                        showStarEarnedModal(5);
-                    }
-                })
-                .catch(function () {
-                    showStarEarnedModal(5);
-                });
-        } else {
-            showStarEarnedModal(5);
-        }
-    }
-
-    function showStarEarnedModal(stars, totalStars) {
-        var existing = document.getElementById('starEarnedModal');
-        if (existing) existing.remove();
-
-        var user = getCurrentUser();
-        var userName = user ? (user.first_name || user.name || 'Explorer') : 'Explorer';
-
-        if (!totalStars) {
-            var headerStars = document.getElementById('headerStars');
-            if (headerStars) totalStars = parseInt(headerStars.textContent) || 0;
-        }
-
-        var modal = document.createElement('div');
-        modal.id = 'starEarnedModal';
-        modal.className = 'modal-backdrop star-earned-modal';
-        modal.innerHTML =
-            '<div class="modal-card star-earned-card">' +
-                '<div class="star-icon">⭐</div>' +
-                '<h2>Congrats, ' + userName + '!</h2>' +
-                '<p>You earned +' + stars + ' stars for great pronunciation!</p>' +
-                '<div class="star-count-display"><span>Total Stars: <strong>' + (totalStars || 0) + '</strong></span></div>' +
-                '<button class="cta-btn" id="starEarnedCloseBtn">Awesome!</button>' +
-            '</div>';
-
-        document.body.appendChild(modal);
-        setTimeout(function () { modal.classList.add('open'); }, 50);
-
-        var closeBtn = document.getElementById('starEarnedCloseBtn');
-        function dismiss() {
-            modal.classList.remove('open');
-            setTimeout(function () { modal.remove(); }, 300);
-        }
-        if (closeBtn) closeBtn.addEventListener('click', dismiss);
-        modal.addEventListener('click', function (e) { if (e.target === modal) dismiss(); });
-        setTimeout(dismiss, 5000);
-
-        if (typeof Sound !== 'undefined' && Sound.win) Sound.win();
-    }
-
-    // =========================================================
-    // RENDER LANGUAGE SELECTION - 2 ROWS, 3 COLUMNS
+    // RENDER LANGUAGE SELECTION
     // =========================================================
     function renderLanguageSelection() {
         var grid = document.getElementById('langGridPronunciation');
@@ -555,11 +528,11 @@ document.addEventListener('DOMContentLoaded', function() {
         var msg = document.getElementById('loginStatusMsg');
         if (msg) {
             if (loggedIn) {
-                msg.textContent = 'Welcome, ' + userName + '! Pick a language to start speaking.';
+                msg.textContent = 'Welcome, ' + userName + '! Pick a language to practice speaking.';
                 msg.style.color = '#2E2657';
                 msg.style.fontSize = '16px';
             } else {
-                msg.innerHTML = '<strong>Sign in to unlock pronunciation practice!</strong> <a href="signin.html" style="color:#FF6F59;text-decoration:underline;">Sign In</a> or <a href="signup.html" style="color:#FF6F59;text-decoration:underline;">Create Account</a>';
+                msg.innerHTML = '<strong><i class="fas fa-lock"></i> Sign in to unlock pronunciation practice!</strong> <a href="signin.html" style="color:#FF6F59;text-decoration:underline;">Sign In</a> or <a href="signup.html" style="color:#FF6F59;text-decoration:underline;">Create Account</a>';
                 msg.style.color = '#FF6B59';
                 msg.style.fontSize = '15px';
             }
@@ -568,13 +541,10 @@ document.addEventListener('DOMContentLoaded', function() {
         var html = '';
         var langKeys = Object.keys(languages);
         
-        langKeys.forEach(function (key) {
+        langKeys.forEach(function(key) {
             var lang = languages[key];
             var imgSrc = langImages[key] || 'imgs/buttons/default.png';
             var total = pronunciationData[key] ? pronunciationData[key].letters.length : 0;
-            var done = pronunciationData[key]
-                ? pronunciationData[key].letters.filter(function (l) { return areAllWordsDone(key, l.char); }).length
-                : 0;
 
             var isLocked = !loggedIn;
             var lockIcon = isLocked ? '<i class="fas fa-lock" style="font-size:12px;color:#8C87A8;margin-left:6px;"></i>' : '';
@@ -583,22 +553,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 '<button class="lang-pron-btn interactive" data-lang="' + key + '" ' + (isLocked ? 'data-locked="true"' : '') + '>' +
                     '<img src="' + imgSrc + '" alt="' + lang.name + '" onerror="this.src=\'imgs/buttons/default.png\'">' +
                     '<span class="lang-label">' + lang.name + ' ' + lockIcon + '</span>' +
-                    '<span class="lang-progress">' + (isLocked ? ' Locked' : done + '/' + total + ' letters') + '</span>' +
+                    '<span class="lang-progress">' + (isLocked ? '<i class="fas fa-lock"></i> Locked' : total + ' letters') + '</span>' +
                 '</button>';
         });
 
         grid.innerHTML = html;
 
-        // Force 2 rows, 3 columns layout
-        grid.style.display = 'grid';
-        grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
-        grid.style.gap = '20px';
-        grid.style.maxWidth = '900px';
-        grid.style.margin = '0 auto';
-        grid.style.padding = '0 20px';
-
-        grid.querySelectorAll('.lang-pron-btn').forEach(function (btn) {
-            btn.addEventListener('click', function () {
+        grid.querySelectorAll('.lang-pron-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
                 var langKey = this.dataset.lang;
                 if (isLoggedIn()) {
                     showContentForLanguage(langKey);
@@ -628,7 +590,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // RENDER LETTERS
+    // RENDER LETTERS - NO COMPLETION CHECK
     // =========================================================
     function renderLetters(langKey, data) {
         var grid = document.getElementById('lettersGrid');
@@ -637,23 +599,14 @@ document.addEventListener('DOMContentLoaded', function() {
         var container = document.createElement('div');
         container.className = 'letters-container';
 
-        data.letters.forEach(function (letter) {
+        data.letters.forEach(function(letter) {
             var card = document.createElement('div');
             card.className = 'letter-card interactive';
-
-            var done = areAllWordsDone(langKey, letter.char);
-            if (done) {
-                card.style.borderColor = '#2E7D32';
-                card.style.borderWidth = '3px';
-                card.style.borderStyle = 'solid';
-                card.style.background = '#F0FFF5';
-            }
-
             card.innerHTML =
                 '<span class="letter-char">' + letter.char + '</span>' +
                 '<span class="letter-name">' + letter.name + '</span>';
 
-            card.addEventListener('click', function () {
+            card.addEventListener('click', function() {
                 showWordsForLetter(langKey, letter.char);
             });
 
@@ -675,30 +628,18 @@ document.addEventListener('DOMContentLoaded', function() {
         currentLetter = letterChar;
         currentWordIndex = 0;
 
-        var letterInfo = data.letters.find(function (l) { return l.char === letterChar; });
+        var letterInfo = data.letters.find(function(l) { return l.char === letterChar; });
         document.getElementById('lettersGrid').style.display = 'none';
         document.getElementById('wordsSection').style.display = 'block';
-        document.getElementById('selectedLetterTitle').textContent =
-            'Letter ' + letterChar + (letterInfo ? ' - ' + letterInfo.name : '');
+        
+        // FIX: Use innerHTML for HTML content
+        var titleEl = document.getElementById('selectedLetterTitle');
+        if (titleEl) {
+            titleEl.innerHTML = '<i class="fas fa-pencil-alt"></i> Letter ' + letterChar + (letterInfo ? ' - ' + letterInfo.name : '');
+        }
 
-        renderWordsOverview(langKey, letterChar);
         renderCurrentWord(langKey, letterChar);
-
         document.getElementById('wordsSection').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function renderWordsOverview(langKey, letterChar) {
-        var overview = document.getElementById('wordsOverview');
-        var words = pronunciationData[langKey].words[letterChar];
-        overview.innerHTML = '';
-
-        words.forEach(function (w, idx) {
-            var dot = document.createElement('span');
-            dot.className = 'word-dot';
-            if (idx === currentWordIndex) dot.classList.add('active');
-            if (isWordDone(langKey, letterChar, w.word)) dot.classList.add('done');
-            overview.appendChild(dot);
-        });
     }
 
     function renderCurrentWord(langKey, letterChar) {
@@ -706,55 +647,60 @@ document.addEventListener('DOMContentLoaded', function() {
         var wordObj = words[currentWordIndex];
         var lang = languages[langKey];
 
+        // Update image
         var practiceImage = document.getElementById('practiceImage');
         var img = document.getElementById('practiceImg');
         var emoji = document.getElementById('practiceEmoji');
         
-        if (wordObj.image) {
+        if (wordObj.image && wordObj.image.length > 0) {
             img.style.display = 'block';
             emoji.style.display = 'none';
             img.src = wordObj.image;
-            img.onerror = function () {
+            img.onerror = function() {
                 img.style.display = 'none';
                 emoji.style.display = 'block';
-                emoji.textContent = '';
+                emoji.textContent = '📄';
             };
         } else {
             img.style.display = 'none';
             emoji.style.display = 'block';
-            emoji.textContent = '';
+            emoji.textContent = '📄';
         }
 
+        // Update text
         document.getElementById('practiceWord').textContent = wordObj.word;
         document.getElementById('practiceTranslation').textContent = wordObj.translation;
         document.getElementById('wordPosition').textContent = (currentWordIndex + 1) + ' / ' + words.length;
 
-        clearResultFeedback();
-        renderWordsOverview(langKey, letterChar);
-
+        // Update mic button
         var micBtn = document.getElementById('micBtn');
         var micLabel = document.getElementById('micLabel');
         if (!speechRecognitionSupported) {
             micBtn.classList.add('disabled-mic');
-            micLabel.textContent = 'Mic unavailable';
+            micLabel.innerHTML = '<i class="fas fa-microphone-slash"></i> Mic unavailable';
         } else {
             micBtn.classList.remove('disabled-mic');
-            micLabel.textContent = 'Tap & Say It';
+            micLabel.innerHTML = '<i class="fas fa-microphone"></i> Tap & Say It';
         }
 
-        speakWord(wordObj.word, lang.speechLang);
+        clearResultFeedback();
+        
+        // Auto-speak the word
+        setTimeout(function() {
+            speakWord(wordObj.word, lang.speechLang);
+        }, 300);
     }
 
     function clearResultFeedback() {
         var feedback = document.getElementById('resultFeedback');
         feedback.className = 'result-feedback';
-        feedback.textContent = '';
+        feedback.innerHTML = '';
     }
 
     function showResultFeedback(type, text) {
         var feedback = document.getElementById('resultFeedback');
         feedback.className = 'result-feedback show ' + type;
-        feedback.textContent = text;
+        feedback.innerHTML = text;
     }
 
     // =========================================================
@@ -763,7 +709,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     var listenAgainBtn = document.getElementById('listenAgainBtn');
     if (listenAgainBtn) {
-        listenAgainBtn.addEventListener('click', function () {
+        listenAgainBtn.addEventListener('click', function() {
             if (!currentLang || !currentLetter) return;
             var words = pronunciationData[currentLang].words[currentLetter];
             var wordObj = words[currentWordIndex];
@@ -774,12 +720,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var micBtn = document.getElementById('micBtn');
     if (micBtn) {
-        micBtn.addEventListener('click', function () {
+        micBtn.addEventListener('click', function() {
             if (!speechRecognitionSupported) {
                 showToast('Microphone practice needs Chrome or Edge.');
                 return;
             }
-            if (isListening) return;
+            if (isListening || isProcessing) return;
             if (!currentLang || !currentLetter) {
                 showToast('Please select a letter first.');
                 return;
@@ -792,20 +738,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
             micBtn.classList.remove('correct', 'incorrect');
             micBtn.classList.add('listening');
-            document.getElementById('micLabel').textContent = 'Listening...';
-            showResultFeedback('listening-state', ' Listening... Say it!');
+            document.getElementById('micLabel').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Listening...';
+            showResultFeedback('listening-state', '<i class="fas fa-ear-listen"></i> Listening... Say the word!');
 
-            checkPronunciation(wordObj.word, lang.speechLang, function (result, heard) {
+            isProcessing = true;
+
+            checkPronunciation(wordObj.word, lang.speechLang, function(result, heard) {
                 micBtn.classList.remove('listening');
-                document.getElementById('micLabel').textContent = 'Tap & Say It';
+                document.getElementById('micLabel').innerHTML = '<i class="fas fa-microphone"></i> Tap & Say It';
+                isProcessing = false;
 
                 if (result === 'correct') {
                     micBtn.classList.add('correct');
-                    showResultFeedback('correct', 'Great job! That\'s correct!');
+                    showResultFeedback('correct', '<i class="fas fa-check-circle"></i> Great job! That\'s correct!');
                     if (typeof Sound !== 'undefined' && Sound.chime) Sound.chime();
-                    markWordDone(currentLang, currentLetter, wordObj.word);
-                    renderWordsOverview(currentLang, currentLetter);
-                    checkForCompletion();
+                    
+                    // Auto-advance to next word after delay
+                    var wordsList = pronunciationData[currentLang].words[currentLetter];
+                    if (currentWordIndex < wordsList.length - 1) {
+                        setTimeout(function() {
+                            currentWordIndex++;
+                            renderCurrentWord(currentLang, currentLetter);
+                        }, 1200);
+                    } else {
+                        setTimeout(function() {
+                            showToast('🎉 You completed all words for this letter!');
+                        }, 1200);
+                    }
                     
                     setTimeout(function() {
                         micBtn.classList.remove('correct');
@@ -813,17 +772,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                 } else if (result === 'incorrect') {
                     micBtn.classList.add('incorrect');
-                    showResultFeedback('incorrect', 'Try again! You said "' + (heard || '...') + '"');
+                    var heardText = heard ? ' "' + heard + '"' : '';
+                    showResultFeedback('incorrect', '<i class="fas fa-times-circle"></i> Try again! You said:' + heardText);
                     setTimeout(function() {
                         micBtn.classList.remove('incorrect');
+                        speakWord(wordObj.word, lang.speechLang);
                     }, 800);
                 } else if (result === 'no-speech') {
-                    showResultFeedback('incorrect', 'I didn\'t hear anything — try again.');
+                    showResultFeedback('incorrect', '<i class="fas fa-volume-mute"></i> I didn\'t hear anything — try again.');
                 } else if (result === 'not-allowed') {
                     openMicHelpModal();
                     clearResultFeedback();
                 } else {
-                    showResultFeedback('incorrect', 'Something went wrong — try again.');
+                    showResultFeedback('incorrect', '<i class="fas fa-exclamation-triangle"></i> Something went wrong — try again.');
                 }
             });
         });
@@ -833,37 +794,25 @@ document.addEventListener('DOMContentLoaded', function() {
     var nextWordBtn = document.getElementById('nextWordBtn');
 
     if (prevWordBtn) {
-        prevWordBtn.addEventListener('click', function () {
+        prevWordBtn.addEventListener('click', function() {
             if (!currentLang || !currentLetter) return;
             var words = pronunciationData[currentLang].words[currentLetter];
-            currentWordIndex = (currentWordIndex - 1 + words.length) % words.length;
-            renderCurrentWord(currentLang, currentLetter);
+            if (currentWordIndex > 0) {
+                currentWordIndex--;
+                renderCurrentWord(currentLang, currentLetter);
+            }
         });
     }
 
     if (nextWordBtn) {
-        nextWordBtn.addEventListener('click', function () {
+        nextWordBtn.addEventListener('click', function() {
             if (!currentLang || !currentLetter) return;
             var words = pronunciationData[currentLang].words[currentLetter];
-            currentWordIndex = (currentWordIndex + 1) % words.length;
-            renderCurrentWord(currentLang, currentLetter);
-        });
-    }
-
-    function checkForCompletion() {
-        if (!areAllWordsDone(currentLang, currentLetter)) return;
-
-        if (areAllLettersDone(currentLang)) {
-            if (starsAwardedLanguages.indexOf(currentLang) === -1) {
-                setTimeout(function () {
-                    earnStarsForPronunciation(currentLang);
-                    markStarsAwarded(currentLang);
-                }, 1500);
-                showToast('You finished pronunciation for all letters!');
+            if (currentWordIndex < words.length - 1) {
+                currentWordIndex++;
+                renderCurrentWord(currentLang, currentLetter);
             }
-        } else {
-            showToast(' Letter ' + currentLetter + ' complete! Keep going!');
-        }
+        });
     }
 
     // =========================================================
@@ -871,7 +820,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================================================
     var backToLettersBtn = document.getElementById('backToLetters');
     if (backToLettersBtn) {
-        backToLettersBtn.addEventListener('click', function () {
+        backToLettersBtn.addEventListener('click', function() {
             if (typeof Sound !== 'undefined' && Sound.pop) Sound.pop();
             document.getElementById('wordsSection').style.display = 'none';
             var grid = document.getElementById('lettersGrid');
@@ -883,7 +832,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var backToLangsBtn = document.getElementById('backToLangs');
     if (backToLangsBtn) {
-        backToLangsBtn.addEventListener('click', function () {
+        backToLangsBtn.addEventListener('click', function() {
             if (typeof Sound !== 'undefined' && Sound.pop) Sound.pop();
             document.getElementById('contentSection').style.display = 'none';
             var langSelection = document.getElementById('langSelection');
@@ -902,11 +851,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (justSignedIn === 'true' && pendingLang && isLoggedIn()) {
             sessionStorage.removeItem('justSignedIn');
             sessionStorage.removeItem('pendingPronunciationLang');
-            setTimeout(function () { showContentForLanguage(pendingLang); }, 500);
+            setTimeout(function() { showContentForLanguage(pendingLang); }, 500);
         }
     }
 
-    document.addEventListener('authChanged', function () {
+    document.addEventListener('authChanged', function() {
         renderLanguageSelection();
     });
 
@@ -946,8 +895,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================================================
     // INIT
     // =========================================================
-    loadProgress();
-    setTimeout(function () {
+    setTimeout(function() {
         renderLanguageSelection();
         checkReturnFromLogin();
     }, 300);

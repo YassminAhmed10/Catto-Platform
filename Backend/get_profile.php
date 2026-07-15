@@ -1,9 +1,19 @@
 <?php
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 require 'dbc.php';
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: ' . (isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '*'));
 header('Access-Control-Allow-Credentials: true');
+
+// Check if dbc.php loaded properly
+if (!isset($connection) || !$connection) {
+    echo json_encode(['success' => false, 'error' => 'Database connection failed']);
+    exit();
+}
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'error' => 'not_logged_in']);
@@ -15,6 +25,11 @@ $user_id = (int) $_SESSION['user_id'];
 // 1. Get all user data - INCLUDING equipped_skin
 $query = "SELECT id, first_name, last_name, email, dob, gender, star_shells, total_stars, daily_streak, equipped_skin, created_at, equipped_theme FROM users WHERE id = ?";
 $stmt = $connection->prepare($query);
+if (!$stmt) {
+    echo json_encode(['success' => false, 'error' => 'Prepare failed: ' . $connection->error]);
+    exit();
+}
+
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $user_result = $stmt->get_result()->fetch_assoc();
@@ -55,6 +70,11 @@ $inv_query = "SELECT s.item_name, s.item_type FROM user_inventory ui
               JOIN shop_items s ON ui.item_id = s.id 
               WHERE ui.user_id = ?";
 $inv_stmt = $connection->prepare($inv_query);
+if (!$inv_stmt) {
+    echo json_encode(['success' => false, 'error' => 'Inventory query failed: ' . $connection->error]);
+    exit();
+}
+
 $inv_stmt->bind_param("i", $user_id);
 $inv_stmt->execute();
 $inv_result = $inv_stmt->get_result();
@@ -73,12 +93,16 @@ $user_result['inventory_details'] = $inventory_details;
 // 7. Calculate Total XP and Level
 $xp_query = "SELECT SUM(score) as total_xp FROM user_progress WHERE user_id = ?";
 $xp_stmt = $connection->prepare($xp_query);
-$xp_stmt->bind_param("i", $user_id);
-$xp_stmt->execute();
-$xp_result = $xp_stmt->get_result()->fetch_assoc();
-$xp_stmt->close();
+if ($xp_stmt) {
+    $xp_stmt->bind_param("i", $user_id);
+    $xp_stmt->execute();
+    $xp_result = $xp_stmt->get_result()->fetch_assoc();
+    $xp_stmt->close();
+    $total_xp = $xp_result['total_xp'] ?? 0;
+} else {
+    $total_xp = 0;
+}
 
-$total_xp = $xp_result['total_xp'] ?? 0;
 $level = floor($total_xp / 100) + 1;
 
 $user_result['total_xp'] = $total_xp;

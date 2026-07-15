@@ -51,47 +51,48 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Great job! You learned the alphabet!'
                 ]
             },
-            { id: 'zaza_goes_fishing_en', cover: '📘', title: 'Zaza Goes Fishing', pages: ['Page 1', 'Page 2'], pageTexts: ['Zaza goes to the sea.', 'Zaza sees a fish.'] },
-            { id: 'my_family_en', cover: '📙', title: 'My Family', pages: ['Page 1', 'Page 2'], pageTexts: ['This is my family.', 'Mom, dad, and me.'] },
-            { id: 'lost_star_en', cover: '📕', title: 'The Lost Star', locked: true },
-            { id: 'market_day_en', cover: '📓', title: 'Market Day', locked: true },
-            { id: 'rainy_day_fun_en', cover: '📔', title: 'Rainy Day Fun', locked: true }
+            { id: 'zaza_goes_fishing_en', cover: 'imgs/Books/catto-treasure.png', title: "Catto's Island", pages: ['Page 1', 'Page 2'], pageTexts: ['Zaza goes to the sea.', 'Zaza sees a fish.'] },
+            { id: 'my_family_en', cover: 'imgs/Books/EN_Book/Book-Summer.png', title: "Catto's Summer", pages: ['Page 1', 'Page 2'], pageTexts: ['This is my family.', 'Mom, dad, and me.'] },
+            { id: 'lost_star_en', cover: 'imgs/Books/Book-Egypt.png', title: "Catto's Visit to Egypt", pages: ['Page 1', 'Page 2'], pageTexts: ['Catto visits Egypt.', 'Catto sees the pyramids.'] },
+            { id: 'market_day_en', cover: 'imgs/Books/Market-Day.png', title: 'Market-Day',pages: ['Page 1', 'Page 2'], pageTexts: ['Catto goes to the market.', 'Catto buys some fruits.'] },
+            { id: 'rainy_day_fun_en', cover: 'imgs/Books/RainyDayFun.png', title: 'Rainy Day Fun', pages: ['Page 1', 'Page 2'], pageTexts: ['Catto plays in the rain.', 'Catto jumps in puddles.'] }
         ],
         ar: [
             { 
                 id: 'alphabet_adventure_ar', 
-                cover: '📗', 
+                cover: 'imgs/Books/AR/Catto-Ar3.png', 
                 title: 'رحلة الأبجدية', 
                 pages: ['Page 1', 'Page 2', 'Page 3', 'Page 4', 'Page 5'],
                 pageTexts: ['تعلم الحروف العربية!', 'أ هو أرنب', 'ب هو بطة', 'ت هو تفاحة', 'أحسنت! لقد تعلمت الحروف!']
             },
-            { id: 'zaza_goes_fishing_ar', cover: '📘', title: 'زازا يذهب للصيد', pages: ['Page 1', 'Page 2'], pageTexts: ['زازا الثعلب يذهب إلى البحر.', 'زازا يرى سمكة زرقاء.'] },
-            { id: 'my_family_ar', cover: '📙', title: 'عائلتي', pages: ['Page 1', 'Page 2'], pageTexts: ['هذه عائلتي.', 'أمي، أبي وأنا.'] }
+            { id: 'zaza_goes_fishing_ar', cover: 'imgs/Books/AR/Catto-Ar2.png', title: 'كاتو يذهب لمشاهدة كأس العالم', pages: ['Page 1', 'Page 2'], pageTexts: ['زازا الثعلب يذهب إلى البحر.', 'زازا يرى سمكة زرقاء.'] },
+            { id: 'my_family_ar', cover: 'imgs/Books/AR/Catto-Ar1.png', title: 'كاتو المغني المشهور ', pages: ['Page 1', 'Page 2'], pageTexts: ['هذه عائلتي.', 'أمي، أبي وأنا.'] }
         ],
         es: [
             { 
                 id: 'alphabet_adventure_es', 
-                cover: '📗', 
-                title: 'Aventura del Alfabeto', 
+                cover: 'imgs/Books/ES/ESb1.png', 
+                title: 'Katto El Volador', 
                 pages: ['Page 1', 'Page 2', 'Page 3', 'Page 4', 'Page 5'],
                 pageTexts: ['Aprende el alfabeto!', 'A es para Abeja', 'B es para Bola', 'C es para Casa', 'Buen trabajo! Aprendiste el alfabeto!']
             },
-            { id: 'zaza_goes_fishing_es', cover: '📘', title: 'Zaza Va a Pescar', pages: ['Page 1', 'Page 2'], pageTexts: ['Zaza el zorro va al mar.', 'Zaza ve un pez azul.'] }
+            { id: 'zaza_goes_fishing_es', cover: 'imgs/Books/ES/ESb2.png', title: 'Catto Cocina Pastel De Manzana', pages: ['Page 1', 'Page 2'], pageTexts: ['Zaza el zorro va al mar.', 'Zaza ve un pez azul.'] }
         ],
         fr: [
             { 
                 id: 'alphabet_adventure_fr', 
-                cover: '📗', 
-                title: 'Aventure de l\'Alphabet', 
+                cover: 'imgs/Books/FR/FRB1.png', 
+                title: 'Katto Le Docteur Des Animaux', 
                 pages: ['Page 1', 'Page 2', 'Page 3', 'Page 4', 'Page 5'],
                 pageTexts: ['Apprenez l\'alphabet!', 'A est pour Avion', 'B est pour Bateau', 'C est pour Chat', 'Bon travail! Vous avez appris l\'alphabet!']
-            }
+            },
+            { id: 'zaza_goes_fishing_fr', cover: 'imgs/Books/FR/FRB2.png', title: 'Katto Et Les Jeux Video', pages: ['Page 1', 'Page 2'], pageTexts: ['Zaza le renard va à la mer.', 'Zaza voit un poisson bleu.'] }
         ],
         de: [
             { 
                 id: 'alphabet_adventure_de', 
-                cover: '📗', 
-                title: 'Abenteuer Alphabet', 
+                cover: 'imgs/Books/DEB1.png',
+                title: 'Katto Baut Einen Roboter', 
                 pages: ['Page 1', 'Page 2', 'Page 3', 'Page 4', 'Page 5'],
                 pageTexts: ['Lerne das Alphabet!', 'A ist für Apfel', 'B ist für Ball', 'C ist für Computer', 'Großartig! Du hast das Alphabet gelernt!']
             }
@@ -99,8 +100,8 @@ document.addEventListener('DOMContentLoaded', function() {
         it: [
             { 
                 id: 'alphabet_adventure_it', 
-                cover: '📗', 
-                title: 'Avventura dell\'Alfabeto', 
+                cover: 'imgs/Books/ITb1.png', 
+                title: 'Ktto Cucina La Pizza', 
                 pages: ['Page 1', 'Page 2', 'Page 3', 'Page 4', 'Page 5'],
                 pageTexts: ['Impara l\'alfabeto!', 'A è per Albero', 'B è per Barca', 'C è per Cane', 'Ottimo lavoro! Hai imparato l\'alfabeto!']
             }

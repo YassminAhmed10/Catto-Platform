@@ -6,15 +6,20 @@
 <title>Learn Spanish — Language Island</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@6.6.0/css/flag-icons.min.css">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/language-page.css">
 <link rel="stylesheet" href="assets/css/header.css">
 </head>
-<body>
+<body style="--lang-accent:#C60B1E; --lang-accent-dark:#8f0813; --lang-tint:rgba(198,11,30,0.08);">
 
-<!-- SKY -->
+<!--
+here i want to create "Sky Background with Animated Elements"
+so i will use:
+1- Sun with face (eyes and smile)
+2- Three floating clouds
+-->
 <div class="sky">
   <div class="sun"><div class="sun-face"><div class="sun-eye left"></div><div class="sun-eye right"></div><div class="sun-smile"></div></div></div>
   <div class="cloud cloud-1"></div>
@@ -22,7 +27,13 @@
   <div class="cloud cloud-3"></div>
 </div>
 
-<!-- HEADER -->
+<!--
+here i want to create "Header - Common Navigation"
+so i will use:
+1- Brand logo
+2- Topbar right (coins, stars, auth buttons, user menu)
+3- Navbar with navigation links
+-->
 <header class="topbar">
   <div class="topbar-top">
     <div class="brand">
@@ -30,11 +41,11 @@
     </div>
     <div class="topbar-right">
       <div class="progress-pill coins-display" style="display:none;">
-        <span class="progress-icon">🪙</span>
+        <i class="fas fa-coins" style="color:var(--star);"></i>
         <span id="headerCoins">0</span>
       </div>
       <div class="progress-pill stars-display" style="display:none;">
-        <span class="progress-icon">⭐</span>
+        <i class="fas fa-star" style="color:var(--star);"></i>
         <span id="headerStars">0</span>
       </div>
       <div class="auth-buttons" id="authButtons">
@@ -49,7 +60,7 @@
     </div>
   </div>
   <nav class="navbar" aria-label="Main">
-    <a class="nav-btn" href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Home</a>
+    <a class="nav-btn" href="index.html"><span class="nav-icon"><i class="fas fa-house"></i></span>Home</a>
     <a class="nav-btn" href="games.html"><span class="nav-icon"><i class="fas fa-gamepad"></i></span>Games</a>
     <a class="nav-btn" href="books.html"><span class="nav-icon"><i class="fas fa-book"></i></span>Books</a>
     <a class="nav-btn" href="listening.html"><span class="nav-icon"><i class="fas fa-headphones"></i></span>Listening</a>
@@ -57,11 +68,16 @@
     <a class="nav-btn" href="videos.html"><span class="nav-icon"><i class="fas fa-video"></i></span>Videos</a>
     <a class="nav-btn" href="art.html"><span class="nav-icon"><i class="fas fa-palette"></i></span>Art</a>
     <a class="nav-btn" href="shop.html"><span class="nav-icon"><i class="fas fa-store"></i></span>Shop</a>
-    
   </nav>
 </header>
 
-<!-- SIDEBAR -->
+<!--
+here i want to create "Sidebar - Navigation Drawer"
+so i will use:
+1- Profile section with user image and name
+2- Menu items: My Profile, Dashboard, Achievements, Languages, Settings
+3- Logout at bottom
+-->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <div class="sidebar" id="sidebar">
   <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
@@ -85,18 +101,38 @@
 </div>
 
 <main>
+  <!--
+  here i want to create "Language Header - Spanish Overview"
+  so i will use:
+  1- Language flag (Spain)
+  2- Title and description
+  3- Progress pill showing levels started
+  -->
   <section class="language-header">
     <div class="language-banner">
-      <span class="language-flag fi fi-es"></span>
-      <h1>Learn Spanish</h1>
-      <p>¡Hola! Start your journey to speak Spanish with Catto!</p>
+      <div class="language-flag"><span class="fi fi-es"></span></div>
+      <div class="language-banner-text">
+        <h1>Learn Spanish</h1>
+        <p>Start your journey to speak Spanish with Catto!</p>
+      </div>
+      <div class="lang-progress-pill">
+        <span class="lp-value">1 / 2</span>
+        <span class="lp-label">Levels Started</span>
+      </div>
     </div>
   </section>
 
+  <!--
+  here i want to create "Learning Roadmap - Level Progression"
+  so i will use:
+  1- Section title with map icon
+  2- Level 1: Alphabet & Sounds (In Progress, 80% complete)
+  3- Level 2: Numbers & Colors (Locked)
+  -->
   <section class="roadmap-section">
     <h2 class="section-title"><i class="fas fa-map"></i> Your Learning Roadmap</h2>
     <p class="section-subtitle">Complete each level to unlock the next adventure!</p>
-    
+
     <div class="levels-container">
       <div class="level-card in-progress">
         <div class="level-number">1</div>
@@ -107,33 +143,145 @@
             <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
             <span class="progress-text">5/6 lessons</span>
           </div>
-          <div class="level-badge"><i class="fas fa-spinner fa-spin"></i> In Progress</div>
         </div>
+        <span class="level-badge"><i class="fas fa-spinner fa-spin"></i> In Progress</span>
       </div>
+
       <div class="level-card locked">
         <div class="level-number">2</div>
         <div class="level-content">
-          <h3>Numbers &amp; Colors <i class="fas fa-lock" style="font-size:14px;color:#8C87A8;margin-left:6px;"></i></h3>
+          <h3>Numbers &amp; Colors <i class="fas fa-lock"></i></h3>
           <p>Learn to count and name colors in Spanish</p>
           <div class="level-progress">
             <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
             <span class="progress-text">0/6 lessons</span>
           </div>
-          <div class="level-badge"><i class="fas fa-lock"></i> Locked</div>
         </div>
+        <span class="level-badge"><i class="fas fa-lock"></i> Locked</span>
       </div>
-      <!-- Add more levels as needed -->
+    </div>
+  </section>
+
+  <!--
+  here i want to create "Current Level Lessons - Level 1 Content"
+  so i will use:
+  1- Section title with book icon
+  2- Lessons grid showing 6 lessons with statuses
+  3- Status indicators: completed, in-progress, locked
+  -->
+  <section class="lessons-section">
+    <h2 class="section-title"><i class="fas fa-book-open"></i> Current Level Lessons</h2>
+    <p class="section-subtitle">Level 1: Alphabet &amp; Sounds</p>
+
+    <div class="lessons-grid">
+      <div class="lesson-card">
+        <div class="lesson-icon"><i class="fas fa-font"></i></div>
+        <div class="lesson-info">
+          <h4>Letters A-M</h4>
+          <p>Learn the first half of the Spanish alphabet</p>
+        </div>
+        <div class="lesson-status completed"><i class="fas fa-check"></i></div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-icon"><i class="fas fa-font"></i></div>
+        <div class="lesson-info">
+          <h4>Letters N-Z</h4>
+          <p>Learn the second half of the Spanish alphabet</p>
+        </div>
+        <div class="lesson-status completed"><i class="fas fa-check"></i></div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-icon"><i class="fas fa-volume-high"></i></div>
+        <div class="lesson-info">
+          <h4>Vowel Sounds</h4>
+          <p>Practice a, e, i, o, u pronunciation</p>
+        </div>
+        <div class="lesson-status completed"><i class="fas fa-check"></i></div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-icon"><i class="fas fa-comment-dots"></i></div>
+        <div class="lesson-info">
+          <h4>Tricky Sounds</h4>
+          <p>Master ñ, ll, and rr pronunciation</p>
+        </div>
+        <div class="lesson-status in-progress"><i class="fas fa-spinner fa-spin"></i></div>
+      </div>
+      <div class="lesson-card locked">
+        <div class="lesson-icon"><i class="fas fa-list-check"></i></div>
+        <div class="lesson-info">
+          <h4>Quiz: Alphabet &amp; Sounds</h4>
+          <p>Test your knowledge with a fun quiz</p>
+        </div>
+        <div class="lesson-status locked"><i class="fas fa-lock"></i></div>
+      </div>
+      <div class="lesson-card locked">
+        <div class="lesson-icon"><i class="fas fa-gamepad"></i></div>
+        <div class="lesson-info">
+          <h4>Game: Match &amp; Learn</h4>
+          <p>Play a fun matching game</p>
+        </div>
+        <div class="lesson-status locked"><i class="fas fa-lock"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!--
+  here i want to create "Achievements Section"
+  so i will use:
+  1- Section title with trophy icon
+  2- Achievements grid showing 4 achievements
+  3- Unlocked: First Step, Locked: Bookworm, Explorer, World Traveler
+  -->
+  <section class="achievements-section">
+    <h2 class="section-title"><i class="fas fa-trophy"></i> Your Achievements</h2>
+    <div class="achievements-grid">
+      <div class="achievement-item unlocked">
+        <span class="achievement-icon"><i class="fas fa-star"></i></span>
+        <span class="achievement-name">First Step</span>
+        <span class="achievement-desc">Complete your first lesson</span>
+      </div>
+      <div class="achievement-item locked">
+        <span class="achievement-icon"><i class="fas fa-book"></i></span>
+        <span class="achievement-name">Bookworm</span>
+        <span class="achievement-desc">Complete 5 lessons</span>
+      </div>
+      <div class="achievement-item locked">
+        <span class="achievement-icon"><i class="fas fa-trophy"></i></span>
+        <span class="achievement-name">Explorer</span>
+        <span class="achievement-desc">Complete 10 lessons</span>
+      </div>
+      <div class="achievement-item locked">
+        <span class="achievement-icon"><i class="fas fa-earth-americas"></i></span>
+        <span class="achievement-name">World Traveler</span>
+        <span class="achievement-desc">Complete all levels</span>
+      </div>
     </div>
   </section>
 </main>
 
+<!--
+here i want to create "Catto Companion - Interactive Helper"
+so i will use:
+1- Catto bubble with greeting message
+2- Catto image
+-->
 <div class="catto-companion">
-  <div class="catto-bubble" id="cattoBubble">¡Hola! Ready to learn Spanish? 🐾</div>
+  <div class="catto-bubble" id="cattoBubble">¡Hola! Ready to learn Spanish?</div>
   <div class="catto-img-wrap">
     <img class="catto-img" src="imgs/catto.png" alt="Catto" onerror="this.style.display='none'">
   </div>
 </div>
 
+<!--
+here i want to create "JavaScript Imports and Initialization"
+so i will use:
+1- sounds.js (audio effects)
+2- header.js (header and sidebar functionality)
+3- activity.js (user activity tracking)
+4- books.js (book-related functionality)
+5- global-theme.js (theme management)
+6- DOMContentLoaded event to initialize sound system
+-->
 <script src="assets/js/sounds.js"></script>
 <script src="assets/js/header.js"></script>
 <script src="assets/js/activity.js"></script>
@@ -145,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function() {
     Sound._enabled = true;
     Sound._init();
   }
-  console.log('🐱 Spanish learning page loaded!');
+  console.log('Spanish learning page loaded!');
 });
 </script>
 </body>

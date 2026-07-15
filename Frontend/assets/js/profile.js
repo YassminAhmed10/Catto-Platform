@@ -4,6 +4,11 @@
 
 console.log('📄 Profile.js loading...');
 
+// =========================================================
+// API BASE URL - Use absolute path from root
+// =========================================================
+var API_BASE = '/Catto_Platform/Language_island2/Backend/';
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ DOM ready');
 
@@ -28,15 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // TEST: Simple click test first
-    // =========================================================
-    editBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        console.log('🟢 Edit button clicked! (test)');
-        alert('✅ Click works! Now let\'s test the real function.');
-    });
-
-    // =========================================================
     // DOM ELEMENTS
     // =========================================================
     var saveBtn = document.getElementById('saveProfileBtn');
@@ -55,9 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var skinModalClose = document.getElementById('skinModalClose');
     var skinGrid = document.getElementById('skinGrid');
 
-    // Theme elements ("My Themes" buttons)
-    var themeButtons = document.querySelectorAll('.theme-toggle-btn');
-    var purpleThemeBtn = document.getElementById('purpleThemeBtn');
+    // Closet tabs
+    var closetTabs = document.querySelectorAll('.closet-tab');
+    var currentTab = 'all';
 
     // Toast elements
     var updateToast = document.getElementById('updateToast');
@@ -74,6 +70,50 @@ document.addEventListener('DOMContentLoaded', function() {
         gender: !!genderInput,
         dob: !!dobInput
     });
+
+    console.log('🔍 Closet tabs found:', closetTabs.length);
+
+    // =========================================================
+    // CLOSET TAB HANDLERS
+    // =========================================================
+    if (closetTabs.length > 0) {
+        closetTabs.forEach(function(tab) {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                closetTabs.forEach(function(t) { t.classList.remove('active'); });
+                this.classList.add('active');
+                currentTab = this.dataset.tab;
+                console.log('🔄 Tab changed to:', currentTab);
+                filterClosetItems();
+            });
+        });
+    }
+
+    function filterClosetItems() {
+        var items = document.querySelectorAll('.closet-item');
+        console.log('🔍 Filtering items for tab:', currentTab, 'Items found:', items.length);
+        
+        var visibleCount = 0;
+        items.forEach(function(item) {
+            var category = item.dataset.category;
+            if (!category) {
+                category = item.dataset.type || 'unknown';
+            }
+            
+            if (currentTab === 'all' || category === currentTab) {
+                item.style.display = 'flex';
+                item.style.opacity = '1';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+                item.style.opacity = '0';
+            }
+        });
+        
+        console.log('📊 Visible items:', visibleCount, 'of', items.length);
+    }
 
     // =========================================================
     // STATE
@@ -100,10 +140,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================================================
     function loadProfile() {
         console.log('🔄 Loading profile...');
-        fetch('../Backend/get_profile.php')
+        fetch(API_BASE + 'get_profile.php')
             .then(function(res) {
                 if (!res.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Network response was not ok: ' + res.status);
                 }
                 return res.json();
             })
@@ -134,7 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateStats(d);
                     loadCloset(d);
                     calculateStreak(d);
-                    updateThemeButtonsUI();
                 }
             })
             .catch(function(err) {
@@ -147,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // RENDER DISPLAY
     // =========================================================
     function renderDisplay(d) {
-        console.log('🎨 Rendering display...');
+        console.log('Rendering display...');
         
         var userName = d.first_name || 'Explorer';
         var userNameEl = document.getElementById('userName');
@@ -291,17 +330,42 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================================================
     // LOAD CLOSET
     // =========================================================
+    
+    // =========================================================
+    // ICON IMAGE PATHS - Replace these with your actual image paths
+    // =========================================================
     var PRINT_ICONS = {
-        'coloring_book': '🖍️',
-        'sudoku': '🧩',
-        'nonogram': '🎨',
-        'fantasy-book': '📚'
+        'coloring_book': 'imgs/profile/icons/coloring-book.png',    // Replace with your image path
+        'sudoku': 'imgs/profile/icons/sudoku.png',                  // Replace with your image path
+        'nonogram': 'imgs/profile/icons/nonogram.png',              // Replace with your image path
+        'fantasy-book': 'imgs/profile/icons/fantasy-book.png',      // Replace with your image path
+        'default': 'imgs/profile/icons/default-print.png'           // Default fallback icon
     };
 
     var THEME_LABELS = {
         'default': 'Default Theme',
-        'purple-theme': 'Purple Theme'
+        'purple-theme': 'Purple Theme',
+        'night-theme': 'Night Theme',
+        'space-theme': 'Space Theme',
+        'boys-theme': 'Boys Theme'
     };
+
+    // =========================================================
+    // ICON IMAGE HELPER - Returns image HTML with fallback
+    // =========================================================
+    function getIconImage(itemName, className) {
+        var iconPath = PRINT_ICONS[itemName] || PRINT_ICONS['default'];
+        return `<img src="${iconPath}" alt="${itemName}" class="${className}" onerror="this.src='imgs/profile/icons/default-print.png'">`;
+    }
+
+    // Map database item types to tab names
+    function mapToTabCategory(itemType) {
+        if (itemType === 'skin' || itemType === 'skins') return 'skins';
+        if (itemType === 'theme' || itemType === 'themes') return 'themes';
+        if (itemType === 'print' || itemType === 'prints' || itemType === 'printable') return 'prints';
+        if (itemType === 'book' || itemType === 'books') return 'books';
+        return itemType;
+    }
 
     function prettifyName(name) {
         return name.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); });
@@ -309,12 +373,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function loadCloset(d) {
         var grid = document.getElementById('closetGrid');
-        if (!grid) return;
+        if (!grid) {
+            console.error('❌ closetGrid not found!');
+            return;
+        }
 
         var inventory = (d.inventory_details || []).slice();
 
-        // The Default Theme is always available (it's free), so make sure it
-        // always shows up in the collection even though it's not "purchased".
+        // The Default Theme is always available (it's free)
         var hasDefaultTheme = inventory.some(function(item) {
             return item.item_type === 'theme' && item.item_name === 'default';
         });
@@ -339,10 +405,11 @@ document.addEventListener('DOMContentLoaded', function() {
             var itemType = item.item_type || 'skin';
             var itemName = item.item_name;
             var isEquipped = false;
-            var isPrintable = (itemType === 'prints' || itemType === 'books' || itemType === 'print' || itemType === 'book');
+            var isPrintable = (itemType === 'prints' || itemType === 'books' || itemType === 'print' || itemType === 'book' || itemType === 'printable');
             var displayName;
             var mediaHtml;
             var typeLabel;
+            var category = mapToTabCategory(itemType);
 
             if (itemType === 'skin') {
                 isEquipped = itemName === d.equipped_skin;
@@ -352,13 +419,17 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (itemType === 'theme') {
                 isEquipped = itemName === equippedTheme;
                 displayName = THEME_LABELS[itemName] || prettifyName(itemName);
-                var swatchClass = itemName === 'purple-theme' ? 'theme-swatch-purple' : 'theme-swatch-default';
-                mediaHtml = `<div class="item-image item-icon ${swatchClass}">🎨</div>`;
+                var swatchClass = 'swatch-default';
+                if (itemName === 'purple-theme') swatchClass = 'swatch-purple';
+                else if (itemName === 'night-theme') swatchClass = 'swatch-night';
+                else if (itemName === 'space-theme') swatchClass = 'swatch-space';
+                else if (itemName === 'boys-theme') swatchClass = 'swatch-boys';
+                mediaHtml = `<div class="item-image theme-visual ${swatchClass}"></div>`;
                 typeLabel = 'Theme';
             } else if (isPrintable) {
                 displayName = prettifyName(itemName);
-                var icon = PRINT_ICONS[itemName] || '📄';
-                mediaHtml = `<div class="item-image item-icon">${icon}</div>`;
+                // Use image icon instead of emoji
+                mediaHtml = getIconImage(itemName, 'item-image item-icon');
                 typeLabel = (itemType === 'books' || itemType === 'book') ? 'Book' : 'Printable';
             } else {
                 displayName = prettifyName(itemName);
@@ -367,7 +438,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             html += `
-                <div class="closet-item ${isEquipped ? 'equipped' : ''} ${isPrintable ? 'printable' : ''}" data-item="${itemName}" data-type="${itemType}">
+                <div class="closet-item ${isEquipped ? 'equipped' : ''} ${isPrintable ? 'printable' : ''}" 
+                     data-item="${itemName}" 
+                     data-type="${itemType}"
+                     data-category="${category}">
                     ${isEquipped ? '<span class="equipped-badge">✓ Equipped</span>' : ''}
                     ${isPrintable ? '<span class="download-badge">📥 Download</span>' : ''}
                     ${mediaHtml}
@@ -379,21 +453,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
         grid.innerHTML = html;
 
+        // Apply tab filter after items are rendered
+        setTimeout(function() {
+            filterClosetItems();
+        }, 100);
+
         grid.querySelectorAll('.closet-item').forEach(function(el) {
-            el.addEventListener('click', function() {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
                 var itemName = this.dataset.item;
                 var itemType = this.dataset.type;
+
+                console.log(' Clicked item:', itemName, 'Type:', itemType);
 
                 if (itemType === 'skin') {
                     if (itemName !== current.equipped_skin) {
                         equipSkin(itemName);
+                    } else {
+                        showToast('This skin is already equipped!', 'info');
                     }
                 } else if (itemType === 'theme') {
-                    if (itemName !== current.equipped_theme) {
-                        equipTheme(itemName);
-                    }
-                } else if (itemType === 'prints' || itemType === 'books' || itemType === 'print' || itemType === 'book') {
-                    window.location.href = '../Backend/download.php?item=' + encodeURIComponent(itemName);
+                    console.log('Theme clicked, redirecting to settings...');
+                    window.location.href = 'settings.html';
+                } else if (itemType === 'prints' || itemType === 'books' || itemType === 'print' || itemType === 'book' || itemType === 'printable') {
+                    window.location.href = API_BASE + 'download.php?item=' + encodeURIComponent(itemName);
                 }
             });
         });
@@ -405,14 +490,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function equipSkin(skinName) {
         console.log('🎯 Equipping skin:', skinName);
         
-        fetch('../Backend/equip_skin.php', {
+        fetch(API_BASE + 'equip_skin.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
             body: JSON.stringify({ equipped_skin: skinName })
         })
         .then(function(res) {
-            if (!res.ok) throw new Error('Network response was not ok');
+            if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
             return res.json();
         })
         .then(function(data) {
@@ -434,77 +519,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // EQUIP THEME (used by "My Themes" buttons AND the closet grid)
-    // =========================================================
-    function equipTheme(themeName) {
-        console.log('🎨 Equipping theme:', themeName);
-
-        fetch('../Backend/update_theme.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ theme: themeName })
-        })
-        .then(function(res) {
-            if (!res.ok) throw new Error('Network response was not ok');
-            return res.json();
-        })
-        .then(function(data) {
-            console.log('📥 Theme equip response:', data);
-            if (data.success) {
-                current.equipped_theme = themeName;
-
-                // Instantly toggle the CSS class so the page changes without a refresh
-                if (themeName === 'purple-theme') {
-                    document.body.classList.add('theme-royal-purple');
-                } else {
-                    document.body.classList.remove('theme-royal-purple');
-                }
-
-                updateThemeButtonsUI();
-                loadProfile();
-                showUpdateToast('Theme equipped!', 'success', 'Your new theme is ready');
-            } else {
-                showUpdateToast('Failed to equip theme', 'error', data.message || 'Please try again');
-            }
-        })
-        .catch(function(err) {
-            console.error('❌ Error equipping theme:', err);
-            showUpdateToast('Network error', 'error', 'Please try again');
-        });
-    }
-
-    // Sync the "My Themes" buttons (show/hide Purple, highlight active one)
-    function updateThemeButtonsUI() {
-        if (!themeButtons || themeButtons.length === 0) return;
-
-        var ownsPurple = current.inventory.some(function(item) {
-            return item.item_name === 'purple-theme';
-        });
-        if (purpleThemeBtn) {
-            purpleThemeBtn.style.display = ownsPurple ? 'inline-block' : 'none';
-        }
-
-        var equippedTheme = current.equipped_theme || 'default';
-        themeButtons.forEach(function(btn) {
-            if (btn.getAttribute('data-theme') === equippedTheme) {
-                btn.classList.remove('secondary');
-            } else {
-                btn.classList.add('secondary');
-            }
-        });
-    }
-
-    // Attach click listeners to the "My Themes" buttons once
-    if (themeButtons && themeButtons.length > 0) {
-        themeButtons.forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                equipTheme(btn.getAttribute('data-theme'));
-            });
-        });
-    }
-
-    // =========================================================
     // TOAST FUNCTIONS
     // =========================================================
     function showToast(message, type) {
@@ -515,6 +529,8 @@ document.addEventListener('DOMContentLoaded', function() {
             toast.classList.add('show');
             if (type === 'error') {
                 toast.style.background = '#C94E4E';
+            } else if (type === 'info') {
+                toast.style.background = '#4C8DAF';
             } else {
                 toast.style.background = '#2E7D32';
             }
@@ -577,7 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // EDIT MODE FUNCTIONS - FIXED
+    // EDIT MODE FUNCTIONS
     // =========================================================
     function enterEditMode() {
         console.log('✏️ Entering edit mode...');
@@ -651,16 +667,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // EDIT BUTTON - MAIN HANDLER (Replace test listener)
+    // EDIT BUTTON - MAIN HANDLER
     // =========================================================
-    // Remove test listener and add real one
-    // (We'll remove the test listener by replacing it)
-    
-    // Clone and replace to remove old listeners
     var newEditBtn = editBtn.cloneNode(true);
     editBtn.parentNode.replaceChild(newEditBtn, editBtn);
     
-    // Now add the real listener
     newEditBtn.addEventListener('click', function(e) {
         e.preventDefault();
         console.log('🟢 Edit button clicked! (real)');
@@ -710,7 +721,7 @@ document.addEventListener('DOMContentLoaded', function() {
             saveBtn.disabled = true;
             saveBtn.textContent = 'Saving...';
 
-            fetch('../Backend/update_profile.php', {
+            fetch(API_BASE + 'update_profile.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -723,7 +734,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
             })
             .then(function(res) {
-                if (!res.ok) throw new Error('Network response was not ok');
+                if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
                 return res.json();
             })
             .then(function(response) {
@@ -765,9 +776,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function openSkinModal() {
-        console.log('🎨 Opening skin modal...');
-        fetch('../Backend/get_profile.php')
-            .then(function(res) { return res.json(); })
+        console.log('Opening skin modal...');
+        fetch(API_BASE + 'get_profile.php')
+            .then(function(res) { 
+                if (!res.ok) throw new Error('Network error: ' + res.status);
+                return res.json(); 
+            })
             .then(function(data) {
                 if (data.success) {
                     current.inventory = data.data.inventory_details || [];
@@ -775,7 +789,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     renderSkinGrid();
                 }
             })
-            .catch(function(err) { console.error('❌ Error fetching inventory:', err); });
+            .catch(function(err) { 
+                console.error('❌ Error fetching inventory:', err);
+                showToast('Could not load skins', 'error');
+            });
         
         if (skinModal) {
             skinModal.classList.add('open');
@@ -838,7 +855,10 @@ document.addEventListener('DOMContentLoaded', function() {
         skinGrid.innerHTML = html;
 
         skinGrid.querySelectorAll('.skin-option').forEach(function(el) {
-            el.addEventListener('click', function() {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
                 var skinName = this.dataset.skin;
                 var isOwned = this.dataset.owned === 'true';
                 
@@ -891,7 +911,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Expose functions globally
     window.loadProfile = loadProfile;
     window.updateAllAvatars = updateAllAvatars;
+    window.equipSkin = equipSkin;
+    window.filterClosetItems = filterClosetItems;
 
     console.log('✅ Profile.js initialized successfully!');
-    console.log('🔍 Click the Edit Profile button and check the console.');
 });

@@ -1,327 +1,615 @@
 /* =========================================================
-   HOME.JS - Home page (index.html) specific behavior only.
-
-   IMPORTANT: This file must NOT redeclare `Auth` — auth.js
-   already owns that object and is loaded first. Redeclaring
-   `const Auth = {...}` here throws a SyntaxError that stops
-   this whole file from running, which is why "Let's Learn"
-   was silently doing nothing for logged-in users.
+   HOME.JS - Home page functionality (Complete)
    ========================================================= */
 
-// Languages that already have a dedicated lesson page.
-// Add more here as you build out english.html-style pages for them.
-const READY_LANGUAGES = {
-  en: 'english.html',
-  es: 'spanish.html'
-};
-
-// Maps each flag's language code to Catto's matching outfit video.
-// These filenames match what's actually in imgs/Catto_Videos/ —
-// note it's a mix of language names and country names, so don't
-// assume a single naming pattern when adding more later.
-const CATTO_LANGUAGE_VIDEOS = {
-  en: 'imgs/Catto_Videos/Catto_English.webm',
-  fr: 'imgs/Catto_Videos/Catto_French.webm',
-  es: 'imgs/Catto_Videos/Catto_Spain.webm',
-  it: 'imgs/Catto_Videos/Catto_Italy.webm',
-  de: 'imgs/Catto_Videos/Catto_German.webm',
-  ar: 'imgs/Catto_Videos/Catto_Egypt.webm'
-};
-const CATTO_FALLBACK_VIDEO = CATTO_LANGUAGE_VIDEOS.en;
-
-// Matching speech-bubble greeting per language.
-const CATTO_LANGUAGE_GREETINGS = {
-  en: 'Hello, my friend! I am Catto!',
-  fr: 'Bonjour, mon ami ! Je suis Catto !',
-  es: '¡Hola, mi amigo! ¡Soy Catto!',
-  it: 'Ciao, amico mio! Sono Catto!',
-  de: 'Hallo, mein Freund! Ich bin Catto!',
-  ar: 'مرحباً يا صديقي! أنا كاتو!'
-};
-
-// ============================================
-// LOGIN REQUIRED MODAL (the one already in index.html
-// with id="loginRequiredModal")
-// ============================================
-function showLoginRequiredModal() {
-  const modal = document.getElementById('loginRequiredModal');
-  if (!modal) return;
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  if (typeof Sound !== 'undefined') Sound.pop();
+// Wait for DOM to be ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initHome);
+} else {
+  initHome();
 }
 
-function hideLoginRequiredModal() {
-  const modal = document.getElementById('loginRequiredModal');
-  if (!modal) return;
-  modal.classList.remove('open');
-  document.body.style.overflow = '';
-  if (typeof Sound !== 'undefined') Sound.pop();
-}
+function initHome() {
 
-// Expose globally — auth.js's showLoginPrompt() calls window.showLoginRequiredModal()
-window.showLoginRequiredModal = showLoginRequiredModal;
-window.hideLoginRequiredModal = hideLoginRequiredModal;
+  // ============================================
+  // LANGUAGE DATA - COMPLETE CONFIGURATION
+  // ============================================
+  var languages = {
+    en: { 
+      name: 'English', 
+      flag: 'fi-gb', 
+      color: '#012169', 
+      path: 'english', 
+      video: 'imgs/Catto_Videos/Catto_English.webm',
+      greeting: 'Hello my friend! I am Catto! ',
+      shortGreeting: 'Hello!',
+      sound: 'Sounds/Hello.mp3'
+    },
+    fr: { 
+      name: 'French', 
+      flag: 'fi-fr', 
+      color: '#002395', 
+      path: 'french', 
+      video: 'imgs/Catto_Videos/Catto_French.webm',
+      greeting: 'Bonjour mon ami! Je suis Catto! ',
+      shortGreeting: 'Bonjour!',
+      sound: 'Sounds/Bonjour mon ami, je suis Catto.mp3'
+    },
+    es: { 
+      name: 'Spanish', 
+      flag: 'fi-es', 
+      color: '#C60B1E', 
+      path: 'spanish', 
+      video: 'imgs/Catto_Videos/Catto_Spain.webm',
+      greeting: '¡Hola amigo! Soy Catto! ',
+      shortGreeting: '¡Hola!',
+      sound: 'Sounds/Hola.mp3'
+    },
+    it: { 
+      name: 'Italian', 
+      flag: 'fi-it', 
+      color: '#009246', 
+      path: 'italian', 
+      video: 'imgs/Catto_Videos/Catto_Italy.webm',
+      greeting: 'Ciao amico! Sono Catto! ',
+      shortGreeting: 'Ciao!',
+      sound: 'Sounds/Ciao.mp3'
+    },
+    de: { 
+      name: 'German', 
+      flag: 'fi-de', 
+      color: '#DD0000', 
+      path: 'german', 
+      video: 'imgs/Catto_Videos/Catto_German.webm',
+      greeting: 'Hallo mein Freund! Ich bin Catto! ',
+      shortGreeting: 'Hallo!',
+      sound: 'Sounds/Hallo.mp3'
+    },
+    ar: { 
+      name: 'Arabic', 
+      flag: 'fi-eg', 
+      color: '#CE1126', 
+      path: 'arabic', 
+      video: 'imgs/Catto_Videos/Catto_Egypt.webm',
+      greeting: 'مرحباً يا صديقي! أنا كاتو! ',
+      shortGreeting: 'مرحباً!',
+      sound: 'Sounds/مرحبا صديقي.wav'
+    }
+  };
 
-// ============================================
-// COMING SOON MODAL (built dynamically — reuses your
-// existing .modal-backdrop / .modal-card styling)
-// ============================================
-function showComingSoonModal(languageName) {
-  let modal = document.getElementById('comingSoonModal');
+  // ============================================
+  // STATE MANAGEMENT
+  // ============================================
+  var state = {
+    currentLang: 'en',
+    isPlaying: false,
+    currentAudio: null,
+    messageTimeout: null
+  };
 
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'comingSoonModal';
-    modal.className = 'modal-backdrop';
-    modal.innerHTML = `
-      <div class="modal-card login-required-modal">
-        <button class="modal-close interactive" id="comingSoonModalClose" aria-label="Close">
-          <i class="fas fa-times"></i>
-        </button>
-        <div class="modal-catto-image">
-          <img src="imgs/Cattoimages/Catto_Login.png" alt="Catto" onerror="this.style.display='none'">
-        </div>
-        <h2 class="modal-title">Coming Soon!</h2>
-        <p class="modal-subtitle" id="comingSoonText">This language isn't ready yet.</p>
-        <div class="modal-actions">
-          <button class="cta-btn interactive" id="comingSoonOk">Got it!</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
+  // ============================================
+  // DOM ELEMENTS
+  // ============================================
+  var langNavBtns = document.querySelectorAll('.lang-nav-btn');
+  var catVideo = document.getElementById('catVideo');
+  var meetVideo = document.querySelector('.meet-video video');
+  var speechBubble = document.getElementById('speechBubble');
+  var speechText = document.getElementById('speechText');
 
-    modal.querySelector('#comingSoonModalClose').addEventListener('click', hideComingSoonModal);
-    modal.querySelector('#comingSoonOk').addEventListener('click', hideComingSoonModal);
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) hideComingSoonModal();
+  // ============================================
+  // VIDEO CONTROL FUNCTIONS
+  // ============================================
+  
+  function updateMainVideo(langKey) {
+    var lang = languages[langKey];
+    if (!lang || !lang.video || !catVideo) return;
+    
+    catVideo.src = lang.video;
+    catVideo.load();
+    catVideo.className = 'catto-video lang-' + langKey;
+    
+    catVideo.play().catch(function(e) {
+      setTimeout(function() {
+        catVideo.play().catch(function() {});
+      }, 300);
+    });
+    
+    catVideo.classList.remove('talking');
+    void catVideo.offsetWidth;
+    catVideo.classList.add('talking');
+  }
+
+  function updateMeetVideo(langKey) {
+    var lang = languages[langKey];
+    if (!lang || !lang.video || !meetVideo) return;
+    
+    meetVideo.src = lang.video;
+    meetVideo.load();
+    meetVideo.className = 'lang-' + langKey;
+    
+    meetVideo.play().catch(function(e) {
+      setTimeout(function() {
+        meetVideo.play().catch(function() {});
+      }, 300);
     });
   }
 
-  const text = document.getElementById('comingSoonText');
-  if (text) {
-    text.textContent = `${languageName} is on its way — Catto's still packing for that trip! Try English or Spanish for now.`;
+  function updateAllVideos(langKey) {
+    updateMainVideo(langKey);
+    updateMeetVideo(langKey);
   }
 
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  if (typeof Sound !== 'undefined') Sound.pop();
-}
+  // ============================================
+  // AUDIO CONTROL FUNCTIONS
+  // ============================================
+  
+  function stopAudio() {
+    if (state.currentAudio) {
+      state.currentAudio.pause();
+      state.currentAudio.currentTime = 0;
+      state.currentAudio = null;
+    }
+  }
 
-function hideComingSoonModal() {
-  const modal = document.getElementById('comingSoonModal');
-  if (!modal) return;
-  modal.classList.remove('open');
-  document.body.style.overflow = '';
-  if (typeof Sound !== 'undefined') Sound.pop();
-}
+  function playGreetingSound(langKey) {
+    var lang = languages[langKey];
+    if (!lang || !lang.sound) return;
+    
+    stopAudio();
+    
+    try {
+      var audio = new Audio(lang.sound);
+      audio.volume = 0.8;
+      state.currentAudio = audio;
+      
+      audio.play().catch(function(e) {
+        console.log('Sound play failed:', e);
+        state.currentAudio = null;
+      });
+    } catch(e) {
+      console.log('Audio error:', e);
+    }
+  }
 
-// ============================================
-// LANGUAGE BAR (the .lang-nav-btn flags in the header)
-// ============================================
-function getSelectedLanguage() {
-  const activeBtn = document.querySelector('.lang-nav-btn.active');
-  return activeBtn ? activeBtn.dataset.lang : 'en';
-}
-
-function getSelectedLanguageName() {
-  const activeBtn = document.querySelector('.lang-nav-btn.active');
-  return activeBtn ? (activeBtn.title || activeBtn.dataset.lang) : 'This language';
-}
-
-// Swaps the <source> of every Catto video on the page to match the
-// selected language, reloads it so the browser actually picks up the
-// new file, and updates the speech-bubble greeting to match.
-// This is what was missing before — clicking a flag only toggled the
-// "active" class, nothing ever told the <video> element to change.
-function updateCattoForLanguage(lang, options = {}) {
-  const allowSound = !!options.allowSound;
-  const videoSrc = CATTO_LANGUAGE_VIDEOS[lang] || CATTO_FALLBACK_VIDEO;
-
-  document.querySelectorAll('.catto-video, .meet-video video').forEach((video) => {
-    const source = video.querySelector('source');
-    if (!source) return;
-
-    // If this language's clip 404s (not produced yet), quietly fall back
-    // to the English clip instead of leaving a blank/frozen video.
-    const onError = () => {
-      if (source.src.indexOf(CATTO_FALLBACK_VIDEO) === -1) {
-        source.src = CATTO_FALLBACK_VIDEO;
-        video.load();
-        attemptPlay(video, allowSound);
+  // ============================================
+  // SHOW GREETING MESSAGE
+  // ============================================
+  function showGreetingMessage(langKey) {
+    var lang = languages[langKey];
+    if (!lang) return;
+    
+    if (state.messageTimeout) {
+      clearTimeout(state.messageTimeout);
+      state.messageTimeout = null;
+    }
+    
+    if (speechText) {
+      speechText.textContent = lang.greeting;
+      speechText.style.color = lang.color;
+    }
+    
+    if (speechBubble) {
+      speechBubble.style.borderColor = lang.color;
+      speechBubble.classList.add('show');
+    }
+    
+    state.messageTimeout = setTimeout(function() {
+      if (speechBubble) {
+        speechBubble.classList.remove('show');
       }
+      state.messageTimeout = null;
+    }, 5000);
+  }
+
+  // ============================================
+  // MAIN LANGUAGE SWITCH FUNCTION
+  // ============================================
+  function switchLanguage(langKey) {
+    if (langKey === state.currentLang && state.isPlaying) {
+      return;
+    }
+    
+    stopAudio();
+    
+    state.currentLang = langKey;
+    state.isPlaying = true;
+    
+    updateAllVideos(langKey);
+    playGreetingSound(langKey);
+    showGreetingMessage(langKey);
+    
+    setTimeout(function() {
+      state.isPlaying = false;
+    }, 6000);
+  }
+
+  // ============================================
+  // CHECK LOGIN STATUS
+  // ------------------------------------------------
+  // IMPORTANT: These are the SOURCE OF TRUTH functions.
+  // They must NOT call window.isUserLoggedIn / window.getCurrentUser
+  // internally, because at the bottom of this file we do:
+  //     window.isUserLoggedIn = isUserLoggedIn;
+  //     window.getCurrentUser = getCurrentUser;
+  // If the functions delegated to window.* "when available",
+  // then after that assignment window.isUserLoggedIn IS this
+  // same function, and calling it would call itself forever
+  // (RangeError: Maximum call stack size exceeded).
+  // ============================================
+  function isUserLoggedIn() {
+    try {
+      var user = localStorage.getItem('languageIslandUser');
+      return user !== null && user !== 'null' && user !== '';
+    } catch(e) {
+      return false;
+    }
+  }
+
+  function getCurrentUser() {
+    try {
+      var user = localStorage.getItem('languageIslandUser');
+      if (user && user !== 'null' && user !== '') {
+        return JSON.parse(user);
+      }
+    } catch(e) {}
+    return null;
+  }
+
+  // ============================================
+  // TOAST
+  // ============================================
+  function showToast(message, isSuccess) {
+    var toast = document.getElementById('toast');
+    var toastMessage = document.getElementById('toastMessage');
+    if (toast && toastMessage) {
+      toastMessage.textContent = message;
+      toast.classList.add('show');
+      if (isSuccess) {
+        toast.style.background = '#58C27D';
+      } else {
+        toast.style.background = '#2E2657';
+      }
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(function() {
+        toast.classList.remove('show');
+        toast.style.background = '';
+      }, 2500);
+    }
+  }
+
+  // ============================================
+  // LANGUAGE NAVBAR - CLICK HANDLERS
+  // ============================================
+  if (langNavBtns.length > 0) {
+    langNavBtns.forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var lang = this.dataset.lang;
+        
+        langNavBtns.forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        
+        switchLanguage(lang);
+        
+        try {
+          localStorage.setItem('selectedLanguage', lang);
+        } catch(e) {}
+      });
+      
+      btn.addEventListener('mouseenter', function() {
+        if (typeof Sound !== 'undefined') Sound.hover();
+      });
+    });
+  }
+
+  // ============================================
+  // CLICK ON CATTO VIDEO - RANDOM GREETING
+  // ============================================
+  if (catVideo) {
+    catVideo.addEventListener('click', function() {
+      var langKeys = Object.keys(languages);
+      var randomLang = langKeys[Math.floor(Math.random() * langKeys.length)];
+      
+      langNavBtns.forEach(function(b) {
+        b.classList.remove('active');
+        if (b.dataset.lang === randomLang) {
+          b.classList.add('active');
+        }
+      });
+      
+      switchLanguage(randomLang);
+      
+      if (typeof Sound !== 'undefined') Sound.pop();
+    });
+  }
+
+  // ============================================
+  // AUTO-PLAY FIRST GREETING
+  // ============================================
+  setTimeout(function() {
+    var activeBtn = document.querySelector('.lang-nav-btn.active');
+    var lang = activeBtn ? activeBtn.dataset.lang : 'en';
+    
+    try {
+      var saved = localStorage.getItem('selectedLanguage');
+      if (saved) {
+        var savedBtn = document.querySelector('.lang-nav-btn[data-lang="' + saved + '"]');
+        if (savedBtn) {
+          langNavBtns.forEach(function(b) { b.classList.remove('active'); });
+          savedBtn.classList.add('active');
+          lang = saved;
+        }
+      }
+    } catch(e) {}
+    
+    var langData = languages[lang];
+    if (langData && speechText) {
+      speechText.textContent = langData.greeting;
+      speechText.style.color = langData.color;
+    }
+    if (speechBubble) {
+      speechBubble.style.borderColor = langData.color;
+      speechBubble.classList.add('show');
+    }
+    
+    state.messageTimeout = setTimeout(function() {
+      if (speechBubble) {
+        speechBubble.classList.remove('show');
+      }
+      state.messageTimeout = null;
+    }, 5000);
+    
+    updateAllVideos(lang);
+    
+  }, 800);
+
+  // ============================================
+  // MODAL HELPERS
+  // ============================================
+  function openModal(modalId) {
+    var modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      if (typeof Sound !== 'undefined') Sound.pop();
+      console.log('Modal opened:', modalId);
+    } else {
+      console.error('Modal not found:', modalId);
+    }
+  }
+
+  function closeModal(modalId) {
+    var modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+      console.log(' Modal closed:', modalId);
+    }
+  }
+
+  function closeAllModals() {
+    document.querySelectorAll('.modal-backdrop').forEach(function(m) {
+      m.classList.remove('open');
+    });
+    document.body.style.overflow = '';
+  }
+
+  // ============================================
+  // SHOW LOGIN REQUIRED MODAL (Guest mode)
+  // ============================================
+  function showLoginRequiredModal() {
+    console.log('Showing login required modal');
+    openModal('loginRequiredModal');
+  }
+
+  // ============================================
+  // SHOW LANGUAGE SELECTION MODAL (User mode)
+  // 3 columns x 2 rows of language image buttons
+  // ============================================
+  function showLanguageSelectionModal() {
+    console.log('Showing language selection modal');
+    var grid = document.getElementById('languageGridModal');
+    if (!grid) {
+      console.error('❌ languageGridModal not found!');
+      return;
+    }
+    
+    var langImages = {
+      ar: 'imgs/buttons/arabic.png',
+      en: 'imgs/buttons/English.png',
+      fr: 'imgs/buttons/French.png',
+      de: 'imgs/buttons/GermanCatto.png',
+      it: 'imgs/buttons/Italy.png',
+      es: 'imgs/buttons/Spain.png'
     };
 
-    source.removeEventListener('error', onError);
-    source.src = videoSrc;
-    source.addEventListener('error', onError, { once: true });
-
-    // Changing source.src alone does nothing until the element reloads.
-    video.load();
-    attemptPlay(video, allowSound);
-  });
-
-  const speechText = document.getElementById('speechText');
-  if (speechText) {
-    speechText.textContent = CATTO_LANGUAGE_GREETINGS[lang] || CATTO_LANGUAGE_GREETINGS.en;
-  }
-}
-
-// Clicking a flag is a real user gesture, so the browser will happily
-// autoplay WITH sound at that point — that's when we unmute. On page
-// load (restoring the saved language) there's no gesture yet, so the
-// video has to stay muted or the browser blocks autoplay entirely.
-function attemptPlay(video, allowSound) {
-  video.muted = !allowSound;
-  const playPromise = video.play();
-  if (playPromise && typeof playPromise.catch === 'function') {
-    playPromise.catch(() => {
-      // Autoplay-with-sound got blocked (e.g. gesture didn't count) —
-      // fall back to muted so the video still shows instead of freezing.
-      if (!video.muted) {
-        video.muted = true;
-        video.play().catch(() => {});
-      }
+    // Fixed order so the 3x2 grid always looks the same
+    var displayOrder = ['en', 'es', 'fr', 'de', 'it', 'ar'];
+    
+    var html = '';
+    displayOrder.forEach(function(key) {
+      var lang = languages[key];
+      if (!lang) return;
+      var imgSrc = langImages[key] || 'imgs/buttons/default.png';
+      html += `
+        <button class="lang-image-btn interactive" data-lang="${key}" type="button">
+          <img src="${imgSrc}" alt="${lang.name}" onerror="this.src='imgs/buttons/default.png'">
+          <span class="lang-label">${lang.name}</span>
+        </button>
+      `;
     });
-  }
-}
+    grid.innerHTML = html;
+    
+    grid.querySelectorAll('.lang-image-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var langKey = this.dataset.lang;
+        var lang = languages[langKey];
+        if (!lang) return;
 
-function wireLanguageBar() {
-  const langButtons = document.querySelectorAll('.lang-nav-btn');
-  langButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      langButtons.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-      if (typeof Sound !== 'undefined') Sound.pop();
-      updateCattoForLanguage(btn.dataset.lang, { allowSound: true });
-      try {
-        localStorage.setItem('selectedLanguage', btn.dataset.lang);
-      } catch (e) {}
-    });
-  });
-
-  // Restore last-picked language on load, if any. No user gesture has
-  // happened yet at this point, so this stays muted (allowSound: false)
-  // — the browser would otherwise block the video from autoplaying at all.
-  try {
-    const saved = localStorage.getItem('selectedLanguage');
-    if (saved) {
-      const savedBtn = document.querySelector(`.lang-nav-btn[data-lang="${saved}"]`);
-      if (savedBtn) {
-        langButtons.forEach((b) => b.classList.remove('active'));
-        savedBtn.classList.add('active');
-        updateCattoForLanguage(saved);
-      }
-    }
-  } catch (e) {}
-}
-
-// ============================================
-// LOGIN STATE HELPER
-// ============================================
-function isLoggedIn() {
-  // header.js sets window.userLogStatus from the server check.
-  // auth.js's Auth.isLoggedIn() reflects the cached/local state.
-  // Prefer the server-verified one when available, fall back to Auth.
-  if (typeof window.isUserLoggedIn === 'function') {
-    return window.isUserLoggedIn();
-  }
-  if (window.Auth && typeof window.Auth.isLoggedIn === 'function') {
-    return window.Auth.isLoggedIn();
-  }
-  return false;
-}
-
-// ============================================
-// ROUTE TO THE SELECTED LANGUAGE'S LESSON PAGE
-// ============================================
-function goToSelectedLanguage() {
-  const lang = getSelectedLanguage();
-  const destination = READY_LANGUAGES[lang];
-
-  if (destination) {
-    window.location.href = destination;
-  } else {
-    showComingSoonModal(getSelectedLanguageName());
-  }
-}
-
-// ============================================
-// HOME PAGE INIT
-// ============================================
-function initHomePage() {
-  wireLoginModalControls();
-  wireLanguageBar();
-  wireStartButtons();
-}
-
-function wireLoginModalControls() {
-  const modal = document.getElementById('loginRequiredModal');
-  const closeBtn = document.getElementById('loginModalClose');
-
-  if (closeBtn) {
-    closeBtn.addEventListener('click', hideLoginRequiredModal);
-  }
-
-  if (modal) {
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) hideLoginRequiredModal();
-    });
-  }
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      hideLoginRequiredModal();
-      hideComingSoonModal();
-    }
-  });
-}
-
-function wireStartButtons() {
-  // Hero "Let's Learn!" button
-  const startBtn = document.getElementById('startBtn');
-  if (startBtn) {
-    startBtn.addEventListener('click', () => {
-      // auth.js already attaches a listener that calls Auth.showLoginPrompt()
-      // (which now delegates to showLoginRequiredModal above) when logged out
-      // and calls e.preventDefault() in that case. We only need to handle
-      // the logged-in case here.
-      if (isLoggedIn()) {
         if (typeof Sound !== 'undefined') Sound.pop();
-        goToSelectedLanguage();
+        closeModal('languageModal');
+
+        // Remember the choice for next visit too
+        try {
+          localStorage.setItem('selectedLanguage', langKey);
+        } catch(e) {}
+
+        // Language pages live at the site root (e.g. spanish.html),
+        // not under a "language/" folder.
+        window.location.href = lang.path + '.html';
+      });
+    });
+    
+    openModal('languageModal');
+  }
+
+  // ============================================
+  // UNIFIED BUTTON HANDLER
+  // ============================================
+  function handleStartLearning(buttonName) {
+    console.log('' + buttonName + ' clicked - User logged in?', isUserLoggedIn());
+    if (typeof Sound !== 'undefined') Sound.pop();
+    
+    if (isUserLoggedIn()) {
+      console.log('User is logged in - showing language modal');
+      showLanguageSelectionModal();
+    } else {
+      console.log(' User is guest - showing login modal');
+      showLoginRequiredModal();
+    }
+  }
+
+  // ============================================
+  // "LET'S LEARN" BUTTON
+  // ============================================
+  var startBtn = document.getElementById('startBtn');
+  if (startBtn) {
+    console.log('startBtn found');
+    startBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      handleStartLearning('Let\'s Learn');
+    });
+  } else {
+    console.warn('startBtn not found!');
+  }
+
+  // ============================================
+  // "START YOUR ADVENTURE!" BUTTON
+  // ============================================
+  var meetBtn = document.getElementById('meetCattoBtn');
+  if (meetBtn) {
+    console.log('meetCattoBtn found');
+    meetBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleStartLearning('Start Your Adventure!');
+    });
+  } else {
+    console.warn('meetCattoBtn not found! Check the ID in HTML.');
+  }
+
+  // ============================================
+  // MODAL CLOSE HANDLERS
+  // ============================================
+  var loginModalClose = document.getElementById('loginModalClose');
+  if (loginModalClose) {
+    loginModalClose.addEventListener('click', function() {
+      closeModal('loginRequiredModal');
+    });
+  }
+
+  var loginModal = document.getElementById('loginRequiredModal');
+  if (loginModal) {
+    loginModal.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal('loginRequiredModal');
       }
     });
   }
 
-  // "Meet Catto" / "Start Your Adventure!" button lower on the page
-  const meetCattoBtn = document.getElementById('meetCattoBtn');
-  if (meetCattoBtn) {
-    meetCattoBtn.addEventListener('click', () => {
-      if (typeof Sound !== 'undefined') Sound.pop();
-      if (isLoggedIn()) {
-        goToSelectedLanguage();
-      } else {
-        showLoginRequiredModal();
+  var languageModalClose = document.getElementById('languageModalClose');
+  if (languageModalClose) {
+    languageModalClose.addEventListener('click', function() {
+      closeModal('languageModal');
+    });
+  }
+
+  var languageModal = document.getElementById('languageModal');
+  if (languageModal) {
+    languageModal.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal('languageModal');
       }
     });
   }
-}
 
-// ============================================
-// Optional hook header.js looks for after a successful
-// login check: `if (typeof window.renderHome === 'function') window.renderHome();`
-// ============================================
-function renderHome() {
-  const user = (window.Auth && window.Auth.getCurrentUser && window.Auth.getCurrentUser())
-    || (typeof window.currentUserData === 'function' ? window.currentUserData() : window.currentUserData);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeAllModals();
+    }
+  });
 
-  if (!user) return;
-
-  const speechText = document.getElementById('speechText');
-  if (speechText && user.first_name) {
-    speechText.textContent = `Welcome back, ${user.first_name}!`;
+  // ============================================
+  // SOUND SYSTEM
+  // ============================================
+  if (typeof Sound !== 'undefined') {
+    Sound._enabled = true;
+    setTimeout(function() {
+      Sound._init();
+    }, 200);
   }
-}
-window.renderHome = renderHome;
 
-document.addEventListener('DOMContentLoaded', initHomePage);
+  // ============================================
+  // CHECK IF USER JUST SIGNED IN - NO AUTO MODAL
+  // ============================================
+  var justSignedIn = sessionStorage.getItem('justSignedIn');
+  if (justSignedIn === 'true') {
+    sessionStorage.removeItem('justSignedIn');
+    setTimeout(function() {
+      if (isUserLoggedIn()) {
+        showToast('Welcome back!', true);
+      }
+    }, 300);
+  }
+
+  var justSignedUp = sessionStorage.getItem('justSignedUp');
+  if (justSignedUp === 'true') {
+    sessionStorage.removeItem('justSignedUp');
+    setTimeout(function() {
+      if (isUserLoggedIn()) {
+        showToast('Welcome to Language Island!', true);
+      }
+    }, 300);
+  }
+
+  // ============================================
+  // RENDER HOME - Called by header.js
+  // ============================================
+  window.renderHome = function() {
+    var user = getCurrentUser();
+    if (!user) return;
+
+    if (speechText && user.first_name) {
+      speechText.textContent = 'Welcome back, ' + user.first_name + '!';
+    }
+    
+    console.log('Home page updated for user:', user.first_name);
+  };
+
+  // ============================================
+  // MAKE FUNCTIONS AVAILABLE GLOBALLY
+  // ============================================
+  window.showToast = showToast;
+  window.showLoginRequiredModal = showLoginRequiredModal;
+  window.showLanguageSelectionModal = showLanguageSelectionModal;
+  window.switchLanguage = switchLanguage;
+  window.getCurrentUser = getCurrentUser;
+  window.isUserLoggedIn = isUserLoggedIn;
+  window.updateAllVideos = updateAllVideos;
+
+  console.log('Home page loaded with all features!');
+  console.log('Available buttons:', {
+    startBtn: document.getElementById('startBtn'),
+    meetCattoBtn: document.getElementById('meetCattoBtn')
+  });
+}

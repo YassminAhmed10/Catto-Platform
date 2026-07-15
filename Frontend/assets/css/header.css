@@ -42,12 +42,12 @@
   height: 70px;
   min-width: 60px;
   border-radius: 9px;
+  overflow:
 }
-
 .brand-logo img {
   display: block;
-  width: 12rem;
-  height: 9rem;
+  width: auto;
+  height: 7rem;
   object-fit: contain;
 }
 .brand-name {
@@ -161,7 +161,7 @@
   gap: 6px;
   justify-content: center;
   align-items: center;
-  margin: 2.2rem auto -1rem;
+  margin: 1.2rem auto -1rem;
   max-width: 1100px;
   padding: 9px 1px;
   background: rgba(255, 255, 255, 0.4);
@@ -341,9 +341,9 @@ main {
   white-space: nowrap;
 }
 
-/* * =========================================================
+* =========================================================
    SIDEBAR - FIXED WITH SAFETY LINES
-   ========================================================= */ 
+   ========================================================= */
 .sidebar-overlay {
   position: fixed;
   inset: 0;

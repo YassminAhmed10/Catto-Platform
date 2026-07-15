@@ -12,12 +12,11 @@
   flex-shrink: 0;
 }
 .brand-logo img{
-  display: block;
   width:auto;
-  height: 12rem;
-  object-fit: fill;
-  transform: scale(0.7);
-  margin-left: -1.9rem;
+  height: rem;
+  transform: scale(.99);
+  margin-left: -1.2rem;
+  
 }
 
 

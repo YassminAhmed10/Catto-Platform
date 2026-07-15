@@ -660,7 +660,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!data.categories || data.categories.length === 0) {
       grid.innerHTML = `
         <div class="empty-state" style="grid-column:1/-1;text-align:center;padding:40px 20px;">
-          <span class="empty-icon">📺</span>
+          <span class="empty-icon"></span>
           <h3>No categories yet!</h3>
           <p>Check back soon for new content.</p>
         </div>
@@ -774,7 +774,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!videos || videos.length === 0) {
       grid.innerHTML = `
         <div class="empty-state">
-          <span class="empty-icon">📺</span>
+          <span class="empty-icon"></span>
           <h3>More videos coming soon!</h3>
           <p>Check back later for new content.</p>
         </div>
@@ -788,7 +788,7 @@ document.addEventListener('DOMContentLoaded', function() {
       card.className = 'content-card' + (isLocked ? ' locked-card' : '');
 
       var videoTitle = video.title || 'Video';
-      var videoIcon = video.icon || '🎬';
+      var videoIcon = video.icon || '';
       var videoColor = video.color || '#FFB84D';
       var videoMinutes = video.minutes || '2 min';
 

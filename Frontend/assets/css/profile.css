@@ -130,123 +130,6 @@
 }
 
 /* =========================================================
-   AVATAR MODAL
-   ========================================================= */
-.avatar-modal {
-  max-width: 400px;
-  width: 90%;
-  padding: 32px 28px 28px;
-  text-align: center;
-  border-radius: 28px;
-  background: var(--white);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-}
-
-.avatar-modal .modal-close {
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  background: none;
-  border: none;
-  font-size: 22px;
-  color: #8C87A8;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.avatar-modal .modal-close:hover {
-  color: var(--plum);
-}
-
-.avatar-modal-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.avatar-modal-image {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 6px solid var(--coral);
-  box-shadow: 0 8px 30px rgba(255, 107, 89, 0.25);
-  margin-bottom: 12px;
-}
-
-.avatar-modal-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.avatar-modal h2 {
-  font-family: var(--font-display);
-  font-size: 26px;
-  color: var(--plum);
-  margin: 0 0 2px;
-}
-
-.avatar-modal-id {
-  color: #8C87A8;
-  font-weight: 600;
-  font-size: 14px;
-  margin: 0 0 16px;
-}
-
-.avatar-modal-stats {
-  display: flex;
-  gap: 24px;
-  justify-content: center;
-  margin-bottom: 20px;
-  padding: 12px 20px;
-  background: #F8F7FF;
-  border-radius: 16px;
-  width: 100%;
-}
-
-.avatar-stat {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--plum);
-}
-
-.avatar-stat-icon {
-  font-size: 20px;
-}
-
-.avatar-stat-value {
-  font-size: 20px;
-}
-
-.avatar-modal-close-btn {
-  width: 100%;
-  padding: 14px;
-  font-size: 16px;
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-  font-family: var(--font-display);
-  font-weight: 700;
-  transition: all 0.15s ease;
-}
-
-.avatar-modal-close-btn.secondary {
-  background: #F1EEFB;
-  color: var(--plum);
-  box-shadow: 0 4px 0 rgba(46,38,87,0.08);
-}
-
-.avatar-modal-close-btn.secondary:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 rgba(46,38,87,0.08);
-}
-
-/* =========================================================
    ADVENTURE STATS - 4 Boxes with Pop-out Icons
    ========================================================= */
 .section-title {
@@ -476,14 +359,10 @@
 }
 
 /* =========================================================
-   CLOSET - MY CLOSET
+   CLOSET - MY COLLECTION
    ========================================================= */
 .closet-section {
   margin-top: 8px;
-}
-
-.closet-section .section-title {
-  margin-bottom: 16px;
 }
 
 .closet-grid {
@@ -502,6 +381,9 @@
   cursor: pointer;
   border: 3px solid transparent;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .closet-item:hover {
@@ -562,17 +444,23 @@
   line-height: 1;
 }
 
-.closet-item .theme-swatch-default {
-  background: linear-gradient(135deg, #F1EEFB, #E5E1F7);
+/* ---- Theme visual box (matches Settings page swatch) ---- */
+.closet-item .item-image.theme-visual {
+  width: 80px;
+  height: 56px;
+  margin: 0 auto 8px;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 3px rgba(255,255,255,0.6);
+  background: none;
+  border: none;
 }
 
-.closet-item .theme-swatch-purple {
-  background: linear-gradient(135deg, #B08CE0, #6C3FB5);
+.closet-item .item-image.theme-visual.swatch-default {
+  background: linear-gradient(135deg, #6EC6FF, #FFE9A8, #FF6F59);
 }
 
-.closet-item.printable .item-image {
-  background: #FFF3E0;
-  border-color: #FFE0B2;
+.closet-item .item-image.theme-visual.swatch-purple {
+  background: linear-gradient(135deg, #EAE5F9, #9D8DF1, #4A154B);
 }
 
 .closet-item .download-badge {
@@ -599,6 +487,54 @@
 .closet-empty p {
   margin: 4px 0;
   font-weight: 600;
+}
+
+/* =========================================================
+   CLOSET TABS
+   ========================================================= */
+.closet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.closet-header .section-title {
+  margin-bottom: 0;
+}
+
+.closet-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.closet-tab {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 2px solid #E3DFF5;
+  background: var(--white);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--plum-soft);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.closet-tab:hover {
+  transform: translateY(-2px);
+  border-color: var(--star);
+  background: rgba(255, 210, 63, 0.1);
+}
+
+.closet-tab.active {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: var(--white);
+  box-shadow: 0 4px 0 var(--coral-dark);
 }
 
 /* =========================================================
@@ -733,35 +669,6 @@
   opacity: 1;
   visibility: visible;
 }
-
-/* Responsive */
-@media (max-width: 480px) {
-  #updateToast {
-    padding: 20px 20px 24px;
-    min-width: 200px;
-    max-width: 300px;
-    border-radius: 20px;
-  }
-  
-  #updateToast .toast-icon {
-    width: 60px;
-    height: 60px;
-  }
-  
-  #updateToast .toast-message {
-    font-size: 16px;
-  }
-  
-  #updateToast .toast-submessage {
-    font-size: 13px;
-  }
-  
-  #updateToast .toast-close-btn {
-    padding: 8px 24px;
-    font-size: 13px;
-  }
-}
-
 
 /* =========================================================
    SKIN MODAL - Skin Change Popup
@@ -971,28 +878,23 @@
     font-size: 22px;
   }
 
-  .avatar-modal {
-    max-width: 340px;
-    padding: 24px 20px 20px;
+  /* Closet tabs responsive */
+  .closet-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
-
-  .avatar-modal-image {
-    width: 120px;
-    height: 120px;
+  
+  .closet-tabs {
+    width: 100%;
+    gap: 6px;
   }
-
-  .avatar-modal-stats {
-    gap: 12px;
-    padding: 10px 16px;
-    flex-wrap: wrap;
-  }
-
-  .avatar-stat {
-    font-size: 15px;
-  }
-
-  .avatar-stat-value {
-    font-size: 17px;
+  
+  .closet-tab {
+    flex: 1;
+    text-align: center;
+    font-size: 12px;
+    padding: 6px 12px;
+    min-width: 0;
   }
   
   #updateToast {
@@ -1062,18 +964,9 @@
     height: 60px;
   }
 
-  .avatar-modal {
-    max-width: 300px;
-    padding: 20px 16px 16px;
-  }
-
-  .avatar-modal-image {
-    width: 100px;
-    height: 100px;
-  }
-
-  .avatar-modal h2 {
-    font-size: 20px;
+  .closet-item .item-image.theme-visual {
+    width: 60px;
+    height: 42px;
   }
 
   .skin-modal {
@@ -1121,4 +1014,48 @@
   #updateToast .toast-message {
     font-size: 15px;
   }
+}
+/* ============================================
+   THEME SWATCHES - PROFILE CLOSET
+   ============================================ */
+
+.closet-item .item-image.theme-visual.swatch-night {
+  background: linear-gradient(135deg, #0B1E3D, #24406E, #F5F7FA);
+}
+
+.closet-item .item-image.theme-visual.swatch-space {
+  background: linear-gradient(135deg, #0A0518, #5A4FCF, #FF9BD2);
+}
+
+.closet-item .item-image.theme-visual.swatch-boys {
+  background: linear-gradient(135deg, #0A1F0A, #00E676, #69F0AE);
+}
+/* ============================================
+   CLOSET ITEM ICONS - Image based
+   ============================================ */
+.closet-item .item-image.item-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 8px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #F1EEFB;
+    border: 3px solid #F1EEFB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.closet-item .item-image.item-icon img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 0;
+    background: transparent;
+}
+
+.closet-item.printable .item-image.item-icon {
+    background: #FFF3E0;
+    border-color: #FFE0B2;
 }
