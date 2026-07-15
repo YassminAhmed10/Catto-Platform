@@ -256,15 +256,15 @@ const Auth = {
       document.querySelectorAll(selector).forEach(el => el.classList.add('protected-content'));
     });
 
-    const startBtn = document.getElementById('startBtn');
-    if (startBtn) {
-      startBtn.addEventListener('click', (e) => {
-        if (!Auth.isLoggedIn()) {
-          e.preventDefault();
-          Auth.showLoginPrompt();
-        }
-      });
-    }
+    // const startBtn = document.getElementById('startBtn');
+    // if (startBtn) {
+    //   startBtn.addEventListener('click', (e) => {
+    //     if (!Auth.isLoggedIn()) {
+    //       e.preventDefault();
+    //       Auth.showLoginPrompt();
+    //     }
+    //   });
+    // }
   },
 
   // ============================================

@@ -359,6 +359,7 @@ function initHome() {
   function openModal(modalId) {
     var modal = document.getElementById(modalId);
     if (modal) {
+      if (modal.classList.contains('open')) return;
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
       if (typeof Sound !== 'undefined') Sound.pop();
@@ -475,6 +476,8 @@ function initHome() {
     console.log('startBtn found');
     startBtn.addEventListener('click', function(e) {
       e.preventDefault();
+      e.stopPropagation();         
+      e.stopImmediatePropagation(); 
       handleStartLearning('Let\'s Learn');
     });
   } else {
