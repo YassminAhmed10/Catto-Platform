@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Language Island</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/profile.css">
+  <link rel="stylesheet" href="assets/css/settings.css">
+</head>
+<body>
+
+<!-- ambient sky layer -->
+<div class="sky">
+  <div class="sun" id="sun">
+    <div class="sun-face">
+      <div class="sun-eye left"></div>
+      <div class="sun-eye right"></div>
+      <div class="sun-smile"></div>
+    </div>
+  </div>
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="cloud cloud-3"></div>
+  <div class="star star-1">★</div>
+  <div class="star star-2">★</div>
+  <div class="star star-3">★</div>
+  <div class="star star-4">★</div>
+</div>
+
+<!-- =========================================================
+   HEADER - Common for all pages
+   ========================================================= -->
+<header class="topbar">
+  <div class="topbar-top">
+    <div class="topbar-left">
+      <div class="brand interactive" id="brandLogo">
+        <span class="brand-logo"><img src="imgs/Cattoimages/cattologo.png" id="siteLogo" alt="Language Island Logo"></span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="progress-pill coins-display">
+        <span class="progress-icon">🪙</span>
+        <span id="headerCoins">0</span>
+      </div>
+      <div class="progress-pill stars-display">
+        <span class="progress-icon">⭐</span>
+        <span id="headerStars">0</span>
+      </div>
+      <div class="auth-buttons" id="authButtons" style="display:none;">
+        <a href="signin.html" class="auth-btn login interactive">Sign In</a>
+        <a href="signup.html" class="auth-btn signup interactive">Sign Up</a>
+      </div>
+      <div class="user-menu-wrapper" id="userMenuWrapper">
+        <button class="menu-toggle interactive" id="menuToggle" aria-label="Open account menu">
+          <img src="imgs/Cattoimages/default-catto.png" alt="User" class="user-avatar-icon" id="userAvatarIcon">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar" aria-label="Main">
+    <a class="nav-btn" href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Home</a>
+    <a class="nav-btn" href="games.html"><span class="nav-icon"><i class="fas fa-gamepad"></i></span>Games</a>
+    <a class="nav-btn" href="books.html"><span class="nav-icon"><i class="fas fa-book"></i></span>Books</a>
+    <a class="nav-btn" href="listening.html"><span class="nav-icon"><i class="fas fa-headphones"></i></span>Listening</a>
+    <a class="nav-btn" href="pronunciation.html"><span class="nav-icon"><i class="fas fa-microphone"></i></span>Speak</a>
+    <a class="nav-btn" href="videos.html"><span class="nav-icon"><i class="fas fa-video"></i></span>Videos</a>
+    <a class="nav-btn" href="art.html"><span class="nav-icon"><i class="fas fa-palette"></i></span>Art</a>
+    <a class="nav-btn" href="shop.html"><span class="nav-icon"><i class="fas fa-store"></i></span>Shop</a>
+  </nav>
+  <!-- lang-navbar removed as requested -->
+</header>
+
+<!-- =========================================================
+   SIDEBAR
+   ========================================================= -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar" id="sidebar">
+  <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+    <i class="fas fa-times"></i>
+  </button>
+
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar-wrapper">
+      <img id="sidebarUserImage" src="imgs/profile/default-catto.png" alt="User Avatar">
+    </div>
+    <div class="sidebar-username" id="sidebarUsername">Explorer</div>
+    <div class="sidebar-user-email" id="sidebarEmail">explorer@languageisland.com</div>
+  </div>
+
+  <ul class="sidebar-menu">
+    <li><a href="profile.html" id="menuProfile"><i class="fas fa-user"></i> My Profile</a></li>
+    <li><a href="index.html" id="menuDashboard"><i class="fas fa-chart-simple"></i> Dashboard</a></li>
+    <li><a href="achievements.html" id="menuAchievements"><i class="fas fa-trophy"></i> Achievements</a></li>
+    <li><a href="languages.html" id="menuLanguages"><i class="fas fa-globe"></i> Languages</a></li>
+    <li><a href="settings.html" class="active" id="menuSettings"><i class="fas fa-cog"></i> Settings</a></li>
+    <li class="logout-item"><a href="#" class="logout" id="menuLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+  </ul>
+</div>
+
+<!-- =========================================================
+   MAIN CONTENT — SETTINGS
+   ========================================================= -->
+<main>
+  <div class="settings-container">
+
+    <div class="page-hero">
+      <h1><i class="fas fa-cog"></i> Settings</h1>
+      <p>Customize how Language Island looks for you!</p>
+    </div>
+
+    <!-- ============================================
+       THEME SECTION
+       ============================================ -->
+    <section class="settings-card">
+      <h2 class="section-title">App Theme</h2>
+      <p class="settings-desc">Pick the colors you like best. Your choice applies everywhere on Language Island!</p>
+
+      <div class="theme-grid" id="themeGrid">
+        <!-- Theme cards generated by settings.js -->
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- Toast -->
+<div class="toast-backdrop" id="toastBackdrop"></div>
+<div class="modal-card" id="updateToast" role="status" aria-live="polite">
+  <div class="toast-icon"><img id="updateToastIconImg" src="imgs/profile/Update.png" alt="Update"></div>
+  <div class="toast-message" id="updateToastMessage">Updated!</div>
+  <div class="toast-submessage" id="updateToastSubmessage"></div>
+  <button class="toast-close-btn" id="updateToastCloseBtn">OK</button>
+</div>
+
+<div class="toast" id="toast">
+  <span class="toast-icon"><i class="fas fa-check-circle"></i></span>
+  <span id="toastMessage">Welcome!</span>
+</div>
+
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/sounds.js"></script>
+<script src="assets/js/header.js"></script>
+<script src="assets/js/settings.js"></script>
+<script src="assets/js/global-theme.js"></script>
+</body>
+</html>

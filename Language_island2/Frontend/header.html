@@ -1,0 +1,78 @@
+<!-- =========================================================
+   HEADER + SIDEBAR - paste this into every page right after <body>,
+   before <main>. Requires header.css to be linked in <head>:
+   <link rel="stylesheet" href="assets/css/header.css">
+   ========================================================= -->
+
+<header class="topbar">
+  <div class="topbar-top">
+    <div class="topbar-left">
+      <div class="brand interactive" id="brandLogo">
+        <img src="imgs/Cattoimages/cattologo.png" class="brand-logo" id="siteLogo" alt="Language Island Logo">
+      </div>
+    </div>
+    <div class="topbar-right">
+      <!-- Coins Display -->
+      <div class="progress-pill coins-display" style="display:none;">
+        <span class="progress-icon">🪙</span>
+        <span id="headerCoins">0</span>
+      </div>
+      <!-- Stars Display -->
+      <div class="progress-pill stars-display" style="display:none;">
+        <span class="progress-icon">⭐</span>
+        <span id="headerStars">0</span>
+      </div>
+      <!-- Auth Buttons -->
+      <div class="auth-buttons" id="authButtons">
+        <a href="signin.html" class="auth-btn login interactive">Sign In</a>
+        <a href="signup.html" class="auth-btn signup interactive">Sign Up</a>
+      </div>
+      <!-- User Menu — MUST be an <img>, not a <div><i></i></div>,
+           or header.js's avatar update (userAvatar.src = ...) silently
+           does nothing. See the videos.html fix from earlier. -->
+      <div class="user-menu-wrapper" id="userMenuWrapper" style="display:none;">
+        <button class="menu-toggle interactive" id="menuToggle" aria-label="Open account menu">
+          <img src="imgs/Cattoimages/default-catto.png" alt="User" class="user-avatar-icon" id="userAvatarIcon">
+        </button>
+      </div>
+    </div>
+  </div>
+  <nav class="navbar" aria-label="Main">
+    <a class="nav-btn" href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Home</a>
+    <a class="nav-btn" href="games.html"><span class="nav-icon"><i class="fas fa-gamepad"></i></span>Games</a>
+    <a class="nav-btn" href="books.html"><span class="nav-icon"><i class="fas fa-book"></i></span>Books</a>
+    <a class="nav-btn" href="listening.html"><span class="nav-icon"><i class="fas fa-headphones"></i></span>Listening</a>
+    <a class="nav-btn" href="pronunciation.html"><span class="nav-icon"><i class="fas fa-microphone"></i></span>Speak</a>
+    <a class="nav-btn" href="videos.html"><span class="nav-icon"><i class="fas fa-video"></i></span>Videos</a>
+    <a class="nav-btn" href="art.html"><span class="nav-icon"><i class="fas fa-palette"></i></span>Art</a>
+    <a class="nav-btn" href="shop.html"><span class="nav-icon"><i class="fas fa-store"></i></span>Shop</a>
+  </nav>
+</header>
+
+<!-- Give the CURRENT page's own nav-btn the class="nav-btn active"
+     instead of plain "nav-btn" — e.g. on games.html:
+     <a class="nav-btn active" href="games.html">...Games</a> -->
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar" id="sidebar">
+  <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+    <i class="fas fa-times"></i>
+  </button>
+
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar-wrapper">
+      <img id="sidebarUserImage" src="imgs/Cattoimages/default-catto.png" alt="User Avatar">
+    </div>
+    <div class="sidebar-username" id="sidebarUsername">Explorer</div>
+    <div class="sidebar-user-email" id="sidebarEmail">explorer@languageisland.com</div>
+  </div>
+
+  <ul class="sidebar-menu">
+    <li><a href="profile.html" id="menuProfile"><i class="fas fa-user"></i> My Profile</a></li>
+    <li><a href="index.html" id="menuDashboard"><i class="fas fa-chart-simple"></i> Dashboard</a></li>
+    <li><a href="achievements.html" id="menuAchievements"><i class="fas fa-trophy"></i> Achievements</a></li>
+    <li><a href="languages.html" id="menuLanguages"><i class="fas fa-globe"></i> Languages</a></li>
+    <li><a href="settings.html" id="menuSettings"><i class="fas fa-cog"></i> Settings</a></li>
+    <li class="logout-item"><a href="#" class="logout" id="menuLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+  </ul>
+</div>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn English — Language Island</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@6.6.0/css/flag-icons.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/language-page.css">
+<link rel="stylesheet" href="assets/css/header.css">
+</head>
+<body style="--lang-accent:#012169; --lang-accent-dark:#000d3d; --lang-tint:rgba(1,33,105,0.08);">
+
+<!-- SKY -->
+<div class="sky">
+  <div class="sun"><div class="sun-face"><div class="sun-eye left"></div><div class="sun-eye right"></div><div class="sun-smile"></div></div></div>
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="cloud cloud-3"></div>
+</div>
+
+<!-- HEADER -->
+<header class="topbar">
+  <div class="topbar-top">
+    <div class="brand">
+      <span class="brand-logo"><img src="imgs/Cattoimages/cattologo.png" alt="Language Island" onerror="this.parentElement.style.display='none'"></span>
+    </div>
+    <div class="topbar-right">
+      <div class="progress-pill coins-display" style="display:none;">
+        <i class="fas fa-coins" style="color:var(--star);"></i>
+        <span id="headerCoins">0</span>
+      </div>
+      <div class="progress-pill stars-display" style="display:none;">
+        <i class="fas fa-star" style="color:var(--star);"></i>
+        <span id="headerStars">0</span>
+      </div>
+      <div class="auth-buttons" id="authButtons">
+        <a href="signin.html" class="auth-btn login interactive">Sign In</a>
+        <a href="signup.html" class="auth-btn signup interactive">Sign Up</a>
+      </div>
+      <div class="user-menu-wrapper" id="userMenuWrapper" style="display:none;">
+        <button class="menu-toggle interactive" id="menuToggle" aria-label="Open account menu">
+          <img src="imgs/profile/default-catto.png" alt="User" class="user-avatar-icon" id="userAvatarIcon">
+        </button>
+      </div>
+    </div>
+  </div>
+  <nav class="navbar" aria-label="Main">
+    <a class="nav-btn" href="index.html"><span class="nav-icon"><i class="fas fa-house"></i></span>Home</a>
+    <a class="nav-btn" href="games.html"><span class="nav-icon"><i class="fas fa-gamepad"></i></span>Games</a>
+    <a class="nav-btn" href="books.html"><span class="nav-icon"><i class="fas fa-book"></i></span>Books</a>
+    <a class="nav-btn" href="listening.html"><span class="nav-icon"><i class="fas fa-headphones"></i></span>Listening</a>
+    <a class="nav-btn" href="pronunciation.html"><span class="nav-icon"><i class="fas fa-microphone"></i></span>Speak</a>
+    <a class="nav-btn" href="videos.html"><span class="nav-icon"><i class="fas fa-video"></i></span>Videos</a>
+    <a class="nav-btn" href="art.html"><span class="nav-icon"><i class="fas fa-palette"></i></span>Art</a>
+    <a class="nav-btn" href="shop.html"><span class="nav-icon"><i class="fas fa-store"></i></span>Shop</a>
+  </nav>
+</header>
+
+<!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar" id="sidebar">
+  <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+    <i class="fas fa-times"></i>
+  </button>
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar-wrapper">
+      <img id="sidebarUserImage" src="imgs/profile/default-catto.png" alt="User Avatar">
+    </div>
+    <div class="sidebar-username" id="sidebarUsername">Explorer</div>
+    <div class="sidebar-user-email" id="sidebarEmail">explorer@languageisland.com</div>
+  </div>
+  <ul class="sidebar-menu">
+    <li><a href="profile.html" id="menuProfile"><i class="fas fa-user"></i> My Profile</a></li>
+    <li><a href="index.html" id="menuDashboard"><i class="fas fa-chart-simple"></i> Dashboard</a></li>
+    <li><a href="achievements.html" id="menuAchievements"><i class="fas fa-trophy"></i> Achievements</a></li>
+    <li><a href="languages.html" id="menuLanguages"><i class="fas fa-globe"></i> Languages</a></li>
+    <li><a href="settings.html" id="menuSettings"><i class="fas fa-cog"></i> Settings</a></li>
+    <li class="logout-item"><a href="#" class="logout" id="menuLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+  </ul>
+</div>
+
+<main>
+  <section class="language-header">
+    <div class="language-banner">
+      <div class="language-flag"><span class="fi fi-gb"></span></div>
+      <div class="language-banner-text">
+        <h1>Learn English</h1>
+        <p>Start your journey to speak English fluently with Catto!</p>
+      </div>
+      <div class="lang-progress-pill">
+        <span class="lp-value">2 / 5</span>
+        <span class="lp-label">Levels Started</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="roadmap-section">
+    <h2 class="section-title"><i class="fas fa-map"></i> Your Learning Roadmap</h2>
+    <p class="section-subtitle">Complete each level to unlock the next adventure!</p>
+
+    <div class="levels-container">
+      <div class="level-card completed">
+        <div class="level-number">1</div>
+        <div class="level-content">
+          <h3>Alphabet &amp; Sounds</h3>
+          <p>Learn the English alphabet and basic sounds</p>
+          <div class="level-progress">
+            <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+            <span class="progress-text">6/6 lessons</span>
+          </div>
+        </div>
+        <span class="level-badge"><i class="fas fa-circle-check"></i> Completed</span>
+      </div>
+
+      <div class="level-card in-progress">
+        <div class="level-number">2</div>
+        <div class="level-content">
+          <h3>Numbers &amp; Colors</h3>
+          <p>Learn to count and name colors in English</p>
+          <div class="level-progress">
+            <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+            <span class="progress-text">4/6 lessons</span>
+          </div>
+        </div>
+        <span class="level-badge"><i class="fas fa-spinner fa-spin"></i> In Progress</span>
+      </div>
+
+      <div class="level-card locked">
+        <div class="level-number">3</div>
+        <div class="level-content">
+          <h3>Animals &amp; Nature <i class="fas fa-lock"></i></h3>
+          <p>Discover animal names and nature words</p>
+          <div class="level-progress">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-text">0/6 lessons</span>
+          </div>
+        </div>
+        <span class="level-badge"><i class="fas fa-lock"></i> Locked</span>
+      </div>
+
+      <div class="level-card locked">
+        <div class="level-number">4</div>
+        <div class="level-content">
+          <h3>Food &amp; Family <i class="fas fa-lock"></i></h3>
+          <p>Learn food vocabulary and family members</p>
+          <div class="level-progress">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-text">0/6 lessons</span>
+          </div>
+        </div>
+        <span class="level-badge"><i class="fas fa-lock"></i> Locked</span>
+      </div>
+
+      <div class="level-card locked">
+        <div class="level-number">5</div>
+        <div class="level-content">
+          <h3>Conversations &amp; Travel <i class="fas fa-lock"></i></h3>
+          <p>Practice real-life conversations and travel phrases</p>
+          <div class="level-progress">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-text">0/6 lessons</span>
+          </div>
+        </div>
+        <span class="level-badge"><i class="fas fa-lock"></i> Locked</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="lessons-section">
+    <h2 class="section-title"><i class="fas fa-book-open"></i> Current Level Lessons</h2>
+    <p class="section-subtitle">Level 2: Numbers &amp; Colors</p>
+
+    <div class="lessons-grid">
+      <div class="lesson-card">
+        <div class="lesson-icon"><i class="fas fa-hashtag"></i></div>
+        <div class="lesson-info">
+          <h4>Numbers 1-10</h4>
+          <p>Learn to count from one to ten</p>
+        </div>
+        <div class="lesson-status completed"><i class="fas fa-check"></i></div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-icon"><i class="fas fa-hashtag"></i></div>
+        <div class="lesson-info">
+          <h4>Numbers 11-20</h4>
+          <p>Learn to count from eleven to twenty</p>
+        </div>
+        <div class="lesson-status completed"><i class="fas fa-check"></i></div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-icon"><i class="fas fa-palette"></i></div>
+        <div class="lesson-info">
+          <h4>Basic Colors</h4>
+          <p>Learn red, blue, green, yellow, and more</p>
+        </div>
+        <div class="lesson-status completed"><i class="fas fa-check"></i></div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-icon"><i class="fas fa-palette"></i></div>
+        <div class="lesson-info">
+          <h4>Advanced Colors</h4>
+          <p>Learn purple, orange, pink, and brown</p>
+        </div>
+        <div class="lesson-status in-progress"><i class="fas fa-spinner fa-spin"></i></div>
+      </div>
+      <div class="lesson-card locked">
+        <div class="lesson-icon"><i class="fas fa-list-check"></i></div>
+        <div class="lesson-info">
+          <h4>Quiz: Numbers &amp; Colors</h4>
+          <p>Test your knowledge with a fun quiz</p>
+        </div>
+        <div class="lesson-status locked"><i class="fas fa-lock"></i></div>
+      </div>
+      <div class="lesson-card locked">
+        <div class="lesson-icon"><i class="fas fa-gamepad"></i></div>
+        <div class="lesson-info">
+          <h4>Game: Match &amp; Learn</h4>
+          <p>Play a fun matching game</p>
+        </div>
+        <div class="lesson-status locked"><i class="fas fa-lock"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="achievements-section">
+    <h2 class="section-title"><i class="fas fa-trophy"></i> Your Achievements</h2>
+    <div class="achievements-grid">
+      <div class="achievement-item unlocked">
+        <span class="achievement-icon"><i class="fas fa-star"></i></span>
+        <span class="achievement-name">First Step</span>
+        <span class="achievement-desc">Complete your first lesson</span>
+      </div>
+      <div class="achievement-item unlocked">
+        <span class="achievement-icon"><i class="fas fa-book"></i></span>
+        <span class="achievement-name">Bookworm</span>
+        <span class="achievement-desc">Complete 5 lessons</span>
+      </div>
+      <div class="achievement-item locked">
+        <span class="achievement-icon"><i class="fas fa-trophy"></i></span>
+        <span class="achievement-name">Explorer</span>
+        <span class="achievement-desc">Complete 10 lessons</span>
+      </div>
+      <div class="achievement-item locked">
+        <span class="achievement-icon"><i class="fas fa-earth-americas"></i></span>
+        <span class="achievement-name">World Traveler</span>
+        <span class="achievement-desc">Complete all levels</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="catto-companion">
+  <div class="catto-bubble" id="cattoBubble">Hi! Ready to learn English?</div>
+  <div class="catto-img-wrap">
+    <img class="catto-img" src="imgs/catto.png" alt="Catto" onerror="this.style.display='none'">
+  </div>
+</div>
+
+<script src="assets/js/sounds.js"></script>
+<script src="assets/js/header.js"></script>
+<script src="assets/js/activity.js"></script>
+<script src="assets/js/books.js"></script>
+<script src="assets/js/global-theme.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof Sound !== 'undefined') {
+    Sound._enabled = true;
+    Sound._init();
+  }
+  console.log('English learning page loaded!');
+});
+</script>
+</body>
+</html>

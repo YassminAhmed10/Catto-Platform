@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — Language Island</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/singup.css">
+</head>
+<body>
+
+<!--
+here i want to create "Sky Background with Animated Elements"
+so i will use:
+1- Sun with face (eyes and smile)
+2- Three floating clouds
+3- Four decorative stars
+-->
+<div class="sky">
+  <div class="sun" id="sun">
+    <div class="sun-face">
+      <div class="sun-eye left"></div>
+      <div class="sun-eye right"></div>
+      <div class="sun-smile"></div>
+    </div>
+  </div>
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="cloud cloud-3"></div>
+  <div class="star star-1">★</div>
+  <div class="star star-2">★</div>
+  <div class="star star-3">★</div>
+  <div class="star star-4">★</div>
+</div>
+
+<!--
+here i want to create "Header - Topbar with Brand Logo"
+so i will use:
+1- Brand logo linking to homepage
+2- Interactive hover effects
+-->
+<header class="topbar">
+  <div class="topbar-top">
+    <a class="brand interactive" href="index.html" style="text-decoration:none;">
+      <img src="imgs/Cattoimages/cattologo.png" class="brand-logo" alt="Language Island Logo">
+    </a>
+  </div>
+</header>
+
+<main>
+  <!--
+  here i want to create "Sign Up Form Layout"
+  so i will use:
+  1- Mascot video (Catto waving)
+  2- Sign up card with form fields
+  3- Form grid with first name, last name, DOB, gender, email, password, confirm password
+  4- Submit button
+  5- Social sign up options (Google, Apple)
+  6- Switch to Sign In link
+  -->
+  <section class="auth-wrap">
+    <div class="auth-mascot">
+      <video class="auth-cat-video" id="authCatVideo" autoplay loop muted playsinline aria-label="Catto waving hello">
+        <source src="imgs/Cattoimages/CattoHi.webm" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-card-logo">
+        <img src="imgs/Cattoimages/cattologo.png" alt="Language Island" class="card-logo-img">
+      </div>
+      <h1 class="auth-title">Sign Up</h1>
+
+      <form id="signupForm" novalidate>
+        <div class="form-grid">
+          <div class="field-group">
+            <label class="field-label" for="firstName"><i class="fas fa-user"></i>First Name</label>
+            <div class="field-input-wrap">
+              <input type="text" id="firstName" class="field-input" placeholder="First name" autocomplete="given-name" required>
+            </div>
+            <div class="field-error" id="firstNameError"><i class="fas fa-exclamation-circle"></i>Required</div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="lastName"><i class="fas fa-user"></i>Last Name</label>
+            <div class="field-input-wrap">
+              <input type="text" id="lastName" class="field-input" placeholder="Last name" autocomplete="family-name" required>
+            </div>
+            <div class="field-error" id="lastNameError"><i class="fas fa-exclamation-circle"></i>Required</div>
+          </div>
+
+          <div class="field-group full-width">
+            <label class="field-label" for="dob"><i class="fas fa-calendar-alt"></i>Date of Birth</label>
+            <div class="field-input-wrap">
+              <input type="date" id="dob" class="field-input">
+            </div>
+            <div class="field-error" id="dobError"><i class="fas fa-exclamation-circle"></i>Please enter your date of birth</div>
+          </div>
+
+          <div class="field-group full-width">
+            <label class="field-label" style="justify-content:center;"><i class="fas fa-venus-mars"></i>Gender</label>
+            <div class="gender-options">
+              <label class="gender-option">
+                <input type="radio" name="gender" value="girl"> <i class="fas fa-female" style="color:#FF6B9D;"></i> Girl
+              </label>
+              <label class="gender-option">
+                <input type="radio" name="gender" value="boy"> <i class="fas fa-male" style="color:#4A90D9;"></i> Boy
+              </label>
+            </div>
+            <div class="field-error" id="genderError" style="justify-content:center;"><i class="fas fa-exclamation-circle"></i>Please select your gender</div>
+          </div>
+
+          <div class="field-group full-width">
+            <label class="field-label" for="signupEmail"><i class="fas fa-envelope"></i>Email</label>
+            <div class="field-input-wrap">
+              <input type="email" id="signupEmail" class="field-input" placeholder="you@example.com" autocomplete="email" required>
+            </div>
+            <div class="field-error" id="signupEmailError"><i class="fas fa-exclamation-circle"></i>Valid email required</div>
+          </div>
+
+          <div class="field-group full-width">
+            <label class="field-label" for="signupPassword"><i class="fas fa-lock"></i>Password</label>
+            <div class="field-input-wrap">
+              <input type="password" id="signupPassword" class="field-input" placeholder="Create a password" autocomplete="new-password" required>
+              <button type="button" class="toggle-pass" id="toggleSignupPass" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="strength-meter">
+              <div class="strength-bar" id="bar1"></div>
+              <div class="strength-bar" id="bar2"></div>
+              <div class="strength-bar" id="bar3"></div>
+            </div>
+            <div class="field-hint" id="strengthHint">At least 8 characters</div>
+            <div class="field-error" id="signupPasswordError"><i class="fas fa-exclamation-circle"></i>Min 8 characters</div>
+          </div>
+
+          <div class="field-group full-width">
+            <label class="field-label" for="confirmPassword"><i class="fas fa-lock"></i>Confirm Password</label>
+            <div class="field-input-wrap">
+              <input type="password" id="confirmPassword" class="field-input" placeholder="Type it again" autocomplete="new-password" required>
+            </div>
+            <div class="field-error" id="confirmPasswordError"><i class="fas fa-exclamation-circle"></i>Passwords don't match</div>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-submit">
+          Create Account <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="auth-divider">or sign up with</div>
+      <div class="social-row">
+        <button type="button" class="social-btn google interactive"><i class="fab fa-google"></i>Google</button>
+        <button type="button" class="social-btn apple interactive"><i class="fab fa-apple"></i>Apple</button>
+      </div>
+
+      <p class="auth-switch">Already exploring with us? <a href="signin.html">Sign In</a></p>
+    </div>
+  </section>
+</main>
+
+<!--
+here i want to create "Toast Notification - Feedback Messages"
+so i will use:
+1- Toast with icon and message
+2- Success (green) and Error (red) states
+-->
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMessage">Account created!</span></div>
+
+<!--
+here i want to create "JavaScript Imports and Form Logic"
+so i will use:
+1- sounds.js (audio effects)
+2- auth-ui.js (auth interface helpers)
+3- auth.js (auth functionality)
+4- Form validation with real-time feedback
+5- Password strength meter
+6- Form submission to backend
+7- Sound effects on hover and click
+-->
+<script src="assets/js/sounds.js"></script>
+<script src="assets/js/auth-ui.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/signup.js"></script>
+</body>
+</html>

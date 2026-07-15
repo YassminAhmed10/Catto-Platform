@@ -1,0 +1,417 @@
+/* =========================================================
+   BOOKS.CSS - Books Page Styles
+   ========================================================= */
+
+.page-hero {
+  text-align: center;
+  padding: 30px clamp(20px, 5vw, 60px) 10px;
+}
+
+.page-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 48px);
+  color: var(--plum);
+  margin: 0 0 8px;
+}
+
+.page-hero p {
+  font-size: 18px;
+  color: var(--plum-soft);
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.lang-selection {
+  padding: 20px clamp(20px, 5vw, 60px) 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.lang-grid-books {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 20px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.lang-card {
+  background: transparent;
+  border: none;
+  border-radius: 22px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.25s ease;
+  cursor: pointer;
+}
+
+.lang-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.15));
+}
+
+.lang-card:active {
+  transform: scale(0.95);
+}
+
+.lang-card img {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 8px 0 var(--shadow), 0 8px 24px rgba(0,0,0,0.08);
+  display: block;
+}
+
+.lang-card:hover img {
+  box-shadow: 0 10px 0 var(--shadow), 0 16px 40px rgba(0,0,0,0.12);
+}
+
+.lang-card .lang-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--plum);
+  margin-top: 4px;
+}
+
+.lang-card .lang-progress {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--plum-soft);
+}
+
+.books-section {
+  padding: 20px clamp(20px, 5vw, 60px) 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.section-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 32px);
+  color: var(--plum);
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.section-header .back-btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  background: var(--white);
+  padding: 10px 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 0 rgba(46,38,87,0.1);
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--plum);
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+  order: -1;
+}
+
+.section-header .back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 rgba(46,38,87,0.1);
+}
+
+.section-header .back-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(46,38,87,0.1);
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.book-card {
+  background: var(--white);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 0 rgba(46,38,87,0.06);
+  border: 3px solid #F1EEFB;
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: default;
+}
+
+.book-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--star);
+  box-shadow: 0 12px 0 rgba(46,38,87,0.06);
+}
+
+.book-card.completed {
+  border-color: var(--grass);
+  background: #F0FFF5;
+}
+
+.book-card.locked {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.book-card .book-cover {
+  height: 16rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  background: linear-gradient(135deg, #F1EEFB, #E3DFF5);
+}
+
+.book-card .book-cover .book-emoji {
+  font-size: 64px;
+}
+
+.book-card .book-info {
+  padding: 16px 18px 20px;
+  text-align: center;
+}
+
+.book-card .book-info h3 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--plum);
+  margin: 0 0 8px;
+}
+
+.book-card .badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.book-card .completed-badge {
+  background: var(--grass);
+  color: #fff;
+}
+
+.book-card .locked-badge {
+  background: #8C87A8;
+  color: #fff;
+}
+
+.book-card .read-btn {
+  background: var(--coral);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 var(--coral-dark);
+  transition: all 0.15s ease;
+  margin-top: 6px;
+  width: 100%;
+}
+
+.book-card .read-btn:hover {
+  transform: translateY(-2px);
+}
+
+.book-card .read-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--coral-dark);
+}
+
+.book-card .read-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-required-modal .modal-card {
+  max-width: 420px;
+  padding: 34px 30px 28px;
+}
+
+.login-required-modal .modal-catto-image {
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-required-modal .modal-catto-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.login-required-modal .modal-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--plum);
+  margin: 0 0 6px;
+}
+
+.login-required-modal .modal-subtitle {
+  color: var(--plum-soft);
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.login-required-modal .modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.login-required-modal .modal-actions .cta-btn {
+  font-size: 15px;
+  padding: 12px 24px;
+  min-width: 130px;
+  flex: 1;
+  max-width: 180px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  border-radius: 999px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+  border: none;
+  cursor: pointer;
+  line-height: 1.2;
+  height: 48px;
+}
+
+.login-required-modal .modal-actions .cta-btn {
+  background: var(--coral);
+  color: var(--white);
+  box-shadow: 0 5px 0 var(--coral-dark);
+}
+
+.login-required-modal .modal-actions .cta-btn.secondary {
+  background: #F1EEFB;
+  color: var(--plum);
+  box-shadow: 0 5px 0 rgba(46,38,87,0.08);
+}
+
+@media (max-width: 768px) {
+  .lang-grid-books {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  .lang-card img {
+    max-width: 200px;
+  }
+  .book-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  .book-card .book-cover {
+    height: 130px;
+    font-size: 48px;
+  }
+  .section-header h2 {
+    font-size: clamp(20px, 3vw, 26px);
+  }
+}
+
+@media (max-width: 480px) {
+  .lang-grid-books {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .lang-card img {
+    max-width: 150px;
+  }
+  .book-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .book-card .book-cover {
+    height: 100px;
+    font-size: 36px;
+  }
+  .book-card .book-info h3 {
+    font-size: 15px;
+  }
+  .book-card .read-btn {
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+  .section-header h2 {
+    font-size: 16px;
+  }
+  .section-header .back-btn {
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+}
+
+/* Book Card - Read Button */
+.book-card .read-btn {
+    background: var(--coral);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 8px 20px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--coral-dark);
+    transition: all 0.15s ease;
+    margin-top: 6px;
+    width: 100%;
+}
+
+.book-card .read-btn:hover {
+    transform: translateY(-2px);
+}
+
+.book-card .read-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--coral-dark);
+}
+
+.book-card.locked .read-btn {
+    display: none;
+}
+
+/* Book Reader Modal */
+.book-reader-modal .modal-card.book-reader-card {
+    max-width: 700px;
+    width: 92%;
+    padding: 20px 24px 24px;
+    border-radius: 24px;
+    background: var(--white);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* ... rest of book reader styles from above ... */

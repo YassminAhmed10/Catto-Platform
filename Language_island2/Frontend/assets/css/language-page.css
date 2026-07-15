@@ -1,0 +1,497 @@
+/* =========================================================
+   LANGUAGE-PAGE.CSS
+   Shared design for every "Learn <Language>" page.
+   Each page sets --lang-accent / --lang-accent-dark / --lang-tint
+   on <body> to recolor the banner, badges and progress bars
+   without duplicating CSS per language.
+   ========================================================= */
+
+body {
+  --lang-accent: var(--coral);
+  --lang-accent-dark: var(--coral-dark);
+  --lang-tint: rgba(255, 111, 89, 0.08);
+}
+
+main {
+  position: relative;
+  z-index: 2;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 40px) 60px;
+}
+
+/* ============================================
+   LANGUAGE BANNER
+   ============================================ */
+.language-header {
+  padding: 28px 0 20px;
+}
+
+.language-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 30px clamp(20px, 4vw, 40px);
+  border-radius: 28px;
+  background: linear-gradient(135deg, var(--lang-tint), rgba(255,255,255,0.9));
+  border: 2px solid rgba(46, 38, 87, 0.06);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.language-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-left: 8px solid var(--lang-accent);
+  border-radius: 28px;
+  pointer-events: none;
+}
+
+.language-flag {
+  flex-shrink: 0;
+  width: 84px;
+  height: 84px;
+  border-radius: 22px;
+  box-shadow: 0 6px 0 rgba(46,38,87,0.1);
+  background: #F1EEFB;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.language-flag .fi {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.language-banner-text { min-width: 0; }
+
+.language-banner h1 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4vw, 36px);
+  color: var(--plum);
+  margin: 0 0 6px;
+}
+
+.language-banner p {
+  font-size: clamp(14px, 1.6vw, 17px);
+  color: var(--plum-soft);
+  font-weight: 700;
+  margin: 0;
+}
+
+.language-banner .lang-progress-pill {
+  margin-left: auto;
+  flex-shrink: 0;
+  text-align: center;
+  background: var(--white);
+  border-radius: 20px;
+  padding: 12px 20px;
+  box-shadow: 0 4px 0 rgba(46,38,87,0.08);
+}
+
+.language-banner .lang-progress-pill .lp-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--lang-accent);
+}
+
+.language-banner .lang-progress-pill .lp-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--plum-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* ============================================
+   SECTION HEADINGS
+   ============================================ */
+.roadmap-section,
+.lessons-section,
+.achievements-section {
+  padding: 34px 0 10px;
+}
+
+.roadmap-section .section-title,
+.lessons-section .section-title,
+.achievements-section .section-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.6vw, 28px);
+  color: var(--plum);
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+}
+
+.roadmap-section .section-title i,
+.lessons-section .section-title i,
+.achievements-section .section-title i {
+  color: var(--lang-accent);
+  font-size: 0.85em;
+}
+
+.section-subtitle {
+  color: var(--plum-soft);
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0 0 26px;
+}
+
+/* ============================================
+   LEVEL ROADMAP
+   ============================================ */
+.levels-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.level-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--white);
+  border-radius: 22px;
+  padding: 20px 24px;
+  box-shadow: var(--card-shadow);
+  border: 2px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.level-card:hover { transform: translateY(-3px); }
+
+.level-number {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 19px;
+  background: #F1EEFB;
+  color: var(--plum-soft);
+}
+
+.level-card.completed .level-number {
+  background: var(--grass);
+  color: var(--white);
+}
+
+.level-card.in-progress .level-number {
+  background: var(--lang-accent);
+  color: var(--white);
+}
+
+.level-card.locked { opacity: 0.72; }
+
+.level-content { flex: 1; min-width: 0; }
+
+.level-content h3 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--plum);
+  margin: 0 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.level-content h3 i.fa-lock {
+  font-size: 13px;
+  color: #8C87A8;
+}
+
+.level-content p {
+  font-size: 13.5px;
+  color: var(--plum-soft);
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.level-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 10px;
+  border-radius: 999px;
+  background: #EFECFA;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--lang-accent), var(--lang-accent-dark));
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  flex-shrink: 0;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--plum-soft);
+  white-space: nowrap;
+}
+
+.level-badge {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: #F1EEFB;
+  color: var(--plum-soft);
+}
+
+.level-card.completed .level-badge {
+  background: #E4F8EA;
+  color: #2E7D32;
+}
+
+.level-card.in-progress .level-badge {
+  background: var(--lang-tint);
+  color: var(--lang-accent-dark);
+}
+
+.level-card.locked .level-badge {
+  background: #F1EEFB;
+  color: #8C87A8;
+}
+
+/* ============================================
+   CURRENT LEVEL LESSONS
+   ============================================ */
+.lessons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.lesson-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--white);
+  border-radius: 20px;
+  padding: 16px 18px;
+  box-shadow: 0 6px 0 rgba(46,38,87,0.06);
+  border: 2px solid #F1EEFB;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.lesson-card:not(.locked):hover {
+  transform: translateY(-3px);
+  border-color: var(--lang-accent);
+  box-shadow: 0 10px 0 rgba(46,38,87,0.06);
+}
+
+.lesson-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  background: var(--lang-tint);
+  color: var(--lang-accent-dark);
+}
+
+.lesson-info { flex: 1; min-width: 0; }
+
+.lesson-info h4 {
+  font-family: var(--font-display);
+  font-size: 15.5px;
+  color: var(--plum);
+  margin: 0 0 2px;
+}
+
+.lesson-info p {
+  font-size: 12.5px;
+  color: var(--plum-soft);
+  font-weight: 700;
+  margin: 0;
+}
+
+.lesson-status {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  background: #F1EEFB;
+  color: #8C87A8;
+}
+
+.lesson-status.completed { background: #E4F8EA; color: #2E7D32; }
+.lesson-status.in-progress { background: var(--lang-tint); color: var(--lang-accent-dark); }
+.lesson-status.locked { background: #F1EEFB; color: #8C87A8; }
+
+.lesson-card.locked { opacity: 0.7; }
+
+/* ============================================
+   ACHIEVEMENTS
+   ============================================ */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.achievement-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  background: var(--white);
+  border-radius: 20px;
+  padding: 22px 14px;
+  box-shadow: 0 6px 0 rgba(46,38,87,0.06);
+  border: 2px solid #F1EEFB;
+  transition: transform 0.2s ease;
+}
+
+.achievement-item.unlocked:hover { transform: translateY(-4px); }
+
+.achievement-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 4px;
+  background: var(--lang-tint);
+  color: var(--lang-accent-dark);
+}
+
+.achievement-item.locked {
+  opacity: 0.55;
+}
+
+.achievement-item.locked .achievement-icon {
+  background: #F1EEFB;
+  color: #8C87A8;
+}
+
+.achievement-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--plum);
+}
+
+.achievement-desc {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--plum-soft);
+  line-height: 1.35;
+}
+
+/* ============================================
+   CATTO COMPANION (floating helper)
+   ============================================ */
+.catto-companion {
+  position: fixed;
+  right: clamp(14px, 3vw, 32px);
+  bottom: clamp(14px, 3vw, 32px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  z-index: 40;
+}
+
+.catto-bubble {
+  max-width: 220px;
+  background: var(--white);
+  color: var(--plum);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 12px 16px;
+  border-radius: 18px;
+  box-shadow: 0 6px 0 rgba(46,38,87,0.1);
+  border: 2px solid var(--lang-tint);
+}
+
+.catto-img-wrap {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 6px 0 rgba(46,38,87,0.12);
+  border: 3px solid var(--lang-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  animation: cattoBob 3.4s ease-in-out infinite;
+}
+
+.catto-img { width: 100%; height: 100%; object-fit: cover; }
+
+@keyframes cattoBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 640px) {
+  .language-banner {
+    flex-wrap: wrap;
+    padding: 24px 20px;
+  }
+  .language-banner .lang-progress-pill {
+    margin-left: 0;
+    width: 100%;
+  }
+  .level-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 44px;
+  }
+  .level-badge { top: 16px; right: 16px; }
+  .lessons-grid { grid-template-columns: 1fr; }
+  .achievements-grid { grid-template-columns: repeat(2, 1fr); }
+  .catto-companion { right: 12px; bottom: 12px; }
+  .catto-bubble { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .catto-img-wrap { animation: none; }
+}
