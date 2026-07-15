@@ -559,7 +559,6 @@ function renderQuizQuestion(){
   const l = WORD_BANK[state.lang];
   const total = l.words.length;
   if(quiz.index >= total){ 
-    // COINS ONLY: 8 coins
     const coinsEarned = 8;
     saveGameProgress(state.lang, quiz.mode, coinsEarned, total - quiz.wrongTries, true)
       .then(() => {
@@ -576,46 +575,45 @@ function renderQuizQuestion(){
   quiz.wrongTries = 0;
 
   const isListen = quiz.mode==="listen";
-  cattoSay(isListen ? "Listen closely and pick the right picture!" : `Find the picture for: ${correctWord.text}`, "happy");
+  cattoSay(isListen ? "Listen closely and pick the right picture!" : "What is this a picture of?", "happy");
 
   const questionBlock = isListen
-    ? `<button class="hear-btn" id="hearBtn">${icon('speaker')} Hear it again</button>`
-    : `${pic(correctWord.img, correctWord.text, 'quiz-pic-big')}
-       <div class="quiz-word-big">${correctWord.text}</div>
-       <button class="hear-btn" id="hearBtn">${icon('speaker')} Hear the word</button>`;
+      ? `<button class="hear-btn" id="hearBtn">${icon('speaker')} Hear it again</button>`
+      : `${pic(correctWord.img, correctWord.text, 'quiz-pic-big')}
+        <button class="hear-btn" id="hearBtn">${icon('speaker')} Hear the word</button>`;
 
-  const choicesBlock = isListen
-    ? `<div class="pic-choices" id="choices">
-        ${choiceIdxs.map(i=>`<button class="choice-pic-btn" data-i="${i}">${pic(l.words[i].img, l.words[i].text)}</button>`).join("")}
-       </div>`
-    : `<div class="word-choices" id="choices">
-        ${choiceIdxs.map(i=>`<button class="choice-btn" data-i="${i}">${l.words[i].text}</button>`).join("")}
-       </div>`;
+    const choicesBlock = isListen
+      ? `<div class="pic-choices" id="choices">
+          ${choiceIdxs.map(i=>`<button class="choice-pic-btn" data-i="${i}">${pic(l.words[i].img, l.words[i].text)}</button>`).join("")}
+        </div>`
+      : `<div class="word-choices" id="choices">
+          ${choiceIdxs.map(i=>`<button class="choice-btn" data-i="${i}">${l.words[i].text}</button>`).join("")}
+        </div>`;
 
-  app.innerHTML = `
-    <section class="hub" dir="${l.dir}">
-      <button class="back-btn" id="backHub">${icon('back','arrow-ic')} Back</button>
-      <div class="quiz-top">
-        <div class="quiz-progress-track">
-          ${l.words.map((_,i)=>`<span class="dot ${i<quiz.index?'done':''} ${i===quiz.index?'current':''}"></span>`).join("")}
+    app.innerHTML = `
+      <section class="hub" dir="${l.dir}">
+        <button class="back-btn" id="backHub">${icon('back','arrow-ic')} Back</button>
+        <div class="quiz-top">
+          <div class="quiz-progress-track">
+            ${l.words.map((_,i)=>`<span class="dot ${i<quiz.index?'done':''} ${i===quiz.index?'current':''}"></span>`).join("")}
+          </div>
+          <div class="quiz-stars">${icon('star','star-ic')} ${userTotalsCache.total_stars}</div>
         </div>
-        <div class="quiz-stars">${icon('star','star-ic')} ${userTotalsCache.total_stars}</div>
-      </div>
-      <div class="quiz-question">${questionBlock}</div>
-      ${choicesBlock}
-    </section>
-  `;
+        <div class="quiz-question">${questionBlock}</div>
+        ${choicesBlock}
+      </section>
+    `;
 
-  document.getElementById("backHub").addEventListener("click", ()=> openHub(state.lang));
-  const hearBtn = document.getElementById("hearBtn");
-  if(hearBtn) hearBtn.addEventListener("click", ()=> speak(correctWord.text, l.speechLang));
+    document.getElementById("backHub").addEventListener("click", ()=> openHub(state.lang));
+    const hearBtn = document.getElementById("hearBtn");
+    if(hearBtn) hearBtn.addEventListener("click", ()=> speak(correctWord.text, l.speechLang));
 
-  document.querySelectorAll("#choices button").forEach(btn=>{
-    btn.addEventListener("mouseenter", ()=>{ if (typeof Sound !== 'undefined' && Sound.hover) Sound.hover(); });
-    btn.addEventListener("click", ()=> onQuizChoice(btn, parseInt(btn.dataset.i,10), correctIdx, correctWord, l));
-  });
+    document.querySelectorAll("#choices button").forEach(btn=>{
+      btn.addEventListener("mouseenter", ()=>{ if (typeof Sound !== 'undefined' && Sound.hover) Sound.hover(); });
+      btn.addEventListener("click", ()=> onQuizChoice(btn, parseInt(btn.dataset.i,10), correctIdx, correctWord, l));
+    });
 
-  if(isListen) speak(correctWord.text, l.speechLang);
+    if(isListen) speak(correctWord.text, l.speechLang);
 }
 
 function onQuizChoice(btn, chosenIdx, correctIdx, correctWord, l){
