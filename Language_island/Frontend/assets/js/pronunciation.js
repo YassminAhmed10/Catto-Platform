@@ -390,10 +390,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (event.results[lastIndex].isFinal) {
                 finalTranscript = event.results[lastIndex][0].transcript;
+                
+                try { recognition.stop(); } catch(e) {}
             }
         };
 
         recognition.onerror = function(event) {
+            if (window.speechTimeout) clearTimeout(window.speechTimeout);
             isListening = false;
             isProcessing = false;
             console.log('Recognition error:', event.error);
@@ -410,6 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         recognition.onend = function() {
+            if (window.speechTimeout) clearTimeout(window.speechTimeout);
             isListening = false;
             isProcessing = false;
             
@@ -438,13 +442,20 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             recognition.start();
             console.log('Listening for:', targetWord);
-            setTimeout(function() {
+            
+            if (window.speechTimeout) clearTimeout(window.speechTimeout);
+            
+            window.speechTimeout = setTimeout(function() {
                 if (isListening) {
-                    try {
-                        recognition.stop();
-                    } catch(e) {}
+                    console.log('Speech recognition timed out.');
+                    try { recognition.abort(); } catch(e) {}
+                    
+                    isListening = false;
+                    isProcessing = false;
+                    onDone('no-speech', null);
                 }
             }, 5000);
+            
         } catch (e) {
             isListening = false;
             isProcessing = false;
@@ -642,6 +653,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function renderCurrentWord(langKey, letterChar) {
+        isListening = false;
+        isProcessing = false;
+        if (recognition) {
+            try { recognition.abort(); } catch(e) {}
+        }
+        if (window.speechTimeout) clearTimeout(window.speechTimeout);
+        
         var words = pronunciationData[langKey].words[letterChar];
         var wordObj = words[currentWordIndex];
         var lang = languages[langKey];
@@ -724,7 +742,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 showToast('Microphone practice needs Chrome or Edge.');
                 return;
             }
-            if (isListening || isProcessing) return;
+            if (isListening) {
+                if (window.recognition) {
+                    try { window.recognition.stop(); } catch(e) {}
+                }
+                return;
+            }
+            if (isProcessing) return;
             if (!currentLang || !currentLetter) {
                 showToast('Please select a letter first.');
                 return;
