@@ -1,11 +1,11 @@
 /* =========================================================
-   PRONUNCIATION.JS - Speak & Practice Page (FIXED)
+   PRONUNCIATION.JS - Speak & Practice Page
    ========================================================= */
 
 console.log('Pronunciation.js loading...');
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ DOM ready for Pronunciation page');
+    console.log('DOM ready for Pronunciation page');
 
     // =========================================================
     // LANGUAGE DATA
@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // TEXT SIMILARITY - ENHANCED
+    // TEXT SIMILARITY 
     // =========================================================
     function normalize(str) {
         return (str || '')
@@ -590,7 +590,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // RENDER LETTERS - NO COMPLETION CHECK
+    // RENDER LETTERS
     // =========================================================
     function renderLetters(langKey, data) {
         var grid = document.getElementById('lettersGrid');
@@ -632,7 +632,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('lettersGrid').style.display = 'none';
         document.getElementById('wordsSection').style.display = 'block';
         
-        // FIX: Use innerHTML for HTML content
         var titleEl = document.getElementById('selectedLetterTitle');
         if (titleEl) {
             titleEl.innerHTML = '<i class="fas fa-pencil-alt"></i> Letter ' + letterChar + (letterInfo ? ' - ' + letterInfo.name : '');

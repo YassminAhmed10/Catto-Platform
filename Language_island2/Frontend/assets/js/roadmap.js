@@ -24,10 +24,10 @@ document.addEventListener('DOMContentLoaded', function() {
       if (typeof Sound !== 'undefined') {
         Sound._init();
         Sound.pop();
-        console.log('🔊 Sound test successful!');
+        console.log('Sound test successful!');
       }
     } catch (e) {
-      console.log('🔇 Sound test failed - will work on user interaction');
+      console.log('Sound test failed - will work on user interaction');
     }
   }, 500);
 

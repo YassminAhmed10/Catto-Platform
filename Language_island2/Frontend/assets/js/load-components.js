@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load Header
     loadComponent('header-placeholder', 'header.html', function() {
-        console.log('✅ Header loaded successfully');
+        console.log('Header loaded successfully');
         
         // Re-initialize header JS after loading
         if (typeof initHeader === 'function') {
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load Sidebar
     loadComponent('sidebar-placeholder', 'sidebar.html', function() {
-        console.log('✅ Sidebar loaded successfully');
+        console.log('Sidebar loaded successfully');
     });
 
 });

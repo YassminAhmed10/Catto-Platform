@@ -1,9 +1,9 @@
 /* =========================================================
-   SOUND SYSTEM - Pure Web Audio API (No external files needed)
+   SOUND SYSTEM 
    ========================================================= */
 
 if (typeof window !== "undefined" && window.Sound && window.Sound.__soundSystemLoaded) {
-  console.log("🎵 Sound system already loaded — skipping duplicate init.");
+  console.log("Sound system already loaded — skipping duplicate init.");
 } else {
 
 (function () {
@@ -25,7 +25,7 @@ if (typeof window !== "undefined" && window.Sound && window.Sound.__soundSystemL
         const resumeAudio = () => {
           if (this._ctx && this._ctx.state === "suspended") {
             this._ctx.resume().catch((err) => {
-              console.log("⚠️ Could not resume audio:", err);
+              console.log("Could not resume audio:", err);
             });
           }
           document.removeEventListener("click", resumeAudio);
@@ -38,9 +38,9 @@ if (typeof window !== "undefined" && window.Sound && window.Sound.__soundSystemL
         document.addEventListener("keydown", resumeAudio);
 
         this._initialized = true;
-        console.log("🎵 Sound system initialized (Web Audio only)!");
+        console.log("Sound system initialized (Web Audio only)!");
       } catch (e) {
-        console.log("⚠️ Web Audio not supported - using silent mode");
+        console.log("Web Audio not supported - using silent mode");
         this._initialized = true;
       }
     },
@@ -362,10 +362,10 @@ if (typeof window !== "undefined" && window.Sound && window.Sound.__soundSystemL
   }
 
   function boot() {
-    // Don't initialize AudioContext here - let it be lazy
+    // Don't initialize AudioContext here
     // Don't preload any MP3 files
     wirePageTurnEvents();
-    console.log("🎵 Sound system ready (Web Audio only, no external files)");
+    console.log("Sound system ready (Web Audio only, no external files)");
   }
 
   document.addEventListener("DOMContentLoaded", boot);
@@ -374,4 +374,4 @@ if (typeof window !== "undefined" && window.Sound && window.Sound.__soundSystemL
   }
 })();
 
-} // end duplicate-load guard
+}

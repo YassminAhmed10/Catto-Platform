@@ -1,5 +1,5 @@
 /* =========================================================
-   Catto's Alphabet Island — game data & logic
+   Catto's Alphabet Island 
    ========================================================= */
 
 const ALPHABETS = {

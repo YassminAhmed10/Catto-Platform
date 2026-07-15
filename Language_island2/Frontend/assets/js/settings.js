@@ -5,9 +5,9 @@
 console.log('Settings.js loading...');
 
 // =========================================================
-// API BASE URL - Use absolute path from root
+// API BASE URL 
 // =========================================================
-var API_BASE = '/Catto_Platform/Language_island2/Backend/';
+var API_BASE = '../Backend/';
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log(' DOM ready - Settings page');
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(function(err) {
-                console.error('❌ Could not load profile:', err);
+                console.error('Could not load profile:', err);
                 showToast('Error loading profile. Please refresh.', 'error');
             });
     }
@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(function(err) {
-            console.error('❌ Error equipping theme:', err);
+            console.error('Error equipping theme:', err);
             showUpdateToast('Network error', 'error', 'Please try again');
         });
     }

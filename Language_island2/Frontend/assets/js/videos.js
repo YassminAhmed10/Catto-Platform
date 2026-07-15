@@ -1,8 +1,5 @@
 /* =========================================================
-   VIDEOS.JS - Complete Videos Page
-   Completion + stars only trigger when the user closes
-   the video modal (X button, backdrop click, or Escape) —
-   never automatically while the video is playing/ended.
+   VIDEOS.JS
    ========================================================= */
 
 console.log('🎬 Videos.js loading...');
@@ -346,7 +343,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // =========================================================
   // SHOW STAR EARNED MODAL - Per video
-  // Icon + text + button only. No motion on the icon itself.
   // =========================================================
   function showStarEarnedModal(stars, totalStars, videoTitle) {
     console.log('Showing star earned modal - Stars:', stars, 'Total:', totalStars);
@@ -420,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // =========================================================
-  // EARN STARS FOR A SINGLE VIDEO - PER-VIDEO REWARD
+  // PER-VIDEO REWARD
   // =========================================================
   function earnStarsForVideo(videoId, videoTitle) {
     console.log('earnStarsForVideo called for:', videoId, 'Title:', videoTitle);
@@ -461,9 +457,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // =========================================================
   // HANDLE VIDEO MODAL CLOSE
-  // This is the ONLY place that marks a video watched and
-  // kicks off the stars flow. It runs no matter which way the
-  // modal was closed (X button, backdrop click, or Escape).
   // =========================================================
   function handleVideoModalClose() {
     closeVideoModal();
@@ -885,8 +878,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // =========================================================
   // PLAY VIDEO
-  // Completion is only FLAGGED here (currentPlayingVideo.hasCompleted).
-  // It is only ACTED ON in handleVideoModalClose().
   // =========================================================
   function playVideo(langKey, categoryKey, videoTitle) {
     console.log('Playing video:', videoTitle);
@@ -946,7 +937,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var videoId = langKey + '_' + categoryKey + '_' + videoTitle;
 
     // Set up tracking for this playback. Nothing fires from
-    // these listeners except flipping hasCompleted to true —
+    // these listeners except flipping hasCompleted to true
     // the actual watched/stars logic waits for modal close.
     currentPlayingVideo = {
       langKey: langKey,
@@ -1010,7 +1001,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // =========================================================
   // VIDEO MODAL CONTROLS
-  // All close paths route through handleVideoModalClose()
   // =========================================================
   var playOverlay = document.getElementById('videoPlayOverlay');
   if (playOverlay) {

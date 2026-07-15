@@ -1,34 +1,34 @@
 /* =========================================================
-   PROFILE.JS - Complete Profile Page with Debugging
+   PROFILE.JS
    ========================================================= */
 
-console.log('📄 Profile.js loading...');
+console.log('Profile.js loading...');
 
 // =========================================================
-// API BASE URL - Use absolute path from root
+// API BASE URL 
 // =========================================================
-var API_BASE = '/Catto_Platform/Language_island2/Backend/';
+var API_BASE = '../Backend/';
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ DOM ready');
+    console.log('DOM ready');
 
     // =========================================================
-    // DEBUG: Check if all elements exist
+    // Check if all elements exist
     // =========================================================
     var editBtn = document.getElementById('editProfileBtn');
-    console.log('🔍 editBtn found?', editBtn);
+    console.log('editBtn found?', editBtn);
     
     var displayMode = document.getElementById('profileDisplayMode');
-    console.log('🔍 displayMode found?', displayMode);
+    console.log('displayMode found?', displayMode);
     
     var editMode = document.getElementById('profileEditMode');
-    console.log('🔍 editMode found?', editMode);
+    console.log('editMode found?', editMode);
 
     // =========================================================
     // If editBtn is null, stop and log error
     // =========================================================
     if (!editBtn) {
-        console.error('❌ editProfileBtn not found! Check the ID in HTML.');
+        console.error('editProfileBtn not found! Check the ID in HTML.');
         return;
     }
 
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var updateToastCloseBtn = document.getElementById('updateToastCloseBtn');
     var toastBackdrop = document.getElementById('toastBackdrop');
 
-    console.log('🔍 Input elements found?', {
+    console.log('Input elements found?', {
         firstName: !!firstNameInput,
         lastName: !!lastNameInput,
         email: !!emailInput,
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dob: !!dobInput
     });
 
-    console.log('🔍 Closet tabs found:', closetTabs.length);
+    console.log('Closet tabs found:', closetTabs.length);
 
     // =========================================================
     // CLOSET TAB HANDLERS
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 closetTabs.forEach(function(t) { t.classList.remove('active'); });
                 this.classList.add('active');
                 currentTab = this.dataset.tab;
-                console.log('🔄 Tab changed to:', currentTab);
+                console.log('Tab changed to:', currentTab);
                 filterClosetItems();
             });
         });
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function filterClosetItems() {
         var items = document.querySelectorAll('.closet-item');
-        console.log('🔍 Filtering items for tab:', currentTab, 'Items found:', items.length);
+        console.log('Filtering items for tab:', currentTab, 'Items found:', items.length);
         
         var visibleCount = 0;
         items.forEach(function(item) {
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        console.log('📊 Visible items:', visibleCount, 'of', items.length);
+        console.log('Visible items:', visibleCount, 'of', items.length);
     }
 
     // =========================================================
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // LOAD PROFILE
     // =========================================================
     function loadProfile() {
-        console.log('🔄 Loading profile...');
+        console.log('Loading profile...');
         fetch(API_BASE + 'get_profile.php')
             .then(function(res) {
                 if (!res.ok) {
@@ -148,14 +148,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 return res.json();
             })
             .then(function(data) {
-                console.log('📥 Profile data received:', data);
+                console.log('Profile data received:', data);
                 if (data.success === false && data.error === 'not_logged_in') {
                     window.location.href = 'signin.html';
                     return;
                 }
                 if (data.success) {
                     var d = data.data;
-                    console.log('👤 User data:', d);
+                    console.log('User data:', d);
 
                     current.first_name = d.first_name || '';
                     current.last_name = d.last_name || '';
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(function(err) {
-                console.error('❌ Could not load profile:', err);
+                console.error('Could not load profile:', err);
                 showToast('Error loading profile. Please refresh.', 'error');
             });
     }
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // UPDATE ALL AVATARS
     // =========================================================
     function updateAllAvatars(skinPath) {
-        console.log('🔄 Updating all avatars to:', skinPath);
+        console.log('Updating all avatars to:', skinPath);
         
         var fallbackPath = 'imgs/profile/default-catto.png';
         
@@ -332,14 +332,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================================================
     
     // =========================================================
-    // ICON IMAGE PATHS - Replace these with your actual image paths
+    // ICON IMAGE PATHS
     // =========================================================
     var PRINT_ICONS = {
-        'coloring_book': 'imgs/profile/icons/coloring-book.png',    // Replace with your image path
-        'sudoku': 'imgs/profile/icons/sudoku.png',                  // Replace with your image path
-        'nonogram': 'imgs/profile/icons/nonogram.png',              // Replace with your image path
-        'fantasy-book': 'imgs/profile/icons/fantasy-book.png',      // Replace with your image path
-        'default': 'imgs/profile/icons/default-print.png'           // Default fallback icon
+        'coloring_book': 'imgs/profile/icons/coloring-book.png',    
+        'sudoku': 'imgs/profile/icons/sudoku.png',                 
+        'nonogram': 'imgs/profile/icons/nonogram.png',             
+        'fantasy-book': 'imgs/profile/icons/fantasy-book.png',      
+        'default': 'imgs/profile/icons/default-print.png'           
     };
 
     var THEME_LABELS = {
@@ -374,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function loadCloset(d) {
         var grid = document.getElementById('closetGrid');
         if (!grid) {
-            console.error('❌ closetGrid not found!');
+            console.error('closetGrid not found!');
             return;
         }
 
@@ -488,7 +488,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // EQUIP SKIN
     // =========================================================
     function equipSkin(skinName) {
-        console.log('🎯 Equipping skin:', skinName);
+        console.log('Equipping skin:', skinName);
         
         fetch(API_BASE + 'equip_skin.php', {
             method: 'POST',
@@ -501,7 +501,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return res.json();
         })
         .then(function(data) {
-            console.log('📥 Equip response:', data);
+            console.log('Equip response:', data);
             if (data.success) {
                 current.equipped_skin = skinName;
                 var skinPath = 'imgs/profile/' + skinName + '.png';
@@ -513,7 +513,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(function(err) {
-            console.error('❌ Error equipping skin:', err);
+            console.error('Error equipping skin:', err);
             showUpdateToast('Network error', 'error', 'Please try again');
         });
     }
@@ -599,7 +599,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('✏️ Entering edit mode...');
         
         if (!firstNameInput || !lastNameInput || !emailInput) {
-            console.error('❌ Input elements not found!');
+            console.error('Input elements not found!');
             showToast('Error: Input fields not found', 'error');
             return;
         }
@@ -614,29 +614,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (displayMode) {
             displayMode.style.display = 'none';
-            console.log('✅ Display mode hidden');
+            console.log('Display mode hidden');
         }
         if (editMode) {
             editMode.style.display = 'block';
-            console.log('✅ Edit mode shown');
+            console.log('Edit mode shown');
         }
         
-        console.log('✅ Edit mode activated successfully');
+        console.log('Edit mode activated successfully');
     }
 
     function exitEditMode() {
-        console.log('✏️ Exiting edit mode...');
+        console.log('Exiting edit mode...');
         
         if (displayMode) {
             displayMode.style.display = 'block';
-            console.log('✅ Display mode shown');
+            console.log('Display mode shown');
         }
         if (editMode) {
             editMode.style.display = 'none';
-            console.log('✅ Edit mode hidden');
+            console.log('Edit mode hidden');
         }
         clearError();
-        console.log('✅ Edit mode exited');
+        console.log('Edit mode exited');
     }
 
     function clearError() {
@@ -667,18 +667,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // EDIT BUTTON - MAIN HANDLER
+    // EDIT BUTTON
     // =========================================================
     var newEditBtn = editBtn.cloneNode(true);
     editBtn.parentNode.replaceChild(newEditBtn, editBtn);
     
     newEditBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        console.log('🟢 Edit button clicked! (real)');
+        console.log('Edit button clicked! (real)');
         enterEditMode();
     });
     
-    console.log('✅ Real edit listener attached');
+    console.log('Real edit listener attached');
 
     // =========================================================
     // CANCEL BUTTON
@@ -686,7 +686,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cancelBtn) {
         cancelBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('🔴 Cancel button clicked');
+            console.log('Cancel button clicked');
             exitEditMode();
         });
     }
@@ -697,7 +697,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (saveBtn) {
         saveBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('💾 Save button clicked');
+            console.log('Save button clicked');
             
             var first_name = firstNameInput ? firstNameInput.value.trim() : '';
             var last_name = lastNameInput ? lastNameInput.value.trim() : '';
@@ -759,7 +759,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(function(err) {
                 saveBtn.disabled = false;
                 saveBtn.textContent = 'Save Changes';
-                console.error('❌ Network error saving profile:', err);
+                console.error('Network error saving profile:', err);
                 showError('Network error. Please try again.');
             });
         });
@@ -790,7 +790,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(function(err) { 
-                console.error('❌ Error fetching inventory:', err);
+                console.error('Error fetching inventory:', err);
                 showToast('Could not load skins', 'error');
             });
         
@@ -914,5 +914,5 @@ document.addEventListener('DOMContentLoaded', function() {
     window.equipSkin = equipSkin;
     window.filterClosetItems = filterClosetItems;
 
-    console.log('✅ Profile.js initialized successfully!');
+    console.log('Profile.js initialized successfully!');
 });

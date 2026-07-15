@@ -1,5 +1,5 @@
 /* =========================================================
-   HOME.JS - Home page functionality (Complete)
+   HOME.JS
    ========================================================= */
 
 // Wait for DOM to be ready
@@ -225,16 +225,6 @@ function initHome() {
 
   // ============================================
   // CHECK LOGIN STATUS
-  // ------------------------------------------------
-  // IMPORTANT: These are the SOURCE OF TRUTH functions.
-  // They must NOT call window.isUserLoggedIn / window.getCurrentUser
-  // internally, because at the bottom of this file we do:
-  //     window.isUserLoggedIn = isUserLoggedIn;
-  //     window.getCurrentUser = getCurrentUser;
-  // If the functions delegated to window.* "when available",
-  // then after that assignment window.isUserLoggedIn IS this
-  // same function, and calling it would call itself forever
-  // (RangeError: Maximum call stack size exceeded).
   // ============================================
   function isUserLoggedIn() {
     try {
@@ -404,13 +394,12 @@ function initHome() {
 
   // ============================================
   // SHOW LANGUAGE SELECTION MODAL (User mode)
-  // 3 columns x 2 rows of language image buttons
   // ============================================
   function showLanguageSelectionModal() {
     console.log('Showing language selection modal');
     var grid = document.getElementById('languageGridModal');
     if (!grid) {
-      console.error('❌ languageGridModal not found!');
+      console.error('languageGridModal not found!');
       return;
     }
     
@@ -454,8 +443,7 @@ function initHome() {
           localStorage.setItem('selectedLanguage', langKey);
         } catch(e) {}
 
-        // Language pages live at the site root (e.g. spanish.html),
-        // not under a "language/" folder.
+        // Language pages live at the site root ,
         window.location.href = lang.path + '.html';
       });
     });
@@ -494,7 +482,7 @@ function initHome() {
   }
 
   // ============================================
-  // "START YOUR ADVENTURE!" BUTTON
+  // START YOUR ADVENTURE BUTTON
   // ============================================
   var meetBtn = document.getElementById('meetCattoBtn');
   if (meetBtn) {
@@ -560,7 +548,7 @@ function initHome() {
   }
 
   // ============================================
-  // CHECK IF USER JUST SIGNED IN - NO AUTO MODAL
+  // CHECK IF USER JUST SIGNED IN
   // ============================================
   var justSignedIn = sessionStorage.getItem('justSignedIn');
   if (justSignedIn === 'true') {

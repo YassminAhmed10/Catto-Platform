@@ -1,8 +1,8 @@
 /* =========================================================
-   HEADER.JS - 100% DB-Driven Authentication & Global State
+   HEADER.JS 
    ========================================================= */
 
-// 1. Global state for ALL pages to use
+//Global state for ALL pages to use
 window.userLogStatus = false;
 window.currentUserData = null;
 window.currentEquippedSkin = 'default-catto';
@@ -35,7 +35,7 @@ function initHeader() {
   // Auto-highlight active nav button
   highlightActiveNav();
   
-  // Try to get user data from localStorage first (fast)
+  // Try to get user data from localStorage first
   try {
     var cachedUser = localStorage.getItem('languageIslandUser');
     if (cachedUser && cachedUser !== 'null' && cachedUser !== '') {
@@ -61,7 +61,6 @@ function initHeader() {
     }
   } catch(e) {}
   
-  // Use absolute path from root
   var apiUrl = '../Backend/check_session.php';
   console.log('Header: Fetching from:', apiUrl);
   
@@ -76,7 +75,7 @@ function initHeader() {
     if (!res.ok) {
       throw new Error('Network response was not ok: ' + res.status);
     }
-    return res.text(); // Use text first to see what's returned
+    return res.text();
   })
   .then(function(text) {
     console.log('Header: Raw response:', text.substring(0, 200));
@@ -87,7 +86,7 @@ function initHeader() {
     } catch(e) {
       console.error('Header: Failed to parse JSON:', e);
       console.log('Header: Raw HTML response:', text);
-      // If we can't parse JSON, use cached data
+      // If we can't parse JSON use cached data
       if (!window.userLogStatus) {
         showLoggedOutUI();
       }

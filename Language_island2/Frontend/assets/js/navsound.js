@@ -200,6 +200,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  console.log('🧭 Navigation sounds loaded!');
-  console.log('📍 Current page:', currentPage);
+  console.log('Navigation sounds loaded!');
+  console.log('Current page:', currentPage);
 });

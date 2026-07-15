@@ -1,11 +1,11 @@
 /* =========================================================
-   LISTENING.JS - Complete Listening Page (Fixed Star Award)
+   LISTENING.JS
    ========================================================= */
 
-console.log('🎧 Listening.js loading...');
+console.log('Listening.js loading...');
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ DOM ready for Listening page');
+    console.log('DOM ready for Listening page');
 
     // =========================================================
     // LANGUAGE DATA
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch(e) {
             starsAwardedLanguages = [];
         }
-        console.log('📂 Loaded starsAwardedLanguages:', starsAwardedLanguages);
+        console.log('Loaded starsAwardedLanguages:', starsAwardedLanguages);
     }
 
     function markStarsAwarded(langKey) {
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 localStorage.setItem('starsAwardedLanguages', JSON.stringify(starsAwardedLanguages));
             } catch(e) {}
-            console.log('✅ Marked stars awarded for:', langKey);
+            console.log('Marked stars awarded for:', langKey);
         }
     }
 
@@ -276,14 +276,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // UPDATE HEADER STARS
     // =========================================================
     function updateHeaderStars(totalStars) {
-        console.log('⭐ Updating header stars to:', totalStars);
+        console.log('Updating header stars to:', totalStars);
         
         var headerStars = document.getElementById('headerStars');
         var starsPill = document.querySelector('.stars-display');
         
         if (headerStars) {
             headerStars.textContent = totalStars || 0;
-            console.log('✅ Header stars updated to:', headerStars.textContent);
+            console.log('Header stars updated to:', headerStars.textContent);
         }
         if (starsPill) {
             starsPill.style.display = 'flex';
@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // SHOW STAR EARNED MODAL
     // =========================================================
     function showStarEarnedModal(stars, totalStars) {
-        console.log('🎉 Showing star earned modal - Stars:', stars, 'Total:', totalStars);
+        console.log('Showing star earned modal - Stars:', stars, 'Total:', totalStars);
         
         var existingModal = document.getElementById('starEarnedModal');
         if (existingModal) existingModal.remove();
@@ -380,18 +380,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // COMPLETE LISTENING - EARN 5 STARS (FORCE RE-AWARD)
     // =========================================================
     function earnStarsForListening(langKey) {
-        console.log('🌟 earnStarsForListening called for:', langKey);
-        console.log('📊 starsAwardedLanguages:', starsAwardedLanguages);
+        console.log('earnStarsForListening called for:', langKey);
+        console.log('starsAwardedLanguages:', starsAwardedLanguages);
         
         // Get current stars from header
         var headerStars = document.getElementById('headerStars');
         var currentStars = parseInt(headerStars ? headerStars.textContent : 0);
-        console.log('📊 Current total stars:', currentStars);
+        console.log('Current total stars:', currentStars);
         
         // Force re-award if marked but not actually awarded (stars are 0)
         var isMarked = starsAwardedLanguages.indexOf(langKey) !== -1;
         if (isMarked && currentStars < 5) {
-            console.log('⚠️ Stars marked but not awarded (stars=0). Re-awarding...');
+            console.log('Stars marked but not awarded (stars=0). Re-awarding...');
             // Remove from awarded list to re-award
             starsAwardedLanguages = starsAwardedLanguages.filter(function(l) { return l !== langKey; });
             try {
@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Check if already awarded
         if (starsAwardedLanguages.indexOf(langKey) !== -1) {
-            console.log('⭐ Stars already awarded for:', langKey);
+            console.log('Stars already awarded for:', langKey);
             // Still show the modal if it was already awarded but user completed again
             setTimeout(function() {
                 showStarEarnedModal(0, currentStars);
@@ -410,7 +410,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         var newTotal = currentStars + 5;
-        console.log('📊 New total:', newTotal);
+        console.log('New total:', newTotal);
         
         // Update header stars immediately
         updateHeaderStars(newTotal);
@@ -426,11 +426,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Also try to save to database via Activity system
         if (typeof Activity !== 'undefined' && Activity.completeActivity) {
             var activityId = 'listening_' + langKey + '_' + Date.now();
-            console.log('📤 Sending to Activity system:', activityId);
+            console.log('Sending to Activity system:', activityId);
             
             Activity.completeActivity('listening', activityId, 5)
                 .then(function(data) {
-                    console.log('📥 Activity response:', data);
+                    console.log('Activity response:', data);
                     if (data.success && data.total_stars) {
                         if (data.total_stars !== newTotal) {
                             updateHeaderStars(data.total_stars);
@@ -441,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.error('Error saving activity:', err);
                 });
         } else {
-            console.warn('⚠️ Activity system not available, stars saved locally only');
+            console.warn('Activity system not available, stars saved locally only');
         }
     }
 
@@ -744,7 +744,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     speakText(wordTextValue, lang.speechLang, function() {
                         if (listenedWords.indexOf(wordId) === -1) {
                             listenedWords.push(wordId);
-                            console.log('📝 Listened to:', wordId);
+                            console.log('Listened to:', wordId);
                         }
 
                         var wordCard = playBtnEl.closest('.word-card');
@@ -762,19 +762,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         playBtnEl.disabled = false;
 
                         if (areAllWordsListened(langKey, letter)) {
-                            console.log('✅ Letter completed:', letter);
+                            console.log('Letter completed:', letter);
                             
                             if (areAllLettersCompleted(langKey)) {
-                                console.log('🎉 ALL LETTERS COMPLETED for language:', langKey);
+                                console.log('ALL LETTERS COMPLETED for language:', langKey);
                                 
                                 if (starsAwardedLanguages.indexOf(langKey) === -1) {
-                                    console.log('🌟 Awarding stars for:', langKey);
+                                    console.log('Awarding stars for:', langKey);
                                     setTimeout(function() {
                                         earnStarsForListening(langKey);
                                     }, 2000);
                                     showToast('You completed all listening activities!');
                                 } else {
-                                    console.log('⏭️ Stars already awarded for:', langKey, 'but showing modal anyway');
+                                    console.log('Stars already awarded for:', langKey, 'but showing modal anyway');
                                     // Show modal even if already awarded (for replay)
                                     setTimeout(function() {
                                         var headerStars = document.getElementById('headerStars');
@@ -1055,5 +1055,5 @@ document.addEventListener('DOMContentLoaded', function() {
         renderLanguageSelection();
     });
 
-    console.log('🎧 Listening.js loaded successfully!');
+    console.log('Listening.js loaded successfully!');
 });

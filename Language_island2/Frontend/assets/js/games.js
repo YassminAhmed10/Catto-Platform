@@ -125,7 +125,7 @@ function pic(src, label, extraClass){
 }
 
 
-  // PROGRESS STORAGE 
+// PROGRESS STORAGE 
 // Cache for game progress data
 let progressCache = null;
 let userTotalsCache = { star_shells: 0, total_stars: 0 };
@@ -209,9 +209,7 @@ function updateHeaderDisplays(starShells, totalStars) {
     if (starsPill) starsPill.style.display = 'flex';
 }
 
-/* =========================================================
-   4) MODAL CONTROLS
-   ========================================================= */
+//  MODAL CONTROLS
 function openLoginModal() {
   var modal = document.getElementById('loginRequiredModal');
   if (modal) {
@@ -236,9 +234,8 @@ function closeAllModals() {
   document.body.style.overflow = '';
 }
 
-/* =========================================================
-   5) STATE
-   ========================================================= */
+// STATE
+
 const state = { lang:null, game:null };
 const app = document.getElementById("app");
 const cattoBubble = document.getElementById("cattoBubble");
@@ -273,9 +270,8 @@ function shuffle(arr){
 
 
 
-// =========================================================
+
 // UPDATE CATTO SKIN ON GAMES PAGE
-// =========================================================
 function updateCattoSkin() {
   const cattoImg = document.getElementById('cattoImg');
   if (!cattoImg) return;
@@ -308,7 +304,7 @@ setTimeout(updateCattoSkin, 300);
 // Listen for skin changes
 document.addEventListener('skinChanged', updateCattoSkin);
 
-// Also update when renderHome is called
+// update when renderHome is called
 const originalRenderHome = window.renderHome;
 window.renderHome = function() {
   if (typeof originalRenderHome === 'function') {

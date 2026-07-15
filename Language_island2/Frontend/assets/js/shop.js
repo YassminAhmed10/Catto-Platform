@@ -1,5 +1,5 @@
 /* =========================================================
-   SHOP.JS - DB-Driven Shop Logic (Buy & Equip & Sort)
+   SHOP.JS - Buy & Equip & Sort
    ========================================================= */
 
 console.log('Shop.js loaded!');
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let isLoggedIn = false;
 
   // =========================================================
-  // SHOP ITEMS - Replace image paths with your actual images
+  // SHOP ITEMS
   // =========================================================
   const shopItems = {
     skins: [
@@ -65,9 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('shopGrid exists:', !!shopGrid);
   console.log('Tab buttons found:', tabButtons.length);
 
-  // =========================================================
-  // Deep-link support: ?category=themes coming from Settings page
-  // =========================================================
   function applyCategoryFromUrl() {
     var params = new URLSearchParams(window.location.search);
     var cat = params.get('category');
@@ -262,17 +259,13 @@ document.addEventListener('DOMContentLoaded', () => {
     card.dataset.itemId = item.id;
     card.dataset.owned = isOwned ? 'true' : 'false';
 
-    // Image HTML - For themes, show a color swatch instead of image
     let imageHtml = '';
     if (item.isTheme) {
-      // Themes - show as CSS circle with gradient
       const swatchClass = item.swatchClass || 'swatch-default';
       imageHtml = `<div class="theme-swatch-shop ${swatchClass}"></div>`;
     } else if (item.image && item.image.length > 0) {
-      // Regular items - show image
       imageHtml = `<img src="${item.image}" alt="${item.name}" class="card-image shop-item-img" loading="lazy">`;
     } else {
-      // Fallback placeholder
       imageHtml = `<div class="card-image-placeholder">🪙</div>`;
     }
 
@@ -483,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(err => {
       console.error('Error equipping:', err);
-      showToast('❌ Network error. Please try again.');
+      showToast('Network error. Please try again.');
     });
   }
 

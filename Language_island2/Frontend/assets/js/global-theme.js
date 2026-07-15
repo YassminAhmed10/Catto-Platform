@@ -26,7 +26,7 @@
       document.body.classList.remove(cls);
     });
 
-    // If theme is 'default', we just remove all classes (no class added)
+    // If theme is default remove all classes (no class added)
     var cls = THEME_CLASS_MAP[theme];
     if (cls) {
       document.body.classList.add(cls);
@@ -42,7 +42,7 @@
   }
 
   // ============================================
-  // INJECT / REMOVE FLOATING PLANETS & NEBULA FOR SPACE THEME
+  // ADD AND REMOVE FLOATING PLANETS & NEBULA FOR SPACE THEME
   // ============================================
   function toggleSpaceDecor(show) {
     var sky = document.querySelector('.sky');
@@ -68,7 +68,7 @@
   }
 
   // ============================================
-  // INJECT / REMOVE SHOOTING STAR FOR NIGHT THEME
+  // ADD AND REMOVE SHOOTING STAR FOR NIGHT THEME
   // ============================================
   function toggleNightDecor(show) {
     var sky = document.querySelector('.sky');
@@ -85,7 +85,7 @@
   }
 
   // ============================================
-  // INJECT / REMOVE FLOWER FOR PURPLE THEME
+  // ADD AND REMOVE FLOWER FOR PURPLE THEME
   // ============================================
   function togglePurpleDecor(show) {
     var sky = document.querySelector('.sky');
@@ -133,7 +133,7 @@
   }
 
   // ============================================
-  // INJECT / REMOVE GREEN PARTICLES FOR BOYS THEME
+  // ADD AND REMOVE GREEN PARTICLES FOR BOYS THEME
   // ============================================
   function toggleBoysDecor(show) {
     var sky = document.querySelector('.sky');
@@ -158,7 +158,7 @@
   }
 
   // ============================================
-  // THEME MANAGEMENT - Use header.js data
+  // THEME MANAGEMENT Use header.js data
   // ============================================
   function applyThemeFromHeader() {
     if (typeof window.getCurrentTheme === 'function') {
@@ -170,7 +170,7 @@
   }
 
   // ============================================
-  // LOAD SAVED SKIN (from header.js)
+  // LOAD SAVED SKIN 
   // ============================================
   function applySkinFromHeader() {
     if (typeof window.getCurrentSkin === 'function') {
@@ -187,8 +187,8 @@
   }
 
   // ============================================
-// INJECT / REMOVE GREEN WAVES & PARTICLES FOR BOYS THEME
-// ============================================
+  // ADD AND REMOVE GREEN WAVES & PARTICLES FOR BOYS THEME
+  // ============================================
 function toggleBoysDecor(show) {
   var sky = document.querySelector('.sky');
   if (!sky) return;
@@ -212,7 +212,7 @@ function toggleBoysDecor(show) {
     
     sky.appendChild(waveContainer);
 
-    // Add floating particles (fireflies)
+    // Add fireflies
     for (var i = 1; i <= 20; i++) {
       var particle = document.createElement('div');
       particle.className = 'green-particle';
