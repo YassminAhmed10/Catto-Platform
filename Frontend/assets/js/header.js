@@ -62,7 +62,7 @@ function initHeader() {
   } catch(e) {}
   
   // Use absolute path from root
-  var apiUrl = '/Catto_Platform/Language_island2/Backend/check_session.php';
+  var apiUrl = '../Backend/check_session.php';
   console.log('Header: Fetching from:', apiUrl);
   
   fetch(apiUrl, {
@@ -187,7 +187,7 @@ function highlightActiveNav() {
     var btnPage = btn.getAttribute('href');
     if (btnPage === currentPage) {
       btn.classList.add('active');
-      console.log('✅ Active nav set for:', btnPage);
+      console.log('Active nav set for:', btnPage);
     }
   });
 }
@@ -297,7 +297,7 @@ function setupSidebar() {
   if (logoutBtn) {
     logoutBtn.addEventListener('click', function(e) {
       e.preventDefault();
-      var logoutUrl = '/Catto_Platform/Language_island2/Backend/logout.php';
+      var logoutUrl = '../Backend/logout.php';
       fetch(logoutUrl, { method: 'POST', credentials: 'include' })
         .then(function() {
           try { localStorage.removeItem('languageIslandUser'); } catch(e) {}
@@ -314,4 +314,4 @@ function setupSidebar() {
 window.updateAllAvatars = updateAllAvatars;
 window.applyTheme = applyTheme;
 
-console.log('✅ Header.js loaded successfully!');
+console.log('Header.js loaded successfully!');
