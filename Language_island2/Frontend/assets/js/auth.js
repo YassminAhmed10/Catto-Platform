@@ -29,7 +29,7 @@ const Auth = {
           this._isLoggedIn = true;
           this.updateUI();
           // Update header displays with server data
-          this.updateHeaderDisplays(data.user.star_shells || 0, data.user.total_stars || 0);
+          this.updateHeaderDisplays(data.user.coins || 0, data.user.total_stars || 0);
         } else if (this._isLoggedIn) {
           console.warn('Session expired or invalid on the server — logging out locally.');
           this.clearSession();
@@ -49,7 +49,7 @@ const Auth = {
         this._currentUser = user;
         this._isLoggedIn = true;
         // Update header displays from cached user data
-        this.updateHeaderDisplays(user.star_shells || 0, user.total_stars || 0);
+        this.updateHeaderDisplays(user.coins || 0, user.total_stars || 0);
         return true;
       } catch (e) {
         this.clearSession();

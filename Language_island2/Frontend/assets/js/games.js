@@ -128,7 +128,7 @@ function pic(src, label, extraClass){
 // PROGRESS STORAGE 
 // Cache for game progress data
 let progressCache = null;
-let userTotalsCache = { star_shells: 0, total_stars: 0 };
+let userTotalsCache = { coins: 0, total_stars: 0 };
 
 // Save game progress to the backend (COINS ONLY)
 function saveGameProgress(language, gameType, coinsEarned, score, won) {
@@ -155,9 +155,9 @@ function saveGameProgress(language, gameType, coinsEarned, score, won) {
     .then(data => {
         console.log('Save response:', data);
         if (data.success) {
-            userTotalsCache.star_shells = data.star_shells;
+            userTotalsCache.coins = data.coins;
             userTotalsCache.total_stars = data.total_stars;
-            updateHeaderDisplays(data.star_shells, data.total_stars);
+            updateHeaderDisplays(data.coins, data.total_stars);
             return data;
         } else {
             console.warn('Failed to save progress:', data.message);
@@ -182,10 +182,10 @@ function fetchGameProgress(language) {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            userTotalsCache.star_shells = data.star_shells;
+            userTotalsCache.coins = data.coins;
             userTotalsCache.total_stars = data.total_stars;
             progressCache = data.progress;
-            updateHeaderDisplays(data.star_shells, data.total_stars);
+            updateHeaderDisplays(data.coins, data.total_stars);
             return data;
         }
         return null;
@@ -524,7 +524,7 @@ function flipMemoryCard(i){
       speak(c1.word.text, WORD_BANK[state.lang].speechLang);
       renderMemoryGame();
       if(memory.matched===WORD_BANK[state.lang].words.length){
-        // COINS ONLY: 10 coins
+        // 10 coins
         const coinsEarned = 10;
         saveGameProgress(state.lang, 'memory', coinsEarned, memory.matched, true)
           .then(() => {

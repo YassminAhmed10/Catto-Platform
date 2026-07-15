@@ -57,29 +57,30 @@ if (!in_array($game_type, $valid_games)) {
 mysqli_begin_transaction($connection);
 
 try {
-    // 1. Update or insert game progress (NO stars tracking)
+    // 1. Update or insert game progress 
     $stmt = $connection->prepare("
-        INSERT INTO game_progress (user_id, language_code, game_type, games_played, games_won, total_score, high_score)
+        INSERT INTO game_progress (user_id, language_code, game_type, games_played, games_won, total_score, stars_earned)
         VALUES (?, ?, ?, 1, ?, ?, ?)
         ON DUPLICATE KEY UPDATE
             games_played = games_played + 1,
             games_won = games_won + ?,
             total_score = total_score + ?,
-            high_score = GREATEST(high_score, ?),
+            stars_earned = stars_earned + ?,
             last_played = CURRENT_TIMESTAMP
     ");
     
     $games_won = $won ? 1 : 0;
+
     $stmt->bind_param("issiiiiii", 
         $user_id, 
         $language, 
         $game_type,
         $games_won,
         $score,
-        $score, // high_score initial value
+        $score, // Initial stars_earned gets the score
         $games_won,
         $score,
-        $score
+        $score // Add score to existing stars_earned
     );
     
     if (!$stmt->execute()) {
@@ -87,13 +88,15 @@ try {
     }
     $stmt->close();
 
-    // 2. Update user's star_shells (coins) ONLY - NO stars
+    // 2. Update user's coins and total_stars
     $stmt = $connection->prepare("
         UPDATE users 
-        SET star_shells = star_shells + ?
+        SET coins = coins + ?,
+            total_stars = total_stars + ?
         WHERE id = ?
     ");
-    $stmt->bind_param("ii", $coins_earned, $user_id);
+
+    $stmt->bind_param("iii", $coins_earned, $score, $user_id);
     
     if (!$stmt->execute()) {
         throw new Exception("Failed to update user coins: " . $stmt->error);
@@ -101,7 +104,7 @@ try {
     $stmt->close();
 
     // 3. Get updated totals
-    $stmt = $connection->prepare("SELECT star_shells, total_stars FROM users WHERE id = ?");
+    $stmt = $connection->prepare("SELECT coins, total_stars FROM users WHERE id = ?");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $result = $stmt->get_result()->fetch_assoc();
@@ -112,9 +115,10 @@ try {
     echo json_encode([
         'success' => true,
         'message' => 'Progress saved successfully',
-        'star_shells' => (int) $result['star_shells'],
+        'coins' => (int) $result['coins'],
         'total_stars' => (int) $result['total_stars'],
-        'coins_earned' => $coins_earned
+        'coins_earned' => $coins_earned,
+        'stars_earned' => $score 
     ]);
 
 } catch (Exception $e) {

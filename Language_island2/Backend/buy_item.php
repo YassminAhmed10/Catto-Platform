@@ -60,7 +60,7 @@ try {
     }
 
     // 3. Check user balance
-    $stmt = $connection->prepare("SELECT star_shells FROM users WHERE id = ? FOR UPDATE");
+    $stmt = $connection->prepare("SELECT coins FROM users WHERE id = ? FOR UPDATE");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $user = $stmt->get_result()->fetch_assoc();
@@ -70,12 +70,12 @@ try {
         throw new Exception("User not found");
     }
 
-    if ((int) $user['star_shells'] < $price) {
+    if ((int) $user['coins'] < $price) {
         throw new Exception("Insufficient coins");
     }
 
     // 4. Deduct coins
-    $stmt = $connection->prepare("UPDATE users SET star_shells = star_shells - ? WHERE id = ?");
+    $stmt = $connection->prepare("UPDATE users SET coins = coins - ? WHERE id = ?");
     $stmt->bind_param("ii", $price, $user_id);
     $stmt->execute();
     $stmt->close();
@@ -89,16 +89,16 @@ try {
     mysqli_commit($connection);
 
     // Get new balance
-    $stmt = $connection->prepare("SELECT star_shells FROM users WHERE id = ?");
+    $stmt = $connection->prepare("SELECT coins FROM users WHERE id = ?");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
-    $newBalance = $stmt->get_result()->fetch_assoc()['star_shells'];
+    $newBalance = $stmt->get_result()->fetch_assoc()['coins'];
     $stmt->close();
 
     echo json_encode([
         'success' => true,
         'item_name' => $item_name,
-        'star_shells' => (int) $newBalance
+        'coins' => (int) $newBalance
     ]);
 
 } catch (Exception $e) {

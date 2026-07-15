@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
         equipped_skin: 'default-catto',
         equipped_theme: 'default',
         id: 0,
-        star_shells: 0,
+        coins: 0,
         total_stars: 0,
         daily_streak: 0,
         inventory: []
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     current.equipped_skin = d.equipped_skin || 'default-catto';
                     current.equipped_theme = d.equipped_theme || 'default';
                     current.id = d.id || 0;
-                    current.star_shells = d.star_shells || 0;
+                    current.coins = d.coins || 0;
                     current.total_stars = d.total_stars || 0;
                     current.daily_streak = d.daily_streak || 0;
                     current.inventory = d.inventory_details || [];
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================================================
     function updateStats(d) {
         var statCoins = document.getElementById('statCoins');
-        if (statCoins) statCoins.textContent = d.star_shells || 0;
+        if (statCoins) statCoins.textContent = d.coins || 0;
 
         var statLevel = document.getElementById('statLevel');
         if (statLevel) statLevel.textContent = d.level || 1;

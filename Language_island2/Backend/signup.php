@@ -69,7 +69,7 @@ if (mysqli_query($connection, $insertQuery)) {
         'success' => true, 
         'message' => 'Account created!',
         'user_id' => $userId,
-        'star_shells' => 0
+        'coins' => 0
     ]);
 } else {
     echo json_encode(['success' => false, 'message' => 'Database error: ' . mysqli_error($connection)]);

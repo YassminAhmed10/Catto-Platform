@@ -24,7 +24,7 @@ $email = mysqli_real_escape_string($connection, trim($data['email']));
 $password = $data['password'];
 
 // Get user with ALL fields including equipped_skin
-$query = "SELECT id, first_name, last_name, email, dob, gender, password_hash, star_shells, total_stars, daily_streak, equipped_skin, created_at FROM users WHERE email = '$email'";
+$query = "SELECT id, first_name, last_name, email, dob, gender, password_hash, coins, total_stars, daily_streak, equipped_skin, created_at FROM users WHERE email = '$email'";
 $result = mysqli_query($connection, $query);
 
 if ($result && mysqli_num_rows($result) > 0) {
@@ -45,7 +45,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                 'email' => $user['email'],
                 'dob' => $user['dob'],
                 'gender' => $user['gender'],
-                'star_shells' => $user['star_shells'],
+                'coins' => $user['coins'],
                 'total_stars' => $user['total_stars'],
                 'daily_streak' => $user['daily_streak'],
                 'equipped_skin' => $user['equipped_skin'] ?? 'default-catto',

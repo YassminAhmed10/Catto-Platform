@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         isLoggedIn = true;
-        currentCoins = data.data.star_shells || 0;
+        currentCoins = data.data.coins || 0;
         purchasedItems = data.data.inventory || [];
         currentSkin = data.data.equipped_skin || 'default-catto';
         currentTheme = data.data.equipped_theme || 'default';

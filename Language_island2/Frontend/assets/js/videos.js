@@ -421,13 +421,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function earnStarsForVideo(videoId, videoTitle) {
     console.log('earnStarsForVideo called for:', videoId, 'Title:', videoTitle);
 
-    if (isVideoAwarded(videoId)) {
-      console.log('Stars already awarded for video:', videoId);
-      return;
-    }
-
-    // Mark as awarded immediately to prevent double calls
-    markVideoAwarded(videoId);
+    // We removed the 'isVideoAwarded' block so you can earn stars infinitely!
 
     var activityId = 'video_' + videoId + '_' + Date.now();
 
@@ -465,6 +459,12 @@ document.addEventListener('DOMContentLoaded', function() {
       var videoId = currentPlayingVideo.videoId;
       var videoTitle = currentPlayingVideo.videoTitle;
 
+      // 1. ALWAYS trigger the reward delay after the video completes
+      setTimeout(function() {
+        earnStarsForVideo(videoId, videoTitle);
+      }, 2000);
+
+      // 2. Only update the UI once per session so it doesn't try to restyle a styled card
       if (watchedVideos.indexOf(videoId) === -1) {
         watchedVideos.push(videoId);
         console.log('Marked as watched (on close):', videoId);
@@ -485,11 +485,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         showToast('You completed this video!');
-
-        // SINGLE DELAY: 2 seconds after the modal is closed
-        setTimeout(function() {
-          earnStarsForVideo(videoId, videoTitle);
-        }, 2000);
+      } else {
+        // Let the user know they finished a re-watch!
+        showToast('Great job watching this again!');
       }
     }
 
@@ -590,12 +588,17 @@ document.addEventListener('DOMContentLoaded', function() {
     grid.innerHTML = html;
 
     grid.querySelectorAll('.lang-video-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
         var langKey = this.dataset.lang;
         if (typeof Sound !== 'undefined') Sound.pop();
 
         if (isLoggedIn()) {
-          showCategoriesForLanguage(langKey);
+          setTimeout(function() {
+            showCategoriesForLanguage(langKey);
+          }, 150);
         } else {
           sessionStorage.setItem('pendingVideoLang', langKey);
           openLoginModal();
@@ -649,6 +652,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var grid = document.getElementById('categoriesGrid');
     if (!grid) return;
     grid.innerHTML = '';
+
+    grid.style.pointerEvents = 'none';
+    setTimeout(function() {
+      grid.style.pointerEvents = 'auto';
+    }, 350);
 
     if (!data.categories || data.categories.length === 0) {
       grid.innerHTML = `
@@ -725,10 +733,17 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
       }
 
-      card.addEventListener('click', function() {
+      card.addEventListener('click', function(e) {
+        e.preventDefault(); 
+        e.stopPropagation();
+        
         if (typeof Sound !== 'undefined') Sound.pop();
-        showVideosForCategory(langKey, categoryKey);
+        
+        setTimeout(function() {
+          showVideosForCategory(langKey, categoryKey);
+        }, 150);
       });
+
       grid.appendChild(card);
     });
 
@@ -763,6 +778,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var grid = document.getElementById('videoGrid');
     if (!grid) return;
     grid.innerHTML = '';
+
+    grid.style.pointerEvents = 'none';
+    setTimeout(function() {
+      grid.style.pointerEvents = 'auto';
+    }, 350);
 
     if (!videos || videos.length === 0) {
       grid.innerHTML = `
@@ -848,6 +868,9 @@ document.addEventListener('DOMContentLoaded', function() {
       `;
 
       card.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
         if (e.target.closest('.watch-btn')) return;
 
         if (isLocked) {
@@ -855,7 +878,10 @@ document.addEventListener('DOMContentLoaded', function() {
           showToast('This video is coming soon!');
         } else {
           if (typeof Sound !== 'undefined') Sound.pop();
-          playVideo(langKey, categoryKey, videoTitle);
+          
+          setTimeout(function() {
+            playVideo(langKey, categoryKey, videoTitle);
+          }, 150);
         }
       });
 

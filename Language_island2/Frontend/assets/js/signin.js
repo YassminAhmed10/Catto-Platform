@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.disabled = false;
         
         if (data.success) {
-          localStorage.setItem('starShells', data.user.star_shells);
+          localStorage.setItem('starShells', data.user.coins);
           localStorage.setItem('languageIslandUser', JSON.stringify(data.user));
           
           sessionStorage.setItem('justSignedIn', 'true');

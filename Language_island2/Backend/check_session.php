@@ -30,7 +30,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = (int) $_SESSION['user_id'];
 
 // Get ALL user data including equipped_theme
-$stmt = $connection->prepare("SELECT id, first_name, last_name, email, dob, gender, star_shells, total_stars, daily_streak, equipped_skin, equipped_theme, created_at FROM users WHERE id = ?");
+$stmt = $connection->prepare("SELECT id, first_name, last_name, email, dob, gender, coins, total_stars, daily_streak, equipped_skin, equipped_theme, created_at FROM users WHERE id = ?");
 if (!$stmt) {
     echo json_encode(['error' => 'Prepare failed: ' . $connection->error]);
     exit();
@@ -56,7 +56,7 @@ echo json_encode([
         'email' => $user['email'],
         'dob' => $user['dob'],
         'gender' => $user['gender'],
-        'star_shells' => (int) $user['star_shells'],
+        'coins' => (int) $user['coins'],
         'total_stars' => (int) $user['total_stars'],
         'daily_streak' => (int) $user['daily_streak'],
         'equipped_skin' => $user['equipped_skin'] ?? 'default-catto',

@@ -23,7 +23,7 @@ if ($language) {
 }
 
 // Build query - get all game progress
-$query = "SELECT language_code, game_type, games_played, games_won, total_score, stars_earned, high_score, last_played 
+$query = "SELECT language_code, game_type, games_played, games_won, total_score, stars_earned, last_played 
           FROM game_progress 
           WHERE user_id = ?";
 $params = [$user_id];
@@ -52,14 +52,13 @@ while ($row = $result->fetch_assoc()) {
         'games_won' => (int) $row['games_won'],
         'total_score' => (int) $row['total_score'],
         'stars_earned' => (int) $row['stars_earned'],
-        'high_score' => (int) $row['high_score'],
         'last_played' => $row['last_played']
     ];
 }
 $stmt->close();
 
 // Get user totals
-$stmt = $connection->prepare("SELECT star_shells, total_stars FROM users WHERE id = ?");
+$stmt = $connection->prepare("SELECT coins, total_stars FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $user_result = $stmt->get_result()->fetch_assoc();
@@ -68,7 +67,7 @@ $stmt->close();
 echo json_encode([
     'success' => true,
     'progress' => $progress,
-    'star_shells' => (int) $user_result['star_shells'],
+    'coins' => (int) $user_result['coins'],
     'total_stars' => (int) $user_result['total_stars']
 ]);
 

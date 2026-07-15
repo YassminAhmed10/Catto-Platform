@@ -195,7 +195,7 @@ function updateHeaderUI(userDbData) {
   // 1. Balances
   var headerCoins = document.getElementById('headerCoins');
   var headerStars = document.getElementById('headerStars');
-  if (headerCoins) headerCoins.innerText = userDbData.star_shells || 0;
+  if (headerCoins) headerCoins.innerText = userDbData.coins || 0;
   if (headerStars) headerStars.innerText = userDbData.total_stars || 0;
 
   // 2. Sidebar Info
