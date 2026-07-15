@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
           
           sessionStorage.setItem('justSignedIn', 'true');
           
-          if (toastMessage) toastMessage.textContent = '🎉 Welcome back, ' + data.user.first_name + '!';
+          if (toastMessage) toastMessage.textContent = 'Welcome back, ' + data.user.first_name + '!';
           if (toast) {
             toast.className = 'toast show';
             toast.style.background = '#58C27D';

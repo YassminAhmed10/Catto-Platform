@@ -158,7 +158,7 @@
               email: emailVal
             }));
 
-            toastMessage.textContent = '🎉 Welcome to Language Island, ' + firstNameVal + '!';
+            toastMessage.textContent = 'Welcome to Language Island, ' + firstNameVal + '!';
             toast.classList.remove('error');
             toast.classList.add('show');
             if (typeof Sound !== 'undefined') Sound.win();

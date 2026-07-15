@@ -516,7 +516,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() {
           if (typeof window.isUserLoggedIn !== 'undefined' && window.isUserLoggedIn()) {
             openStudio(pendingLang);
-            showToast('👋 Welcome back! Let\'s create!');
+            showToast('Welcome back! Let\'s create!');
           }
         }, 500);
       } else {

@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var toast = document.getElementById('toast');
     if (toast) {
       var originalText = toast.textContent;
-      toast.textContent = '🔙 Welcome back!';
+      toast.textContent = 'Welcome back!';
       toast.style.background = '#6EC6FF';
       toast.classList.add('show');
       setTimeout(function() {
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {
       var toast = document.getElementById('toast');
       if (toast) {
-        toast.textContent = '🔙 Welcome back to Language Island!';
+        toast.textContent = 'Welcome back to Language Island!';
         toast.style.background = '#58C27D';
         toast.classList.add('show');
         setTimeout(function() {

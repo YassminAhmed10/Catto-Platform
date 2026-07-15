@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Purchase response:', response);
       if (response.success) {
         fetchShopData();
-        showToast(`✅ Purchased ${item.name}!`);
+        showToast(`Purchased ${item.name}!`);
       } else {
         showToast(`❌ ${response.message || 'Error.'}`);
       }
@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchShopData();
         if (typeof initHeader === 'function') initHeader();
         
-        showToast(`✅ Skin Equipped!`);
+        showToast(`Skin Equipped!`);
       } else {
         showToast(`❌ ${response.message || 'Error equipping.'}`);
       }

@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
     unlockedCount++;
     updateProgressText();
     burstConfetti(next);
-    showToast('🎉 New world unlocked: ' + next.dataset.lang + '!', true);
+    showToast('New world unlocked: ' + next.dataset.lang + '!', true);
   }
 
   function burstConfetti(anchorEl) {
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (activeWorld) {
         if (typeof Sound !== 'undefined') Sound.win();
         burstConfetti(activeWorld.querySelector('.stop-node'));
-        showToast('🚀 Off to ' + activeWorld.dataset.lang + ' world! Let\'s go!', true);
+        showToast('Off to ' + activeWorld.dataset.lang + ' world! Let\'s go!', true);
         unlockNextWorld();
       }
       closeModal();
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (first) {
         openModal(first);
       } else {
-        showToast('🌟 Start with Spanish! It\'s ready to go!');
+        showToast('Start with Spanish! It\'s ready to go!');
       }
     });
   }
@@ -299,6 +299,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Welcome message
   setTimeout(function() {
-    showToast('🌟 Welcome to Language Island! Click a level to start!', true);
+    showToast('Welcome to Language Island! Click a level to start!', true);
   }, 800);
 });

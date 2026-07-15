@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.classList.remove('playing');
       activeSpeeches[index] = null;
       Sound.win();
-      showToast('📖 Finished reading! Great job!', true);
+      showToast('Finished reading! Great job!', true);
       
       // Reset progress after a moment
       setTimeout(() => {
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
           btn.classList.remove('playing');
           activeSpeeches[index] = null;
           Sound.win();
-          showToast('📖 Finished reading! Great job!', true);
+          showToast('Finished reading! Great job!', true);
         };
         
         activeSpeeches[index] = {
@@ -333,6 +333,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Show welcome message
   setTimeout(() => {
-    showToast('📖 Click "Read to me" to start listening!', true);
+    showToast('Click "Read to me" to start listening!', true);
   }, 500);
 });

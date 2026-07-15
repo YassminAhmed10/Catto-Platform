@@ -549,7 +549,7 @@ class LanguageSelect {
       this.openLessonModal(level);
     } else if (index < progress.currentLevel) {
       Sound.pop();
-      this.showToast(`✅ Level ${level.id} already completed!`);
+      this.showToast(`Level ${level.id} already completed!`);
     } else {
       Sound.locked();
       this.showToast(`🔒 Complete Level ${progress.currentLevel + 1} first!`);
@@ -613,12 +613,12 @@ class LanguageSelect {
     
     if (levelProgress.lessonsCompleted && levelProgress.lessonsCompleted.includes(lesson.id)) {
       Sound.pop();
-      this.showToast(`✅ ${lesson.name} already completed!`);
+      this.showToast(`${lesson.name} already completed!`);
       return;
     }
     
     Sound.pop();
-    this.showToast(`📖 Starting ${lesson.name}...`);
+    this.showToast(`Starting ${lesson.name}...`);
     
     setTimeout(() => {
       this.completeLesson(level, lesson);
@@ -648,7 +648,7 @@ class LanguageSelect {
     if (allCompleted) {
       Sound.win();
       this.completeLevel(level.id);
-      this.showToast(`🎉 Level ${level.id} completed! Unlocking next level...`);
+      this.showToast(`Level ${level.id} completed! Unlocking next level...`);
       setTimeout(() => {
         this.closeLessonModal();
       }, 2000);
