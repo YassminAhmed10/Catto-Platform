@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (typeof window.isUserLoggedIn !== 'undefined' && window.isUserLoggedIn()) {
         var user = typeof window.getCurrentUser !== 'undefined' ? window.getCurrentUser() : null;
         var name = user ? user.name || 'Explorer' : 'Explorer';
-        msg.textContent = ' Welcome, ' + name + '! Pick a language to start creating!';
+        msg.textContent = '';
         msg.style.color = 'var(--grass)';
       } else {
         msg.textContent = '';

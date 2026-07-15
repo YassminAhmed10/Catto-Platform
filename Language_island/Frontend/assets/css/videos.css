@@ -10,12 +10,12 @@
 .page-hero h1 {
   font-family: var(--font-display);
   font-size: clamp(32px, 5vw, 48px);
-  color: var(--plum);
+  color: var(--sky-text);
   margin: 0 0 8px;
 }
 .page-hero p {
   font-size: 18px;
-  color: var(--plum-soft);
+  color: var(--sky-text-soft);
   font-weight: 700;
   margin: 0 0 6px;
 }

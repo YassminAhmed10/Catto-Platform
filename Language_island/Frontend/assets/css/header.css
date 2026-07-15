@@ -42,8 +42,8 @@
   height: 70px;
   min-width: 60px;
   border-radius: 9px;
-  overflow:
 }
+
 .brand-logo img {
   display: block;
   width: auto;
@@ -141,11 +141,11 @@
   box-shadow: 0 4px 0 rgba(46,38,87,0.1);
 }
 .coins-display {
-  background: linear-gradient(135deg, #FFF8EC, #FFEFD6);
+  background: linear-gradient(135deg, #FFF8EC, #FFEFD6) !important;
   border: 2px solid var(--star);
 }
 .stars-display {
-  background: linear-gradient(135deg, #FFF8EC, #FFEFD6);
+  background: linear-gradient(135deg, #FFF8EC, #FFEFD6) !important;
   border: 2px solid #FFD700;
 }
 .coins-display .progress-icon,
@@ -170,22 +170,22 @@
   position: relative;
   z-index: 5;
   width: 100%;
-  overflow-x: auto;        /* was: hidden — now scrolls instead of clipping */
-  scrollbar-width: none;   /* hide scrollbar on Firefox */
+  overflow-x: auto;        
+  scrollbar-width: none;  
 }
 .navbar::-webkit-scrollbar {
-  display: none;           /* hide scrollbar on Chrome/Edge/Safari */
+  display: none;           
 }
 
 .nav-btn {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 14px;         /* was 16px — slightly smaller so more fit */
+  font-size: 14px;      
   color: var(--plum);
   background: var(--white);
   border: none;
   border-radius: 999px;
-  padding: 22px 33px;      /* was 12px 24px — tighter padding */
+  padding: 22px 33px;     
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -198,7 +198,7 @@
   flex-shrink: 0;
 }
 /* =========================================================
-   SIDEBAR - FIXED WITH SAFETY LINES
+   SIDEBAR 
    ========================================================= */
 .sidebar-overlay {
   position: fixed;
@@ -216,7 +216,7 @@
 }
 
 /* =========================================================
-   SIDEBAR - FIXED WITH SAFETY LINES
+   SIDEBAR 
    ========================================================= */
 .sidebar {
   position: fixed;
@@ -238,7 +238,6 @@
   border-left: 3px solid rgba(255, 210, 63, 0.15);
   display: flex;
   flex-direction: column;
-  /* Remove any transform that might affect fixed positioning */
   transform: translateX(100%);
 }
 .sidebar.open {
@@ -276,7 +275,7 @@ main {
 }
 
 /* =========================================================
-   SIDEBAR PROFILE - FIXED AVATAR
+   SIDEBAR PROFILE 
    ========================================================= */
 .sidebar-profile {
   text-align: center;
@@ -341,9 +340,9 @@ main {
   white-space: nowrap;
 }
 
-* =========================================================
-   SIDEBAR - FIXED WITH SAFETY LINES
-   ========================================================= */
+  /* =========================================================
+   SIDEBAR 
+   =========================================================  */
 .sidebar-overlay {
   position: fixed;
   inset: 0;
@@ -360,7 +359,7 @@ main {
 }
 
 /* =========================================================
-   SIDEBAR - FIXED WITH SAFETY LINES
+   SIDEBAR 
    ========================================================= */
 .sidebar {
   position: fixed;
@@ -694,10 +693,6 @@ main {
   50% { opacity: 0.7; transform: scale(0.9); }
 }
 
-/* =========================================================
-   FAIL-SAFE: Sidebar avatar must always be 90x90 clipped
-   (Targets only #sidebarUserImage so other avatar styles remain unchanged)
-   ========================================================= */
 .sidebar-avatar-wrapper {
   width: 90px !important;
   height: 90px !important;

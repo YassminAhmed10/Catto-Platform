@@ -490,7 +490,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var loginMsg = document.getElementById('loginStatusMsg');
         if (loginMsg) {
             if (isLoggedInUser) {
-                loginMsg.textContent = 'Welcome, ' + userName + '! Pick a language to start listening.';
+                loginMsg.textContent = '';
                 loginMsg.style.color = '#2E2657';
             } else {
                 loginMsg.textContent = 'Sign in to unlock all listening activities.';

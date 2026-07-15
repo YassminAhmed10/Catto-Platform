@@ -109,7 +109,7 @@
   font-size: clamp(30px, 4.4vw, 48px);
   line-height: 1.1;
   margin: 0 0 16px;
-  color: var(--plum);
+  color: var(--sky-text);
 }
 
 .hero-text h1 .fa-globe-americas {
@@ -118,7 +118,7 @@
 
 .hero-text p {
   font-size: clamp(16px, 1.8vw, 19px);
-  color: var(--plum-soft);
+  color: var(--sky-text-soft);
   margin: 0 0 26px;
   font-weight: 700;
 }
@@ -507,14 +507,14 @@
   font-family: var(--font-display);
   text-align: center;
   font-size: clamp(28px, 3.5vw, 38px);
-  color: var(--plum);
+  color: var(--sky-text);
   margin: 0 0 8px;
 }
 
 .section-subtitle {
   text-align: center;
   font-size: 18px;
-  color: var(--plum-soft);
+  color: var(--sky-text-soft);
   font-weight: 700;
   margin: 0 0 30px;
 }

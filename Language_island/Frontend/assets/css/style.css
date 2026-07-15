@@ -13,6 +13,13 @@
   --plum-soft: #5A5184;
   --white: #FFFFFF;
   --star: #FFD23F;
+  /* Text color used ONLY for headings/paragraphs that sit directly on the
+     animated .sky background (hero + section titles). Defaults to the same
+     dark text as everything else, so the default theme is unaffected. Dark
+     themes override this to a light color so text stays readable against
+     their darker sky gradients. */
+  --sky-text: var(--plum);
+  --sky-text-soft: var(--plum-soft);
   --card-shadow: 0 14px 0 rgba(46,38,87,0.12);
   --font-display: 'Baloo 2', system-ui, sans-serif;
   --font-body: 'Nunito', system-ui, sans-serif;
@@ -199,11 +206,11 @@ main { position: relative; z-index: 2; }
   font-size: clamp(30px, 4.4vw, 48px);
   line-height: 1.1;
   margin: 0 0 16px;
-  color: var(--plum);
+  color: var(--sky-text);
 }
 .hero-text p {
   font-size: clamp(16px, 1.8vw, 19px);
-  color: var(--plum-soft);
+  color: var(--sky-text-soft);
   margin: 0 0 26px;
   font-weight: 700;
 }
@@ -1452,12 +1459,12 @@ button:focus-visible {
 .page-hero h1 {
   font-family: var(--font-display);
   font-size: clamp(28px, 4vw, 42px);
-  color: var(--plum);
+  color: var(--sky-text);
   margin: 0 0 10px;
 }
 .page-hero p {
   font-size: clamp(15px, 1.6vw, 18px);
-  color: var(--plum-soft);
+  color: var(--sky-text-soft);
   font-weight: 700;
   margin: 0;
 }
@@ -1655,6 +1662,8 @@ body.theme-royal-purple {
   --grass: #BFA5E8;
   --sky-top: #6B3FA0;
   --sky-bottom: #D4B8FF;
+  --sky-text: #F8F2FF;
+  --sky-text-soft: #DCC6FF;
 }
 
 body.theme-royal-purple .sky {
@@ -1953,6 +1962,8 @@ body.theme-night {
   --coral-dark: #1F3A75;
   --star: #F5F7FA;
   --grass: #C9D6E8;
+  --sky-text: #FFFFFF;
+  --sky-text-soft: #C9D6E8;
 }
 
 body.theme-night .sky {
@@ -2077,6 +2088,8 @@ body.theme-space {
   --coral-dark: #B00E8E;
   --star: #FFD447;
   --grass: #4FE3C1;
+  --sky-text: #FFFFFF;
+  --sky-text-soft: #E4D9FF;
 }
 
 body.theme-space .sky {
@@ -2256,6 +2269,8 @@ body.theme-boys {
   --grass: #4CAF50;
   --sky-top: #0A2A0A;
   --sky-bottom: #1A5A1A;
+  --sky-text: #F1FFF3;
+  --sky-text-soft: #B8F5C8;
 }
 
 body.theme-boys .sky {

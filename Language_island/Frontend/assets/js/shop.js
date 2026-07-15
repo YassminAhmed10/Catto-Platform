@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!loginStatusMsg) return;
     if (loggedIn) {
       loginStatusMsg.innerHTML = `<i class="fas fa-coins" style="margin-right:6px;color:var(--star);"></i> You have <strong>${currentCoins}</strong> coins! Spend them wisely!`;
-      loginStatusMsg.style.color = 'var(--plum-soft)';
+      loginStatusMsg.style.color = 'var(--sky-text-soft)';
     } else {
       loginStatusMsg.innerHTML = `<i class="fas fa-lock" style="margin-right:6px;"></i> Sign in to start earning coins!`;
       loginStatusMsg.style.color = 'var(--coral)';

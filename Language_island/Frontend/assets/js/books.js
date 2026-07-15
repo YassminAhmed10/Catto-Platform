@@ -445,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (loginMsg) {
             if (isLoggedInUser) {
                 loginMsg.textContent = 'Welcome, ' + userName + '! Pick a language to start reading!';
-                loginMsg.style.color = 'var(--plum-soft)';
+                loginMsg.style.color = 'var(--sky-text-soft)';
                 loginMsg.style.fontWeight = '700';
             } else {
                 loginMsg.textContent = 'Sign in to unlock all books and track your progress!';

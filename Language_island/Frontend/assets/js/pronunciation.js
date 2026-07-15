@@ -539,7 +539,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var msg = document.getElementById('loginStatusMsg');
         if (msg) {
             if (loggedIn) {
-                msg.textContent = 'Welcome, ' + userName + '! Pick a language to practice speaking.';
+                msg.textContent = '';
                 msg.style.color = '#2E2657';
                 msg.style.fontSize = '16px';
             } else {

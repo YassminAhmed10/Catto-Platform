@@ -78,8 +78,8 @@
 
 /* ---------- language picker (home) - Image Islands ---------- */
 .games-hero{ text-align:center; padding: 20px 10px 6px; }
-.games-hero h1{ font-family: var(--font-display); font-size: clamp(26px,5vw,40px); color: var(--plum); }
-.games-hero p{ margin-top:10px; font-size:16px; color: var(--plum-soft); font-weight:700; }
+.games-hero h1{ font-family: var(--font-display); font-size: clamp(26px,5vw,40px); color: var(--sky-text); }
+.games-hero p{ margin-top:10px; font-size:16px; color: var(--sky-text-soft); font-weight:700; }
 
 .lang-grid{ 
   display: grid; 

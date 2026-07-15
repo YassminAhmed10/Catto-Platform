@@ -565,7 +565,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var loginMsg = document.getElementById('loginStatusMsg');
     if (loginMsg) {
       if (isLoggedInUser) {
-        loginMsg.textContent = 'Welcome, ' + userName + '! Pick a language to start watching.';
+        loginMsg.textContent = '';
         loginMsg.style.color = '#2E2657';
       } else {
         loginMsg.textContent = 'Sign in to unlock all videos and track your progress.';
@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (isLoggedIn()) {
         var user = getCurrentUser();
         var name = user ? user.name || 'Explorer' : 'Explorer';
-        msg.textContent = 'Welcome, ' + name + '! Pick a language to start watching.';
+        msg.textContent = '';
         msg.style.color = '#2E2657';
       } else {
         msg.textContent = 'Sign in to unlock all videos and track your progress.';
