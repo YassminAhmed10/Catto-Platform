@@ -36,7 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     books: [
       { id: 'catto-space', name: 'Catto in Space', price: 200, category: 'books', image: 'imgs/shop/Books/Catto-space.png', description: 'Join Catto on an adventure through the stars and planets!' },
       { id: 'catto-fruits', name: 'Catto & Fruits', price: 200, category: 'books', image: 'imgs/shop/Books/Catto-fruits.png', description: 'Learn about healthy fruits with Catto in this colorful book!' },
-      { id: 'catto-numbers', name: 'Catto & Numbers', price: 200, category: 'books', image: 'imgs/shop/Books/Catto-numbers.png', description: 'Count along with Catto and discover the world of numbers!' }
+      { id: 'catto-numbers', name: 'Catto & Numbers', price: 200, category: 'books', image: 'imgs/shop/Books/Catto-numbers.png', description: 'Count along with Catto and discover the world of numbers!' },
+      { id: 'fantasy-book', name: 'Romance Fantasy Adventure', price: 250, category: 'books', image: 'imgs/shop/Books/fantasy-book.png', description: 'Dive into a magical world of romance and fantasy.' }
     ],
     themes: [
       { id: 'purple-theme', name: 'Royal Purple Theme', price: 300, category: 'themes', image: '', description: 'Unlock a magical purple color palette for your entire dashboard.', isTheme: true, swatchClass: 'swatch-purple' },
