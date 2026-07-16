@@ -1,5 +1,5 @@
 /* =========================================================
-   PRONUNCIATION.JS - Speak & Practice Page
+   PRONUNCIATION.JS - Speak & Practice Page (FIXED)
    ========================================================= */
 
 console.log('Pronunciation.js loading...');
@@ -201,6 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var recognition = null;
     var isListening = false;
     var isProcessing = false;
+    var speechTimeout = null;
 
     // =========================================================
     // AUTH HELPERS
@@ -353,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // SPEECH RECOGNITION
+    // SPEECH RECOGNITION - FIXED
     // =========================================================
     function checkPronunciation(targetWord, langCode, onDone) {
         if (!speechRecognitionSupported) {
@@ -363,11 +364,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isListening) return;
         if (isProcessing) return;
 
+        // Clean up any existing recognition
         if (recognition) {
             try { recognition.abort(); } catch (e) {}
             recognition = null;
         }
+        if (speechTimeout) {
+            clearTimeout(speechTimeout);
+            speechTimeout = null;
+        }
 
+        // Create new recognition instance
         recognition = new SpeechRecognitionAPI();
         recognition.lang = langCode;
         recognition.maxAlternatives = 10;
@@ -375,31 +382,39 @@ document.addEventListener('DOMContentLoaded', function() {
         recognition.continuous = false;
 
         isListening = true;
+        isProcessing = true;
 
         var finalTranscript = '';
         var allAlternatives = [];
 
         recognition.onresult = function(event) {
+            console.log('Recognition result:', event);
             var lastIndex = event.results.length - 1;
             
+            // Collect all alternatives
             for (var i = 0; i < event.results.length; i++) {
                 for (var j = 0; j < event.results[i].length; j++) {
                     allAlternatives.push(event.results[i][j].transcript);
                 }
             }
 
+            // Get final transcript if available
             if (event.results[lastIndex].isFinal) {
                 finalTranscript = event.results[lastIndex][0].transcript;
-                
+                console.log('Final transcript:', finalTranscript);
+                // Stop listening after final result
                 try { recognition.stop(); } catch(e) {}
             }
         };
 
         recognition.onerror = function(event) {
-            if (window.speechTimeout) clearTimeout(window.speechTimeout);
+            console.log('Recognition error:', event.error);
+            if (speechTimeout) {
+                clearTimeout(speechTimeout);
+                speechTimeout = null;
+            }
             isListening = false;
             isProcessing = false;
-            console.log('Recognition error:', event.error);
             
             if (event.error === 'no-speech') {
                 onDone('no-speech', null);
@@ -407,17 +422,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 onDone('not-allowed', null);
             } else if (event.error === 'audio-capture') {
                 onDone('not-allowed', null);
+            } else if (event.error === 'network') {
+                onDone('error', null);
             } else {
                 onDone('error', null);
             }
         };
 
         recognition.onend = function() {
-            if (window.speechTimeout) clearTimeout(window.speechTimeout);
+            console.log('Recognition ended');
+            if (speechTimeout) {
+                clearTimeout(speechTimeout);
+                speechTimeout = null;
+            }
             isListening = false;
             isProcessing = false;
             
+            // Determine the best match
             var heard = finalTranscript || (allAlternatives.length > 0 ? allAlternatives[0] : null);
+            console.log('Heard:', heard);
             
             if (heard) {
                 var matched = false;
@@ -425,6 +448,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (isCloseEnough(targetWord, allAlternatives[k])) {
                         matched = true;
                         heard = allAlternatives[k];
+                        console.log('Match found:', heard);
                         break;
                     }
                 }
@@ -440,26 +464,24 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         try {
+            console.log('Starting recognition for:', targetWord);
             recognition.start();
-            console.log('Listening for:', targetWord);
             
-            if (window.speechTimeout) clearTimeout(window.speechTimeout);
-            
-            window.speechTimeout = setTimeout(function() {
+            // Set timeout to prevent hanging
+            speechTimeout = setTimeout(function() {
                 if (isListening) {
                     console.log('Speech recognition timed out.');
                     try { recognition.abort(); } catch(e) {}
-                    
                     isListening = false;
                     isProcessing = false;
                     onDone('no-speech', null);
                 }
-            }, 5000);
+            }, 6000);
             
         } catch (e) {
+            console.error('Error starting recognition:', e);
             isListening = false;
             isProcessing = false;
-            console.error('Error starting recognition:', e);
             onDone('error', null);
         }
     }
@@ -653,12 +675,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function renderCurrentWord(langKey, letterChar) {
+        // Clean up any ongoing recognition
         isListening = false;
         isProcessing = false;
         if (recognition) {
             try { recognition.abort(); } catch(e) {}
+            recognition = null;
         }
-        if (window.speechTimeout) clearTimeout(window.speechTimeout);
+        if (speechTimeout) {
+            clearTimeout(speechTimeout);
+            speechTimeout = null;
+        }
         
         var words = pronunciationData[langKey].words[letterChar];
         var wordObj = words[currentWordIndex];
@@ -743,8 +770,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             if (isListening) {
-                if (window.recognition) {
-                    try { window.recognition.stop(); } catch(e) {}
+                // Stop listening if already listening
+                if (recognition) {
+                    try { recognition.stop(); } catch(e) {}
                 }
                 return;
             }
@@ -763,8 +791,6 @@ document.addEventListener('DOMContentLoaded', function() {
             micBtn.classList.add('listening');
             document.getElementById('micLabel').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Listening...';
             showResultFeedback('listening-state', '<i class="fas fa-ear-listen"></i> Listening... Say the word!');
-
-            isProcessing = true;
 
             checkPronunciation(wordObj.word, lang.speechLang, function(result, heard) {
                 micBtn.classList.remove('listening');
@@ -785,7 +811,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }, 1200);
                     } else {
                         setTimeout(function() {
-                            showToast('You completed all words for this letter!');
+                            showToast('🎉 You completed all words for this letter!');
                         }, 1200);
                     }
                     
