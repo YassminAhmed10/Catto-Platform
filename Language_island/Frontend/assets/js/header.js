@@ -29,13 +29,34 @@ document.addEventListener('DOMContentLoaded', function() {
   initHeader();
 });
 
+// =========================================================
+// LISTEN FOR STAR UPDATES FROM OTHER PAGES
+// =========================================================
+document.addEventListener('starsUpdated', function(e) {
+    var totalStars = e.detail && typeof e.detail.totalStars !== 'undefined' ? e.detail.totalStars : 0;
+    console.log('⭐ Header received starsUpdated event:', totalStars);
+    
+    var headerStars = document.getElementById('headerStars');
+    if (headerStars) {
+        headerStars.textContent = totalStars;
+    }
+    
+    try {
+        var userData = JSON.parse(localStorage.getItem('languageIslandUser')) || {};
+        userData.total_stars = totalStars;
+        localStorage.setItem('languageIslandUser', JSON.stringify(userData));
+    } catch(e) {}
+    
+    if (window.currentUserData) {
+        window.currentUserData.total_stars = totalStars;
+    }
+});
+
 function initHeader() {
   console.log('Header: Checking authentication...');
   
-  // Auto-highlight active nav button
   highlightActiveNav();
   
-  // Try to get user data from localStorage first
   try {
     var cachedUser = localStorage.getItem('languageIslandUser');
     if (cachedUser && cachedUser !== 'null' && cachedUser !== '') {
@@ -45,7 +66,6 @@ function initHeader() {
       window.currentEquippedSkin = user.equipped_skin || 'default-catto';
       window.currentEquippedTheme = user.equipped_theme || 'default';
       
-      // Update UI immediately with cached data
       updateHeaderUI(user);
       
       var authButtons = document.getElementById('authButtons');
@@ -85,8 +105,6 @@ function initHeader() {
       handleAuthResponse(data);
     } catch(e) {
       console.error('Header: Failed to parse JSON:', e);
-      console.log('Header: Raw HTML response:', text);
-      // If we can't parse JSON use cached data
       if (!window.userLogStatus) {
         showLoggedOutUI();
       }
@@ -109,7 +127,6 @@ function handleAuthResponse(data) {
   var starsDisplay = document.querySelector('.stars-display');
 
   if (data.logged_in && data.user) {
-    // --- LOGGED IN ---
     window.userLogStatus = true;
     window.currentUserData = data.user;
     window.currentEquippedSkin = data.user.equipped_skin || 'default-catto';
@@ -122,12 +139,10 @@ function handleAuthResponse(data) {
 
     updateHeaderUI(data.user);
     
-    // Store in localStorage
     try {
       localStorage.setItem('languageIslandUser', JSON.stringify(data.user));
     } catch(e) {}
     
-    // Trigger UI updates
     if (typeof window.renderHome === 'function') {
       console.log('Header: Calling renderHome()');
       window.renderHome();
@@ -169,9 +184,6 @@ function showLoggedOutUI() {
   console.log('Header: User not logged in');
 }
 
-// =========================================================
-// Auto-highlight active nav button based on current URL
-// =========================================================
 function highlightActiveNav() {
   var currentPage = window.location.pathname.split('/').pop() || 'index.html';
   console.log('📍 Current page:', currentPage);
@@ -192,19 +204,16 @@ function highlightActiveNav() {
 }
 
 function updateHeaderUI(userDbData) {
-  // 1. Balances
   var headerCoins = document.getElementById('headerCoins');
   var headerStars = document.getElementById('headerStars');
   if (headerCoins) headerCoins.innerText = userDbData.coins || 0;
   if (headerStars) headerStars.innerText = userDbData.total_stars || 0;
 
-  // 2. Sidebar Info
   var sidebarUsername = document.getElementById('sidebarUsername');
   var sidebarEmail = document.getElementById('sidebarEmail');
   if (sidebarUsername) sidebarUsername.textContent = userDbData.first_name || 'Explorer';
   if (sidebarEmail) sidebarEmail.textContent = userDbData.email || '';
 
-  // 3. Avatar Skin Update
   var currentSkin = userDbData.equipped_skin || 'default-catto';
   window.currentEquippedSkin = currentSkin;
   
@@ -212,14 +221,12 @@ function updateHeaderUI(userDbData) {
   
   updateAllAvatars(skinPath);
   
-  // 4. Theme Update
   var currentTheme = userDbData.equipped_theme || 'default';
   window.currentEquippedTheme = currentTheme;
   
   applyTheme(currentTheme);
 }
 
-// Apply theme based on user preference
 function applyTheme(theme) {
   document.body.classList.remove('theme-royal-purple');
   if (theme === 'purple-theme') {
@@ -227,7 +234,6 @@ function applyTheme(theme) {
   }
 }
 
-// Update ALL avatars across the entire site
 function updateAllAvatars(skinPath) {
   console.log('Updating all avatars to:', skinPath);
   

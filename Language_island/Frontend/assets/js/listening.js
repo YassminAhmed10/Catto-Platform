@@ -1,5 +1,5 @@
 /* =========================================================
-   LISTENING.JS
+   LISTENING.JS 
    ========================================================= */
 
 console.log('Listening.js loading...');
@@ -182,8 +182,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // STATE
     // =========================================================
     var currentLang = null;
+    var currentLetter = null;
     var listenedWords = [];
-    var starsAwardedLanguages = [];
+    var wordListenCount = {};
+    var isAwardingStars = false;
 
     // =========================================================
     // AUTH CHECK
@@ -212,31 +214,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch(e) {}
         return null;
-    }
-
-    // =========================================================
-    // LOAD STARS AWARDED
-    // =========================================================
-    function loadStarsAwarded() {
-        try {
-            var saved = localStorage.getItem('starsAwardedLanguages');
-            if (saved) {
-                starsAwardedLanguages = JSON.parse(saved);
-            }
-        } catch(e) {
-            starsAwardedLanguages = [];
-        }
-        console.log('Loaded starsAwardedLanguages:', starsAwardedLanguages);
-    }
-
-    function markStarsAwarded(langKey) {
-        if (starsAwardedLanguages.indexOf(langKey) === -1) {
-            starsAwardedLanguages.push(langKey);
-            try {
-                localStorage.setItem('starsAwardedLanguages', JSON.stringify(starsAwardedLanguages));
-            } catch(e) {}
-            console.log('Marked stars awarded for:', langKey);
-        }
     }
 
     // =========================================================
@@ -276,30 +253,32 @@ document.addEventListener('DOMContentLoaded', function() {
     // UPDATE HEADER STARS
     // =========================================================
     function updateHeaderStars(totalStars) {
-        console.log('Updating header stars to:', totalStars);
-        
+        console.log('⭐ Updating header stars to:', totalStars);
+
         var headerStars = document.getElementById('headerStars');
         var starsPill = document.querySelector('.stars-display');
-        
+
         if (headerStars) {
             headerStars.textContent = totalStars || 0;
-            console.log('Header stars updated to:', headerStars.textContent);
         }
         if (starsPill) {
             starsPill.style.display = 'flex';
         }
-        
+
         try {
             var userData = JSON.parse(localStorage.getItem('languageIslandUser')) || {};
             userData.total_stars = totalStars;
             localStorage.setItem('languageIslandUser', JSON.stringify(userData));
         } catch(e) {}
-        
+
         try {
-            document.dispatchEvent(new CustomEvent('starsUpdated', { 
-                detail: { totalStars: totalStars } 
+            document.dispatchEvent(new CustomEvent('starsUpdated', {
+                detail: { totalStars: totalStars }
             }));
-        } catch(e) {}
+            console.log('✅ Dispatched starsUpdated event with:', totalStars);
+        } catch(e) {
+            console.warn('Could not dispatch starsUpdated:', e);
+        }
     }
 
     // =========================================================
@@ -307,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================================================
     function showStarEarnedModal(stars, totalStars) {
         console.log('Showing star earned modal - Stars:', stars, 'Total:', totalStars);
-        
+
         var existingModal = document.getElementById('starEarnedModal');
         if (existingModal) existingModal.remove();
 
@@ -328,14 +307,14 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.innerHTML = `
             <div class="modal-card star-earned-card">
                 <div class="star-icon">
-                    <img src="imgs/profile/Stars.png" alt="Stars" onerror="this.style.display='none'">
+                    <img src="imgs/profile/Stars.png" alt="Stars" onerror="this.outerHTML='<i class=\\'fas fa-star star-fallback-icon\\'></i>'">
                 </div>
-                <h2>🎉 Congrats, ${userName}!</h2>
-                <p>You earned +${stars} stars for completing listening!</p>
+                <h2>Congratulations, ${userName}!</h2>
+                <p>You earned +${stars} stars for completing listening practice!</p>
                 <div class="star-count-display">
                     <span>Total Stars: <strong id="starEarnedTotal">${totalStars || 0}</strong></span>
                 </div>
-                <button class="cta-btn" id="starEarnedCloseBtn">Awesome</button>
+                <button class="cta-btn" id="starEarnedCloseBtn">Great</button>
             </div>
         `;
 
@@ -377,71 +356,135 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // COMPLETE LISTENING - EARN 5 STARS (FORCE RE-AWARD)
+    // COMPLETE LISTENING - EARN 5 STARS
     // =========================================================
     function earnStarsForListening(langKey) {
-        console.log('earnStarsForListening called for:', langKey);
-        console.log('starsAwardedLanguages:', starsAwardedLanguages);
-        
-        // Get current stars from header
-        var headerStars = document.getElementById('headerStars');
-        var currentStars = parseInt(headerStars ? headerStars.textContent : 0);
-        console.log('Current total stars:', currentStars);
-        
-        // Force re-award if marked but not actually awarded (stars are 0)
-        var isMarked = starsAwardedLanguages.indexOf(langKey) !== -1;
-        if (isMarked && currentStars < 5) {
-            console.log('Stars marked but not awarded (stars=0). Re-awarding...');
-            // Remove from awarded list to re-award
-            starsAwardedLanguages = starsAwardedLanguages.filter(function(l) { return l !== langKey; });
-            try {
-                localStorage.setItem('starsAwardedLanguages', JSON.stringify(starsAwardedLanguages));
-            } catch(e) {}
-        }
-        
-        // Check if already awarded
-        if (starsAwardedLanguages.indexOf(langKey) !== -1) {
-            console.log('Stars already awarded for:', langKey);
-            // Still show the modal if it was already awarded but user completed again
-            setTimeout(function() {
-                showStarEarnedModal(0, currentStars);
-            }, 2000);
+        console.log('🌟 earnStarsForListening called for:', langKey);
+
+        if (isAwardingStars) {
+            console.log('Already awarding stars, skipping duplicate trigger...');
             return;
         }
+        isAwardingStars = true;
 
+        var headerStars = document.getElementById('headerStars');
+        var currentStars = parseInt(headerStars ? headerStars.textContent : 0) || 0;
         var newTotal = currentStars + 5;
-        console.log('New total:', newTotal);
-        
-        // Update header stars immediately
+        console.log('Current total stars:', currentStars, '-> New total:', newTotal);
+
+        // Update local UI immediately
         updateHeaderStars(newTotal);
 
-        // Mark as awarded
-        markStarsAwarded(langKey);
-
-        // Show modal after 2 seconds
-        setTimeout(function() {
-            showStarEarnedModal(5, newTotal);
-        }, 2000);
-
-        // Also try to save to database via Activity system
+        // Save to database via Activity system
         if (typeof Activity !== 'undefined' && Activity.completeActivity) {
             var activityId = 'listening_' + langKey + '_' + Date.now();
-            console.log('Sending to Activity system:', activityId);
+            console.log('📤 Sending to Activity system:', activityId);
             
             Activity.completeActivity('listening', activityId, 5)
                 .then(function(data) {
-                    console.log('Activity response:', data);
+                    console.log('📥 Activity response:', data);
                     if (data.success && data.total_stars) {
-                        if (data.total_stars !== newTotal) {
-                            updateHeaderStars(data.total_stars);
-                        }
+                        updateHeaderStars(data.total_stars);
+                        resetWordsForLanguage(langKey);
+                        refreshCurrentView(langKey);
+                        showStarEarnedModal(5, data.total_stars);
+                        showToast('Great job! You can listen again to earn more stars.');
+                    } else if (data.alreadyCompleted) {
+                        resetWordsForLanguage(langKey);
+                        refreshCurrentView(langKey);
+                        showToast('You already earned stars for this session! Play again.');
+                    } else {
+                        resetWordsForLanguage(langKey);
+                        refreshCurrentView(langKey);
+                        showToast('Could not save progress, but you can keep playing!');
                     }
                 })
                 .catch(function(err) {
-                    console.error('Error saving activity:', err);
+                    console.error('❌ Error saving activity:', err);
+                    resetWordsForLanguage(langKey);
+                    refreshCurrentView(langKey);
+                    showToast('Network error, but you can keep playing!');
+                })
+                .finally(function() {
+                    isAwardingStars = false;
                 });
         } else {
-            console.warn('Activity system not available, stars saved locally only');
+            // Fallback: direct API call
+            console.warn('Activity system not available, using direct API...');
+            saveListeningProgressDirect(langKey, 5, function(success, totalStars) {
+                if (success) {
+                    updateHeaderStars(totalStars || newTotal);
+                    resetWordsForLanguage(langKey);
+                    refreshCurrentView(langKey);
+                    showStarEarnedModal(5, totalStars || newTotal);
+                    showToast('Great job! You can listen again to earn more stars.');
+                } else {
+                    resetWordsForLanguage(langKey);
+                    refreshCurrentView(langKey);
+                    showToast('Could not save progress, but you can keep playing!');
+                }
+                isAwardingStars = false;
+            });
+        }
+    }
+
+    // =========================================================
+    // DIRECT API SAVE - FALLBACK
+    // =========================================================
+    function saveListeningProgressDirect(langKey, starsEarned, callback) {
+        var activityId = 'listening_' + langKey + '_' + Date.now();
+        console.log('📤 Direct save to save_activity.php:', activityId);
+
+        fetch('../Backend/save_activity.php', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                activity_type: 'listening',
+                activity_id: activityId,
+                stars_earned: starsEarned
+            })
+        })
+        .then(function(res) {
+            if (!res.ok) {
+                throw new Error('Network response was not ok: ' + res.status);
+            }
+            return res.json();
+        })
+        .then(function(data) {
+            console.log('📥 Direct save response:', data);
+            if (data && data.success) {
+                callback(true, data.total_stars);
+            } else {
+                callback(false, null);
+            }
+        })
+        .catch(function(err) {
+            console.error('❌ Direct save error:', err);
+            callback(false, null);
+        });
+    }
+
+    // =========================================================
+    // RESET WORDS FOR LANGUAGE
+    // =========================================================
+    function resetWordsForLanguage(langKey) {
+        listenedWords = [];
+        wordListenCount = {};
+        console.log('Reset words for language:', langKey, '- ready to replay');
+    }
+
+    // =========================================================
+    // REFRESH CURRENT VIEW
+    // =========================================================
+    function refreshCurrentView(langKey) {
+        var wordsSection = document.getElementById('wordsSection');
+        var wordsVisible = wordsSection && wordsSection.style.display !== 'none';
+
+        if (wordsVisible && currentLetter) {
+            showWordsForLetter(langKey, currentLetter);
+        } else {
+            renderLetters(langKey, listeningData[langKey]);
         }
     }
 
@@ -458,22 +501,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!data || !data.words[letterChar]) return false;
 
         var words = data.words[letterChar];
-        var allListened = words.every(function(w) {
+        return words.every(function(w) {
             return isWordListened(langKey, letterChar, w.word);
         });
-
-        return allListened;
     }
 
     function areAllLettersCompleted(langKey) {
         var data = listeningData[langKey];
         if (!data) return false;
 
-        var allCompleted = data.letters.every(function(letter) {
+        return data.letters.every(function(letter) {
             return areAllWordsListened(langKey, letter.char);
         });
-
-        return allCompleted;
     }
 
     // =========================================================
@@ -484,28 +523,23 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!grid) return;
 
         var isLoggedInUser = isLoggedIn();
-        var user = getCurrentUser();
-        var userName = user ? user.first_name || user.name || 'Explorer' : 'Explorer';
 
         var loginMsg = document.getElementById('loginStatusMsg');
         if (loginMsg) {
             if (isLoggedInUser) {
                 loginMsg.textContent = '';
-                loginMsg.style.color = '#2E2657';
             } else {
                 loginMsg.textContent = 'Sign in to unlock all listening activities.';
                 loginMsg.style.color = '#FF6B59';
             }
         }
 
-        loadStarsAwarded();
-
         var html = '';
         var langKeys = Object.keys(languages);
         langKeys.forEach(function(key) {
             var lang = languages[key];
             var imgSrc = langImages[key] || 'imgs/buttons/default.png';
-            
+
             html += `
                 <button class="lang-listening-btn" data-lang="${key}">
                     <img src="${imgSrc}" alt="${lang.name}" onerror="this.src='imgs/buttons/default.png'">
@@ -534,6 +568,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================================================
     function showContentForLanguage(langKey) {
         currentLang = langKey;
+        currentLetter = null;
         var lang = languages[langKey];
         var data = listeningData[langKey];
 
@@ -550,8 +585,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (contentSection) contentSection.style.display = 'block';
         if (selectedLangName) selectedLangName.textContent = lang.name;
 
-        // Reset listened words for this session
-        listenedWords = [];
+        resetWordsForLanguage(langKey);
 
         renderLetters(langKey, data);
         if (contentSection) {
@@ -583,13 +617,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 card.style.borderWidth = '3px';
                 card.style.borderStyle = 'solid';
                 card.style.background = '#F0FFF5';
+
+                var doneBadge = document.createElement('span');
+                doneBadge.className = 'letter-done-badge';
+                doneBadge.innerHTML = '<i class="fas fa-check"></i>';
+                card.appendChild(doneBadge);
             }
 
             var playBtn = document.createElement('button');
             playBtn.className = 'letter-play';
             playBtn.dataset.letter = letter.char;
             playBtn.dataset.lang = langKey;
-            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            playBtn.innerHTML = '<span class="yt-play-badge"><i class="fas fa-play"></i></span>';
 
             playBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -597,10 +636,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 var lang = languages[this.dataset.lang];
                 if (lang) {
                     var playBtnEl = this;
-                    playBtnEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    playBtnEl.innerHTML = '<span class="yt-play-badge yt-play-badge-loading"><i class="fas fa-spinner fa-spin"></i></span>';
+                    playBtnEl.disabled = true;
                     speakText(letter, lang.speechLang);
                     setTimeout(function() {
-                        playBtnEl.innerHTML = '<i class="fas fa-play"></i>';
+                        playBtnEl.innerHTML = '<span class="yt-play-badge"><i class="fas fa-play"></i></span>';
+                        playBtnEl.disabled = false;
                     }, 1500);
                 }
             });
@@ -648,6 +689,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        currentLetter = letterChar;
+
         var words = data.words[letterChar];
         var letterInfo = data.letters.find(function(l) { return l.char === letterChar; });
 
@@ -672,6 +715,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var card = document.createElement('div');
             card.className = 'word-card interactive';
             card.dataset.wordId = wordId;
+            card.dataset.word = wordObj.word;
 
             if (isListened) {
                 card.style.borderColor = '#2E7D32';
@@ -689,11 +733,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 img.alt = wordObj.word;
                 img.className = 'word-image';
                 img.onerror = function() {
-                    imageContainer.innerHTML = '<span class="word-emoji">📄</span>';
+                    imageContainer.innerHTML = '📄';
                 };
                 imageContainer.appendChild(img);
             } else {
-                imageContainer.innerHTML = '<span class="word-emoji">📄</span>';
+                imageContainer.innerHTML = '📄';
             }
 
             card.appendChild(imageContainer);
@@ -713,75 +757,70 @@ document.addEventListener('DOMContentLoaded', function() {
             playBtn.dataset.word = wordObj.word;
             playBtn.dataset.lang = langKey;
             playBtn.dataset.letter = letterChar;
+            playBtn.dataset.wordId = wordId;
+
+            var listenCount = wordListenCount[wordId] || 0;
+            playBtn.innerHTML = isListened
+                ? '<span class="yt-play-badge yt-play-badge-done"><i class="fas fa-check"></i></span>'
+                : '<span class="yt-play-badge"><i class="fas fa-play"></i></span>';
+            playBtn.title = listenCount > 0 ? 'Listened ' + listenCount + ' time(s)' : 'Tap to listen';
 
             if (isListened) {
-                playBtn.textContent = 'Listen';
                 playBtn.style.background = '#2E7D32';
                 playBtn.style.color = '#FFFFFF';
                 playBtn.style.boxShadow = '0 4px 0 #1a6b2a';
             } else {
-                playBtn.textContent = 'Listen';
                 playBtn.style.background = '#FFD23F';
                 playBtn.style.color = '#2E2657';
                 playBtn.style.boxShadow = '0 4px 0 #E5B800';
             }
+
+            playBtn.disabled = false;
 
             playBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 var wordTextValue = this.dataset.word;
                 var lang = languages[this.dataset.lang];
                 var letter = this.dataset.letter;
-                var wordId = langKey + '_' + letter + '_' + wordTextValue;
+                var wId = this.dataset.wordId;
 
                 if (lang) {
                     var playBtnEl = this;
-                    playBtnEl.textContent = 'Speaking...';
+                    playBtnEl.innerHTML = '<span class="yt-play-badge yt-play-badge-loading"><i class="fas fa-spinner fa-spin"></i></span>';
                     playBtnEl.style.background = '#FF6B59';
                     playBtnEl.style.color = '#FFFFFF';
                     playBtnEl.style.boxShadow = '0 4px 0 #C94E4E';
                     playBtnEl.disabled = true;
 
                     speakText(wordTextValue, lang.speechLang, function() {
-                        if (listenedWords.indexOf(wordId) === -1) {
-                            listenedWords.push(wordId);
-                            console.log('Listened to:', wordId);
+                        wordListenCount[wId] = (wordListenCount[wId] || 0) + 1;
+
+                        if (listenedWords.indexOf(wId) === -1) {
+                            listenedWords.push(wId);
                         }
 
                         var wordCard = playBtnEl.closest('.word-card');
-                        if (wordCard && listenedWords.indexOf(wordId) !== -1) {
+                        if (wordCard) {
                             wordCard.style.borderColor = '#2E7D32';
                             wordCard.style.borderWidth = '3px';
                             wordCard.style.borderStyle = 'solid';
                             wordCard.style.background = '#F0FFF5';
                         }
 
-                        playBtnEl.textContent = 'Listen';
+                        var count = wordListenCount[wId] || 0;
+                        playBtnEl.innerHTML = '<span class="yt-play-badge yt-play-badge-done"><i class="fas fa-check"></i></span>';
+                        playBtnEl.title = 'Listened ' + count + ' time(s)';
                         playBtnEl.style.background = '#2E7D32';
                         playBtnEl.style.color = '#FFFFFF';
                         playBtnEl.style.boxShadow = '0 4px 0 #1a6b2a';
                         playBtnEl.disabled = false;
 
                         if (areAllWordsListened(langKey, letter)) {
-                            console.log('Letter completed:', letter);
-                            
                             if (areAllLettersCompleted(langKey)) {
-                                console.log('ALL LETTERS COMPLETED for language:', langKey);
-                                
-                                if (starsAwardedLanguages.indexOf(langKey) === -1) {
-                                    console.log('Awarding stars for:', langKey);
-                                    setTimeout(function() {
-                                        earnStarsForListening(langKey);
-                                    }, 2000);
-                                    showToast('You completed all listening activities!');
-                                } else {
-                                    console.log('Stars already awarded for:', langKey, 'but showing modal anyway');
-                                    // Show modal even if already awarded (for replay)
-                                    setTimeout(function() {
-                                        var headerStars = document.getElementById('headerStars');
-                                        var currentStars = parseInt(headerStars ? headerStars.textContent : 0);
-                                        showStarEarnedModal(0, currentStars);
-                                    }, 2000);
-                                }
+                                console.log('ALL LETTERS COMPLETED for language:', langKey, '- awarding stars');
+                                setTimeout(function() {
+                                    earnStarsForListening(langKey);
+                                }, 800);
                             } else {
                                 showToast('Letter ' + letter + ' completed!');
                             }
@@ -806,7 +845,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (backToLettersBtn) {
         backToLettersBtn.addEventListener('click', function() {
             if (typeof Sound !== 'undefined' && Sound.pop) Sound.pop();
-            
+
+            currentLetter = null;
+
             var wordsSection = document.getElementById('wordsSection');
             if (wordsSection) wordsSection.style.display = 'none';
 
@@ -829,16 +870,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (backToLangsBtn) {
         backToLangsBtn.addEventListener('click', function() {
             if (typeof Sound !== 'undefined' && Sound.pop) Sound.pop();
-            
+
             var contentSection = document.getElementById('contentSection');
             var langSelection = document.getElementById('langSelection');
-            
+
             if (contentSection) contentSection.style.display = 'none';
             if (langSelection) {
                 langSelection.style.display = 'block';
                 langSelection.scrollIntoView({ behavior: 'smooth' });
             }
-            
+
             renderLanguageSelection();
         });
     }
@@ -871,9 +912,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // =========================================================
-    // CLOSE LOGIN MODAL
-    // =========================================================
     var loginModalClose = document.getElementById('loginModalClose');
     if (loginModalClose) {
         loginModalClose.addEventListener('click', function() {
@@ -921,38 +959,297 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // LOAD STARS AWARDED
+    // LISTEN FOR AUTH CHANGES
     // =========================================================
-    function loadCompletedLetters() {
-        loadStarsAwarded();
-    }
+    document.addEventListener('authChanged', function(e) {
+        console.log('Auth changed event received:', e.detail);
+        renderLanguageSelection();
+
+        if (e.detail && e.detail.loggedIn) {
+            var pendingLang = sessionStorage.getItem('pendingListeningLang');
+            if (pendingLang) {
+                sessionStorage.removeItem('pendingListeningLang');
+                setTimeout(function() {
+                    showContentForLanguage(pendingLang);
+                }, 500);
+            }
+        }
+    });
 
     // =========================================================
     // ADD CSS STYLES
     // =========================================================
     function addListeningStyles() {
         if (document.getElementById('listening-styles')) return;
-        
+
         var style = document.createElement('style');
         style.id = 'listening-styles';
         style.textContent = `
+            .letter-play i,
+            .word-play-btn i {
+                margin-right: 5px;
+            }
+
+            .letter-play i {
+                display: none;
+            }
+
+            .word-play-btn > i {
+                display: none;
+            }
+
+            .yt-play-badge {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: #FF0000;
+                color: #FFFFFF;
+                margin-right: 6px;
+                vertical-align: middle;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+                flex-shrink: 0;
+            }
+
+            .yt-play-badge i {
+                display: inline-block !important;
+                font-size: 9px;
+                margin-right: 0 !important;
+                margin-left: 2px;
+            }
+
+            .yt-play-badge.yt-play-badge-loading {
+                background: #FF6B59;
+            }
+
+            .yt-play-badge.yt-play-badge-loading i {
+                margin-left: 0;
+                font-size: 10px;
+            }
+
+            .yt-play-badge.yt-play-badge-done {
+                background: #2E7D32;
+            }
+
+            .yt-play-badge.yt-play-badge-done i {
+                margin-left: 0;
+                font-size: 10px;
+            }
+
+            .letter-play {
+                width: 34px;
+                height: 34px;
+                padding: 0;
+                border-radius: 50%;
+            }
+
+            .letter-play .yt-play-badge {
+                width: 22px;
+                height: 22px;
+                margin-right: 0;
+            }
+
+            .letter-play .yt-play-badge i {
+                font-size: 10px;
+            }
+
+            .word-play-btn {
+                width: 44px;
+                height: 44px;
+                padding: 0;
+                border-radius: 50%;
+                margin: 0 auto;
+            }
+
+            .word-play-btn .yt-play-badge {
+                width: 30px;
+                height: 30px;
+                margin-right: 0;
+            }
+
+            .word-play-btn .yt-play-badge i {
+                font-size: 13px;
+            }
+
+            .letter-play,
+            .word-play-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .letter-done-badge {
+                position: absolute;
+                top: -8px;
+                left: -8px;
+                width: 26px;
+                height: 26px;
+                background: #2E7D32;
+                color: #FFFFFF;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+
+            .star-fallback-icon {
+                font-size: 60px;
+                color: #FFD23F;
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+
+            .star-earned-card h2 {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .star-earned-card .cta-btn i {
+                margin-right: 6px;
+            }
+
             .letter-card {
                 border: 3px solid transparent;
                 transition: all 0.3s ease;
+                position: relative;
+                padding: 16px;
+                border-radius: 12px;
+                text-align: center;
+                background: #FFFFFF;
+                cursor: pointer;
+                box-shadow: 0 4px 0 rgba(46,38,87,0.06);
+                overflow: visible;
+            }
+
+            .letter-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 0 rgba(46,38,87,0.06);
+            }
+
+            .letter-play {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                padding: 4px 12px;
+                border-radius: 999px;
+                border: none;
+                background: #F1EEFB;
+                color: #2E2657;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-family: 'Baloo 2', cursive;
+                font-weight: 600;
+                font-size: 12px;
+            }
+
+            .letter-play:hover:not(:disabled) {
+                background: #FFD23F;
+                transform: scale(1.05);
+            }
+
+            .letter-play:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+            .letter-char {
+                font-size: 32px;
+                font-weight: 800;
+                display: block;
+                font-family: 'Baloo 2', cursive;
+                color: #2E2657;
+            }
+
+            .letter-name {
+                font-size: 14px;
+                font-weight: 600;
+                color: #5A5184;
+                display: block;
+            }
+
+            .letter-sound {
+                font-size: 12px;
+                color: #8C87A8;
+                display: block;
             }
 
             .word-card {
                 border: 3px solid #F1EEFB;
                 transition: all 0.3s ease;
+                padding: 16px;
+                border-radius: 16px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+                background: #FFFFFF;
+                box-shadow: 0 4px 0 rgba(46,38,87,0.06);
+            }
+
+            .word-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 0 rgba(46,38,87,0.06);
+            }
+
+            .word-image-container {
+                width: 80px;
+                height: 80px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #F8F7FF;
+                border-radius: 12px;
+                overflow: hidden;
+            }
+
+            .word-image {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+            .word-text {
+                font-family: 'Baloo 2', cursive;
+                font-size: 20px;
+                font-weight: 700;
+                color: #2E2657;
+            }
+
+            .word-translation {
+                font-size: 14px;
+                color: #8C87A8;
+                font-weight: 600;
             }
 
             .word-play-btn {
+                padding: 8px 20px;
+                border: none;
+                border-radius: 999px;
+                font-family: 'Baloo 2', cursive;
+                font-weight: 700;
+                font-size: 14px;
+                cursor: pointer;
                 transition: all 0.3s ease;
+                width: 100%;
             }
 
             .word-play-btn:disabled {
                 opacity: 0.7;
                 cursor: not-allowed;
+            }
+
+            .word-play-btn:not(:disabled):hover {
+                transform: translateY(-2px);
+            }
+
+            .word-play-btn:not(:disabled):active {
+                transform: translateY(2px);
             }
 
             .star-earned-modal .modal-card.star-earned-card {
@@ -963,12 +1260,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 border: 3px solid #FFD23F;
                 border-radius: 28px;
                 box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-                animation: starPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            }
-
-            @keyframes starPop {
-                0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
-                100% { transform: scale(1) rotate(0deg); opacity: 1; }
             }
 
             .star-earned-card .star-icon {
@@ -1036,6 +1327,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 transform: translateY(3px);
                 box-shadow: 0 2px 0 #C94E4E;
             }
+
+            .words-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 16px;
+                margin-top: 16px;
+            }
+
+            .words-header {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                margin-bottom: 16px;
+                flex-wrap: wrap;
+            }
         `;
         document.head.appendChild(style);
     }
@@ -1044,16 +1350,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // INIT
     // =========================================================
     addListeningStyles();
-    loadCompletedLetters();
-    
+
     setTimeout(function() {
         renderLanguageSelection();
         checkReturnFromLogin();
     }, 300);
 
-    document.addEventListener('authChanged', function() {
-        renderLanguageSelection();
-    });
-
-    console.log('Listening.js loaded successfully!');
+    console.log('Listening.js loaded successfully! (unlimited replay enabled)');
 });
