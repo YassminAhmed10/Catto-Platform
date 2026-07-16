@@ -17,7 +17,8 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = (int) $_SESSION['user_id'];
-$data = json_decode(file_get_contents('php://input'), true);
+$raw_data = file_get_contents('php://input');
+$data = json_decode($raw_data, true);
 
 if (!$data) {
     echo json_encode(['success' => false, 'message' => 'No data received']);
@@ -33,7 +34,7 @@ if (!$activity_type || !$activity_id) {
     exit();
 }
 
-$valid_types = ['book', 'listening', 'video'];
+$valid_types = ['book', 'listening', 'video', 'pronunciation'];
 if (!in_array($activity_type, $valid_types)) {
     echo json_encode(['success' => false, 'message' => 'Invalid activity type']);
     exit();
@@ -50,7 +51,21 @@ try {
     $stmt->close();
 
     if ($existing) {
-        throw new Exception("Activity already completed");
+        // Already completed - get current total
+        $stmt = $connection->prepare("SELECT total_stars FROM users WHERE id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $total_stars = $stmt->get_result()->fetch_assoc()['total_stars'];
+        $stmt->close();
+        
+        mysqli_commit($connection);
+        echo json_encode([
+            'success' => false,
+            'alreadyCompleted' => true,
+            'message' => 'Activity already completed',
+            'total_stars' => (int) $total_stars
+        ]);
+        exit();
     }
 
     // Save activity
@@ -59,7 +74,7 @@ try {
     $stmt->execute();
     $stmt->close();
 
-    // Update total stars
+    // Update total_stars
     $stmt = $connection->prepare("UPDATE users SET total_stars = total_stars + ? WHERE id = ?");
     $stmt->bind_param("ii", $stars_earned, $user_id);
     $stmt->execute();
@@ -83,7 +98,7 @@ try {
 
 } catch (Exception $e) {
     mysqli_rollback($connection);
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 }
 
 $connection->close();
