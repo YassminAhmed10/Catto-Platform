@@ -811,7 +811,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }, 1200);
                     } else {
                         setTimeout(function() {
-                            showToast('🎉 You completed all words for this letter!');
+                            showToast('You completed all words for this letter!');
                         }, 1200);
                     }
                     
